@@ -21,7 +21,7 @@ app.use(
     cors({
         origin: (origin, callback) => {
             const allowedOrigins = [
-                "https://newrepo-frontend.vercel.app",
+                "https://institute-frontend-gamma.vercel.app",
                 "http://localhost:5173"
             ];
             if (!origin || allowedOrigins.includes(origin)) {
@@ -39,9 +39,16 @@ app.use(
 
 app.use(session({
     secret: "secret",
-    resave: false,
+    resave: true,
+    proxy: true,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 } // 1 day in milliseconds
+    cookie: {
+        secure:true,
+        httpOnly:true,
+        sameSite:'none',
+        maxAge: 24 * 60 * 60 * 1000,
+        path:'/'
+    } 
 }))
 
 app.use(passport.initialize())
@@ -90,7 +97,10 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
-
+app.use('/', (req, res) => {
+    res.send("hello i am aashish")
+}
+)
 app.use('/api/contact', contactRoutes)
 app.use('/api/mock', mockRoutes)
 app.use('/api/notice', noticeRoutes)
