@@ -97,10 +97,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
-app.use('/', (req, res) => {
-    res.send("hello i am aashish")
-}
-)
+
 app.use('/api/contact', contactRoutes)
 app.use('/api/mock', mockRoutes)
 app.use('/api/notice', noticeRoutes)
