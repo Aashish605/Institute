@@ -11,7 +11,7 @@ const Mock = () => {
 
     // Move getdata outside useEffect so it can be reused
     const getdata = async () => {
-        const data = await axios.get('http://localhost:4000/api/mock/get')
+        const data = await axios.get('https://institute-xi.vercel.app/api/mock/get')
         setweeklyResults(data.data)
     }
 
@@ -20,7 +20,7 @@ const Mock = () => {
     }, []);
 
     const deleteData = async (i) => {
-        await axios.post('http://localhost:4000/api/mock/delete', { id: i })
+        await axios.post('https://institute-xi.vercel.app/api/mock/delete', { id: i })
         getdata(); // Refresh data after delete
     }
 

@@ -12,7 +12,7 @@ const CourseModel = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('http://localhost:4000/api/course');
+                const res = await axios.get('https://institute-xi.vercel.app/api/course');
                 const found = res.data.find(item => item.title === model);
                 setCourse(found)
 

@@ -9,7 +9,7 @@ const Course = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('http://localhost:4000/api/course');
+                const res = await axios.get('https://institute-xi.vercel.app/api/course');
                 console.log(res.data);
 
                 setCourse(res.data)

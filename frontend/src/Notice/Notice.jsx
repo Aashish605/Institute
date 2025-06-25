@@ -13,7 +13,7 @@ const Notice = () => {
 
 
     const getdata = async () => {
-        const data = await axios.get('http://localhost:4000/api/notice/get')
+        const data = await axios.get('https://institute-xi.vercel.app/api/notice/get')
         setnotices(data.data)
     }
 
@@ -23,7 +23,7 @@ const Notice = () => {
 
 
     const deleteData = async (i) => {
-        await axios.post('http://localhost:4000/api/notice/delete', { id: i })
+        await axios.post('https://institute-xi.vercel.app/api/notice/delete', { id: i })
         getdata(); // Refresh data after delete
     }
 

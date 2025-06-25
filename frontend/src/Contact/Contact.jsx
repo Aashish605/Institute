@@ -36,7 +36,7 @@ const Contact = () => {
     const { register, handleSubmit, formState: { errors },reset } = useForm();
     const onSubmit = (data) => {
         try {
-            axios.post('http://localhost:4000/api/contact', data)
+            axios.post('https://institute-xi.vercel.app/api/contact', data)
             notifySuccess("Contact Submitted successfully");
             reset();
         } catch (error) {

@@ -59,7 +59,7 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:4000/auth/google/callback"
+        callbackURL: "https://institute-xi.vercel.app/auth/google/callback"
     }, async (accessToken, refreshToken, profile, done) => {
         try {
             const adminEmail = "ashishkhadka317@gmail.com"; // <-- Set your admin Gmail here

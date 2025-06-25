@@ -10,7 +10,7 @@ const NoticeModel = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('http://localhost:4000/api/notice/get');
+                const res = await axios.get('https://institute-xi.vercel.app/api/notice/get');
                 const found = res.data.find(item => item._id === model);
                 setnotice(found);
             } catch (error) {

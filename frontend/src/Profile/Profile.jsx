@@ -26,7 +26,7 @@ function Profile() {
         setLoading(true);
         try {
             const res = await axios.put(
-                'http://localhost:4000/auth/update',
+                'https://institute-xi.vercel.app/auth/update',
                 { name },
                 {
                     withCredentials: true,

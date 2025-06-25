@@ -13,7 +13,7 @@ const Verify = () => {
         const fetchReceipts = async () => {
             setLoading(true)
             try {
-                const res = await axios.get('http://localhost:4000/api/payment/receipts')
+                const res = await axios.get('https://institute-xi.vercel.app/api/payment/receipts')
                 const userReceipts = res.data.filter(r => r.userEmail === user?.email)
                 setReceipts(userReceipts)
             } catch (err) {
@@ -45,7 +45,7 @@ const Verify = () => {
     const handleVerify = async (id) => {
         setUpdating(id)
         try {
-            await axios.patch(`http://localhost:4000/api/payment/receipt/${id}`, { status: 'verified' })
+            await axios.patch(`https://institute-xi.vercel.app/api/payment/receipt/${id}`, { status: 'verified' })
             setReceipts(receipts =>
                 receipts.map(r => r._id === id ? { ...r, status: 'verified' } : r)
             )

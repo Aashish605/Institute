@@ -18,7 +18,7 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('http://localhost:4000/api/course');
+                const res = await axios.get('https://institute-xi.vercel.app/api/course');
                 setCourse(res.data)
             } catch (error) {
                 console.log(error);

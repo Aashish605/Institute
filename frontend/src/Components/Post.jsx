@@ -61,7 +61,7 @@ const Post = () => {
             const imgUrl = await uploadFile("image");
             data["Img"] = imgUrl
             console.log(data);
-            axios.post(`http://localhost:4000/api/${data.Section}/post`, data, {
+            axios.post(`https://institute-xi.vercel.app/api/${data.Section}/post`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

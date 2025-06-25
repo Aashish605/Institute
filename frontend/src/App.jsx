@@ -12,7 +12,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(setLoading(true));
-    fetch("http://localhost:4000/auth/user", {
+    fetch("https://institute-xi.vercel.app/auth/user", {
       credentials: "include",
     })
       .then(res => res.json())
