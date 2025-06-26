@@ -19,7 +19,8 @@ function Profile() {
         setname(logIn?.displayName || '');
     }, [logIn?.displayName]);
 
-    if (!logIn) return <div>Not logged in</div>;
+    if (!logIn) return <div className='min-h-[60vh] flex items-center justify-center text-4xl text-red-700 '>Not logged in</div>;
+    if (loading) return <div className='min-h-[60vh] flex items-center justify-center text-4xl text-green-700 '>Loading Your Data</div>;
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -55,7 +56,7 @@ function Profile() {
                 My Profile
             </h1>
             <img
-                src={logIn.photo || "/profile.jpg"}
+                src={ logIn.photo.trim() !== "" ? logIn.photo : "/profile.jpg"}
                 alt="Profile"
                 className="rounded-[50%] my-6"
             />

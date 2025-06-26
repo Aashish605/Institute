@@ -29,10 +29,10 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/contact' element={<Contact />} />
     <Route path='/course' element={<Course />} />
     <Route path='/course/:model' element={<CourseModel />} />
-    <Route path='/course/:model/enroll' element={<Enroll />} />
     <Route path='/mock/:model' element={<MockModel />} />
     <Route path='/notice/:model' element={<NoticeModel />} />
     <Route element={<RequireAuth />}>
+    <Route path='/course/:model/enroll' element={<Enroll />} />
       <Route path='/mock' element={<Mock />} />
       <Route path='/profile' element={<Profile />} />
     </Route>

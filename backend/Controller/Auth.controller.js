@@ -5,7 +5,7 @@ export const passportAuth = passport.authenticate('google', { scope: ['profile',
 export const callback = [
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
-        res.redirect("http://localhost:5173/profile");
+        res.redirect("https://institute-frontend-gamma.vercel.app/profile");
     }
 ];
 
