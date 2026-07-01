@@ -13,8 +13,15 @@ export const postNotice = async (req, res) => {
 
 export const getNotice = async (req, res) => {
     try {
-        const data = await Notice.findAll()
-        return res.json(data);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 100;
+        const offset = (page - 1) * limit;
+        const { rows, count } = await Notice.findAndCountAll({
+            order: [['createdAt', 'DESC']],
+            limit,
+            offset
+        });
+        return res.json({ rows, count, page, totalPages: Math.ceil(count / limit) });
     } catch (error) {
         console.error("Error during getting the data", error)
         return res.status(500).json({ msg: "Error getting data" })
