@@ -26,7 +26,9 @@ export const submitReceipt = async (req, res) => {
 // Optional: Admin can get all receipts
 export const getAllReceipts = async (req, res) => {
     try {
-        const receipts = await PaymentReceipt.findAll({ order: [['createdAt', 'DESC']] });
+        const where = {};
+        if (req.query.email) where.userEmail = req.query.email;
+        const receipts = await PaymentReceipt.findAll({ where, order: [['createdAt', 'DESC']] });
         res.json(receipts);
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });

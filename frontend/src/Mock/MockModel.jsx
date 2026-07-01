@@ -10,9 +10,8 @@ const MockModel = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await api.get('/api/mock/get');
-                const found = res.data.find(item => item._id === model);
-                setMock(found);
+                const res = await api.get(`/api/mock/get/${model}`);
+                setMock(res.data);
             } catch (error) {
                 setMock(null);
                 console.log(error);

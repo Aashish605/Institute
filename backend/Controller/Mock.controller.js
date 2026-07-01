@@ -20,6 +20,17 @@ export const getMock = async (req, res) => {
     }
 }
 
+export const getMockById = async (req, res) => {
+    try {
+        const data = await Mock.findByPk(req.params.id);
+        if (!data) return res.status(404).json({ msg: "Not found" });
+        return res.json(data);
+    } catch (error) {
+        console.error("Error during getting the data", error)
+        return res.status(500).json({ msg: "Error getting data" })
+    }
+}
+
 export const deleteMock = async (req,res) => {
     console.log(req.body.id);
     try {

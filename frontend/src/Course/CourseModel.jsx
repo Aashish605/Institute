@@ -12,10 +12,8 @@ const CourseModel = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await api.get('/api/course');
-                const found = res.data.find(item => item.title === model);
-                setCourse(found)
-
+                const res = await api.get(`/api/course/${encodeURIComponent(model)}`);
+                setCourse(res.data)
             } catch (error) {
                 setCourse(null);
                 console.log(error);

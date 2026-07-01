@@ -10,9 +10,8 @@ const NoticeModel = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await api.get('/api/notice/get');
-                const found = res.data.find(item => item._id === model);
-                setnotice(found);
+                const res = await api.get(`/api/notice/get/${model}`);
+                setnotice(res.data);
             } catch (error) {
                 setnotice(null);
                 console.log(error);

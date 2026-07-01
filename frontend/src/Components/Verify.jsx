@@ -13,9 +13,8 @@ const Verify = () => {
         const fetchReceipts = async () => {
             setLoading(true)
             try {
-                const res = await api.get('/api/payment/receipts')
-                const userReceipts = res.data.filter(r => r.userEmail === user?.email)
-                setReceipts(userReceipts)
+                const res = await api.get(`/api/payment/receipts?email=${encodeURIComponent(user.email)}`)
+                setReceipts(res.data)
             } catch (err) {
                 setReceipts([])
                 console.log(err);
@@ -47,7 +46,7 @@ const Verify = () => {
         try {
             await api.patch(`/api/payment/receipt/${id}`, { status: 'verified' })
             setReceipts(receipts =>
-                receipts.map(r => r._id === id ? { ...r, status: 'verified' } : r)
+                receipts.map(r => r.id === id ? { ...r, status: 'verified' } : r)
             )
         } catch (err) {
             alert("Failed to update status.")
@@ -95,7 +94,7 @@ const Verify = () => {
                     <div className="space-y-8">
                         {filteredReceipts.map(r => (
                             <div
-                                key={r._id}
+                                key={r.id}
                                 className="bg-white border border-gray-100 rounded-2xl shadow-md flex flex-col md:flex-row gap-6 items-center p-6 hover:shadow-lg transition"
                             >
                                 <img
@@ -134,10 +133,10 @@ const Verify = () => {
                                         {filter === 'pending' && (
                                             <button
                                                 className="ml-4 px-4 py-1 rounded bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition"
-                                                disabled={updating === r._id}
-                                                onClick={() => handleVerify(r._id)}
+                                                disabled={updating === r.id}
+                                                onClick={() => handleVerify(r.id)}
                                             >
-                                                {updating === r._id ? "Verifying..." : "Mark as Verified"}
+                                                {updating === r.id ? "Verifying..." : "Mark as Verified"}
                                             </button>
                                         )}
                                     </div>
