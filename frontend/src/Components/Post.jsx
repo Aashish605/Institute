@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import api from "../config/api";
+import { PAYMENTS } from "../config/site";
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -40,12 +42,12 @@ const Post = () => {
     const uploadFile = async (type) => {
         const data = new FormData();
         data.append("file", img);
-        data.append("upload_preset", "image_preset");
+        data.append("upload_preset", PAYMENTS.cloudinary.uploadPreset);
         try {
-            const cloudName = "drsfbaluf";
+            const cloudName = PAYMENTS.cloudinary.cloudName;
             const resourceType = "image";
-            const api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
-            const res = await axios.post(api, data);
+            const apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+            const res = await axios.post(apiUrl, data);
             const { secure_url } = res.data;
             return secure_url;
         } catch (error) {
@@ -61,11 +63,7 @@ const Post = () => {
             const imgUrl = await uploadFile("image");
             data["Img"] = imgUrl
             console.log(data);
-            axios.post(`https://institute-xi.vercel.app/api/${data.Section}/post`, data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
+            api.post(`/api/${data.Section}/post`, data)
             notifySuccess("Data Submitted successfully");
             setupload(false)
             setImg(null);

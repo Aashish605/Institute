@@ -1,4 +1,4 @@
-import PaymentReceipt from '../Model/PaymentReceipt.model.js';
+import { PaymentReceipt, Course } from '../Model/index.js';
 
 export const submitReceipt = async (req, res) => {
     try {
@@ -6,15 +6,17 @@ export const submitReceipt = async (req, res) => {
         if ( !receipt || !course || !userName || !userEmail) {
             return res.status(400).json({ message: "Missing required fields" });
         }
-        const payment = new PaymentReceipt({
+        const courseMatch = await Course.findOne({ where: { title: course } });
+        const payment = await PaymentReceipt.create({
             reference,
             receipt,
             notes,
             course,
             userName,
-            userEmail
+            userEmail,
+            userId: req.user?.id || null,
+            courseId: courseMatch?.id || null,
         });
-        await payment.save();
         res.status(201).json({ message: "Payment receipt submitted", payment });
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
@@ -24,7 +26,7 @@ export const submitReceipt = async (req, res) => {
 // Optional: Admin can get all receipts
 export const getAllReceipts = async (req, res) => {
     try {
-        const receipts = await PaymentReceipt.find().sort({ createdAt: -1 });
+        const receipts = await PaymentReceipt.findAll({ order: [['createdAt', 'DESC']] });
         res.json(receipts);
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });

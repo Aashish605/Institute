@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { clearUser, setUser } from '../Redux/Auth/AuthSlice'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../config/api'
 
 function Profile() {
 
@@ -26,16 +26,7 @@ function Profile() {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.put(
-                'https://institute-xi.vercel.app/auth/update',
-                { name },
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
+            const res = await api.put('/auth/update', { name });
             const data = res.data;
             if (data.user) {
                 dispatch(setUser(data.user));

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
-import axios from "axios";
+import api from "../config/api";
 import { NavLink } from 'react-router-dom'
 import "swiper/css";
 import { Navigation, Pagination } from "swiper/modules";
@@ -18,7 +18,7 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('https://institute-xi.vercel.app/api/course');
+                const res = await api.get('/api/course');
                 setCourse(res.data)
             } catch (error) {
                 console.log(error);
@@ -69,7 +69,7 @@ const Home = () => {
                     <div className=" mx-auto flex flex-col md:flex-row items-center p-8 gap-10 ">
                         <div className="md:w-1/2 space-y-6 ">
                             <h1 className="text-5xl max-sm:text-4xl font-bold">Empowering Learning for <p className="text-primary inline">Everyone</p></h1>
-                            <p className="">Join Neo Bridge where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.</p>
+                            <p className="">Join Mirror where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.</p>
                         </div>
                         <div className="md:w-1/2 max-sm:w-[95vw]  flex items-center  justify-center overflow-hidden">
                             <img onClick={() => {
@@ -115,7 +115,7 @@ const Home = () => {
                         <div className="md:w-2/3">
                             <h2 className="text-3xl font-bold mb-2">Run your Ad's here!</h2>
                             <p className="mb-4">
-                                Promote your educational services, products, or events to a highly engaged audience of learners and educators. Contact us to feature your advertisement on Neo Bridge.
+                                Promote your educational services, products, or events to a highly engaged audience of learners and educators. Contact us to feature your advertisement on Mirror.
                             </p>
                             <NavLink to={'/contact'} className="inline-block px-6 py-2 bg-white text-secondary font-semibold rounded-md shadow hover:bg-gray-100 transition">
                                 Contact Us
@@ -134,7 +134,7 @@ const Home = () => {
                 {/* Features */}
                 < section className="bg-white  max-w-[85vw] mx-auto my-[10vh] " >
                     <h1 className="text-5xl text-center font-semibold ">Unlock Your Potential with</h1>
-                    <h1 className="text-5xl text-center font-semibold text-secondary ">Neo Bridge</h1>
+                    <h1 className="text-5xl text-center font-semibold text-secondary ">Mirror</h1>
                     <div className="container mx-auto grid  gap-8 my-16  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 jus ">
                         {[
                             { title: "Engaging Hybrid Learning Experiences", icon: "Home/Learning.png", feature: "Experience a perfect blend of live sessions and recorded classes delivered by top professionals tailored to meet your needs." },

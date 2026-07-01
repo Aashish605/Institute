@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
+import api from '../config/api'
+import { PAYMENTS } from '../config/site';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'; // <-- Add this
 
@@ -17,33 +19,32 @@ const Enroll = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
 
-    // Add your Cloudinary config
-    const CLOUDINARY_UPLOAD_PRESET = "image_preset"; // replace with your preset
-    const CLOUDINARY_CLOUD_NAME = "drsfbaluf"; // replace with your cloud name
+    const CLOUDINARY_UPLOAD_PRESET = PAYMENTS.cloudinary.uploadPreset
+    const CLOUDINARY_CLOUD_NAME = PAYMENTS.cloudinary.cloudName
 
     const uploadReceiptToCloudinary = async (file) => {
         const data = new FormData();
         data.append("file", file);
         data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
         try {
-            const api = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-            const res = await axios.post(api, data);
+            const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+            const res = await axios.post(cloudinaryUrl, data);
             return res.data.secure_url;
         } catch (error) {
-            throw new Error("Failed to upload receipt image.",error);
+            throw new Error("Failed to upload receipt image.", error);
         }
     };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('https://institute-xi.vercel.app/api/course');
+                const res = await api.get('/api/course');
                 const found = res.data.find(item => item.title === model);
                 setCourse(found)
             } catch (error) {
                 setCourse(null);
                 console.log(error);
-                
+
             }
         };
         fetchData();
@@ -76,9 +77,9 @@ const Enroll = () => {
                 userName: user?.displayName || user?.name || "",
                 userEmail: user?.email || "",
             };
-console.log(payload);
+            console.log(payload);
 
-            await axios.post('https://institute-xi.vercel.app/api/payment/receipt', payload, {
+            await api.post('/api/payment/receipt', payload, {
                 headers: { 'Content-Type': 'application/json' }
             });
 
@@ -88,7 +89,7 @@ console.log(payload);
             setNotes('');
         } catch (err) {
             setError('Submission failed. Please try again.');
-            console.log(err);   
+            console.log(err);
         }
         setSubmitting(false);
     };
@@ -163,7 +164,7 @@ console.log(payload);
                                 </div>
                                 <div className="mb-2">
                                     <span className="font-bold">Account Name: </span>
-                                    Neo bridge
+                                    Mirror
                                 </div>
                                 <div>
                                     <span className="font-bold">Account Number: </span>
@@ -174,7 +175,7 @@ console.log(payload);
                             <div className="bg-gray-50 rounded-xl p-6 flex flex-col items-center">
                                 <h2 className="text-lg font-semibold mb-4">Scan to Pay</h2>
                                 <img src="/logo.png" alt="QR Code" className="w-40 h-40 mb-2 object-center " />
-                                <div className="font-semibold">Neo Bridge</div>
+                                <div className="font-semibold">Mirror</div>
                                 <div className="text-gray-500 text-sm mt-2 text-center">Scan this QR code with your banking app</div>
                             </div>
                         </div>

@@ -1,8 +1,8 @@
-import Course from '../Model/Course.model.js'
+import { Course } from '../Model/index.js'
 
 export const getCourse = async (req, res) => {
     try {
-        const data = await Course.find()
+        const data = await Course.findAll()
         return res.json(data);
     } catch (error) {
         console.error("Error during getting the data", error)

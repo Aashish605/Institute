@@ -12,7 +12,7 @@ const About = () => {
                     }}
                 ></div>
                 <div className='text-white relative top-[-80%] max-sm:top-[-95%] px-16 max-sm:px-3 '>
-                    <span className='my-4 font-bold text-4xl max-sm:text-3xl '>About Neo Bridge</span>
+                    <span className='my-4 font-bold text-4xl max-sm:text-3xl '>About Mirror</span>
                     <p className='text-xl'>Building a strong foundation for  your future</p>
                 </div>
             </div>
@@ -20,7 +20,7 @@ const About = () => {
             <section className="mb-12 ">
                 <span className="text-3xl font-bold mb-12 underline underline-offset-[10px] decoration-secondary ">About Us</span>
                 <p className="my-6">
-                    <span className='font-semibold inline'>Neo Bridge</span> Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.
+                    <span className='font-semibold inline'>Mirror</span> Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.
                 </p>
                 <p>
                     Our approach combines <span className='font-semibold inline'> expert-led teaching, data-driven performance analytics,</span>  and a strong mentorship-driven community to give students the clarity, confidence, and competence they need to excel.
@@ -31,7 +31,7 @@ const About = () => {
             <section className="mb-12  ">
                 <h2 className="text-3xl font-bold mb-4 underline underline-offset-[10px] decoration-secondary ">Introduction</h2>
                 <p className="mb-4">
-                    At <span className='font-semibold inline'>Neo Bridge Academy</span>, we believe that every student has the potential to excel — with the right guidance, strategy, and environment. That's why we offer a comprehensive, student-focused approach to entrance exam preparation, available both online and offline. Here's what sets us apart:
+                    At <span className='font-semibold inline'>Mirror Academy</span>, we believe that every student has the potential to excel — with the right guidance, strategy, and environment. That's why we offer a comprehensive, student-focused approach to entrance exam preparation, available both online and offline. Here's what sets us apart:
                 </p>
                 <ul className="list-disc pl-10 mb-4 space-y-2">
                     <li><span className='font-semibold inline'>Focused Entrance Preparation</span> with a strong emphasis on conceptual clarity and foundational understanding</li>
@@ -41,7 +41,7 @@ const About = () => {
                     <li><span className='font-semibold inline'>Personalized support, flexible learning modes,</span> and a vibrant, motivating student community</li>
                 </ul>
                 <p>
-                    At  <span className='font-semibold inline'>Neo Bridge Academy</span>, we don't just prepare you for exams — we help you unlock your full academic potential.
+                    At  <span className='font-semibold inline'>Mirror Academy</span>, we don't just prepare you for exams — we help you unlock your full academic potential.
                 </p>
             </section>
 
@@ -83,15 +83,15 @@ const About = () => {
                 </section>
             </div >
 
-            {/* Neo BridgeFamily Message */}
+            {/* MirrorFamily Message */}
             <section className="mb-12 h-fit rounded-2xl shadow-md overflow-hidden  flex items-center bg-secondary max-[1130px]:bg-white justify-center gap-7 max-[1130px]:flex-col ">
                 <div className=' flex flex-col items-center justify-center py-6 bg-secondary max-[1130px]:w-full w-1/3 h-full   '>
                     <img src="About/person.png" alt="" className='' />
-                    <span className='text-2xl text-white font-bold text-center'>Message From <br /> Neo Bridge Family </span>
+                    <span className='text-2xl text-white font-bold text-center'>Message From <br /> Mirror Family </span>
                 </div>
                 <div className=' w-2/3 max-[1130px]:w-full max-[1130px]:px-4 max-[1130px]:py-6 py-12 px-6 bg-white'>
                     <p className="mb-4">
-                        Dear prospective students/Guardians, we take great delight in extending a warm welcome to you all at Neo BridgeAcademy—founded by the front-liner faculties of engineering entrance and graduates of Pulchowk Campus. Choosing Neo Bridgeguarantees you for making your future bright ahead.
+                        Dear prospective students/Guardians, we take great delight in extending a warm welcome to you all at MirrorAcademy—founded by the front-liner faculties of engineering entrance and graduates of Pulchowk Campus. Choosing Mirrorguarantees you for making your future bright ahead.
                     </p>
                     <p className="mb-4">
                         Our only goal is to support our students academically and maximise their outputs in the competitive examination. We will make our every effort count in paving the excellent way for engineering aspirants towards their dream.
@@ -100,19 +100,19 @@ const About = () => {
                         Our prime location Kathmandu Valley, Maitighar, is easily accessible from different corners of the valley. We are equipped with adequate infrastructure, quality books and qualified instructors to enforce excellent accomplishments. Together we can grow and create an impact in the field of engineering.
                     </p>
                     <p className="mb-4">
-                        Finally, we assume Neo Bridgeshall be considered as a place where your talent is furnished and you shall prepare yourself for a rewarding career in your interested field of engineering/IT and eventually to be a morally honoured and cultured citizen.
+                        Finally, we assume Mirrorshall be considered as a place where your talent is furnished and you shall prepare yourself for a rewarding career in your interested field of engineering/IT and eventually to be a morally honoured and cultured citizen.
                     </p>
                     <p>
                         Wishing you all the best and hoping for your gracious visit.<br />
                         Thank you all.<br />
-                        - Neo Bridge Family
+                        - Mirror Family
                     </p>
                 </div>
             </section>
 
             {/* Contact Section */}
             <section className="mb-[10vh] flex items-center flex-col">
-                <h2 className="text-3xl font-bold text-center mb-6">Ready to start your journey with Neo Bridge Academy?</h2>
+                <h2 className="text-3xl font-bold text-center mb-6">Ready to start your journey with Mirror Academy?</h2>
                 <NavLink to={'/contact'} className='mx-auto border-2 cursor-pointer border-secondary text-secondary px-6  py-3 rounded-md'>Contact Us</NavLink>
             </section>
         </div>

@@ -1,14 +1,16 @@
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../Db/db.js';
 
-const PaymentReceiptSchema = new mongoose.Schema({
-    reference: { type: String },
-    receipt: { type: String, required: true }, // Cloudinary URL
-    notes: { type: String },
-    course: { type: String, required: true },
-    userName: { type: String, required: true },
-    userEmail: { type: String, required: true },
-    status: { type: String, default: "pending" } // for admin verification
-}, { timestamps: true });
+const PaymentReceipt = sequelize.define('PaymentReceipt', {
+    reference: { type: DataTypes.STRING },
+    receipt: { type: DataTypes.STRING, allowNull: false },
+    notes: { type: DataTypes.TEXT },
+    course: { type: DataTypes.STRING, allowNull: false },
+    userName: { type: DataTypes.STRING, allowNull: false },
+    userEmail: { type: DataTypes.STRING, allowNull: false },
+    status: { type: DataTypes.STRING, defaultValue: 'pending' },
+}, {
+    timestamps: true,
+});
 
-const PaymentReceipt = mongoose.model('PaymentReceipt', PaymentReceiptSchema);
 export default PaymentReceipt;

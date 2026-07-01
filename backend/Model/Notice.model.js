@@ -1,24 +1,12 @@
-import mongoose from 'mongoose'
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../Db/db.js';
 
-const NoticeSchema = new mongoose.Schema({
-    Title: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    Description: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    Img:{
-        type:String,
-        required:true,
-        trim:true
-    }
+const Notice = sequelize.define('Notice', {
+    Title: { type: DataTypes.STRING, allowNull: false },
+    Description: { type: DataTypes.TEXT, allowNull: false },
+    Img: { type: DataTypes.STRING, allowNull: false },
 }, {
     timestamps: true,
 });
 
-const Notice = mongoose.model('Notice', NoticeSchema);
 export default Notice;

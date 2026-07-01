@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../config/api'
 import { useSelector } from 'react-redux'
 
 const Verify = () => {
@@ -13,7 +13,7 @@ const Verify = () => {
         const fetchReceipts = async () => {
             setLoading(true)
             try {
-                const res = await axios.get('https://institute-xi.vercel.app/api/payment/receipts')
+                const res = await api.get('/api/payment/receipts')
                 const userReceipts = res.data.filter(r => r.userEmail === user?.email)
                 setReceipts(userReceipts)
             } catch (err) {
@@ -45,7 +45,7 @@ const Verify = () => {
     const handleVerify = async (id) => {
         setUpdating(id)
         try {
-            await axios.patch(`https://institute-xi.vercel.app/api/payment/receipt/${id}`, { status: 'verified' })
+            await api.patch(`/api/payment/receipt/${id}`, { status: 'verified' })
             setReceipts(receipts =>
                 receipts.map(r => r._id === id ? { ...r, status: 'verified' } : r)
             )

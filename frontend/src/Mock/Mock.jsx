@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from '../config/api'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux'
@@ -11,7 +11,7 @@ const Mock = () => {
 
     // Move getdata outside useEffect so it can be reused
     const getdata = async () => {
-        const data = await axios.get('https://institute-xi.vercel.app/api/mock/get')
+        const data = await api.get('/api/mock/get')
         setweeklyResults(data.data)
     }
 
@@ -20,7 +20,7 @@ const Mock = () => {
     }, []);
 
     const deleteData = async (i) => {
-        await axios.post('https://institute-xi.vercel.app/api/mock/delete', { id: i })
+        await api.post('/api/mock/delete', { id: i })
         getdata(); // Refresh data after delete
     }
 

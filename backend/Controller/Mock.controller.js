@@ -1,15 +1,9 @@
-import Mock from '../Model/Mock.model.js'
+import { Mock } from '../Model/index.js'
 
 export const postMock = async (req, res) => {
     let { Title, Week, Description, Img } = req.body;
     try {
-        const data = new Mock({
-            Title,
-            Week,
-            Description,
-            Img
-        })
-        await data.save();
+        await Mock.create({ Title, Week, Description, Img });
     } catch (error) {
         console.error("Error during saving the data", error)
         return res.status(500).json({ msg: "Error saving data" })
@@ -18,7 +12,7 @@ export const postMock = async (req, res) => {
 
 export const getMock = async (req, res) => {
     try {
-        const data = await Mock.find()
+        const data = await Mock.findAll()
         return res.json(data);
     } catch (error) {
         console.error("Error during getting the data", error)
@@ -29,7 +23,7 @@ export const getMock = async (req, res) => {
 export const deleteMock = async (req,res) => {
     console.log(req.body.id);
     try {
-        const remove = await Mock.deleteOne({ _id: req.body.id });
+        const remove = await Mock.destroy({ where: { id: req.body.id } });
         return res.json(remove)
     } catch (error) {
         console.error("Error deleting the data", error)

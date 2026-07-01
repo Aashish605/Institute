@@ -1,6 +1,6 @@
 import express from "express";
 import cors from 'cors';
-import ConnectDB from './Db/db.js'
+import { connectDB, sequelize } from './Db/db.js'
 import dotenv from 'dotenv'
 dotenv.config()
 import passport, { Passport } from 'passport'
@@ -10,7 +10,7 @@ import contactRoutes from './Routes/Contact.route.js'
 import mockRoutes from './Routes/Mock.route.js'
 import noticeRoutes from './Routes/Notice.route.js'
 import courseRoutes from './Routes/Course.route.js'
-import User from './Model/User.model.js';
+import { User } from './Model/index.js';
 import authRoutes from './Routes/Auth.route.js'
 import paymentReceiptRoutes from './Routes/PaymentReceipt.route.js';
 
@@ -43,11 +43,11 @@ app.use(session({
     proxy: true,
     saveUninitialized: true,
     cookie: {
-        secure:true,
-        httpOnly:true,
-        sameSite:'none',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000,
-        path:'/'
+        path: '/',
     } 
 }))
 
@@ -59,11 +59,11 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "https://institute-xi.vercel.app/auth/google/callback"
+        callbackURL: process.env.GOOGLE_CALLBACK_URL || "https://institute-xi.vercel.app/auth/google/callback"
     }, async (accessToken, refreshToken, profile, done) => {
         try {
             const adminEmail = "ashishkhadka317@gmail.com"; // <-- Set your admin Gmail here
-            let user = await User.findOne({ googleId: profile.id });
+            let user = await User.findOne({ where: { googleId: profile.id } });
             if (!user) {
                 user = await User.create({
                     googleId: profile.id,
@@ -89,7 +89,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await User.findById(id);
+        const user = await User.findByPk(id);
         done(null, user);
     } catch (err) {
         done(err, null);
@@ -108,7 +108,7 @@ app.use('/api/payment', paymentReceiptRoutes)
 
 const startServer = async () => {
     try {
-        await ConnectDB();
+        await connectDB();
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);

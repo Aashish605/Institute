@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../config/api';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ const MockModel = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('https://institute-xi.vercel.app/api/mock/get');
+                const res = await api.get('/api/mock/get');
                 const found = res.data.find(item => item._id === model);
                 setMock(found);
             } catch (error) {

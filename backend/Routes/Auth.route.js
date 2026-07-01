@@ -1,5 +1,5 @@
 import express from 'express';
-import User from '../Model/User.model.js';
+import { User } from '../Model/index.js';
 
 const router = express.Router();
 import { passportAuth, callback, getuser, logout } from '../Controller/Auth.controller.js'
@@ -15,17 +15,12 @@ router.put('/update', async (req, res) => {
         
         return res.status(401).json({ message: 'Not authenticated' });
     }
-    const { name } = req.body;
+    const { name, contact } = req.body;
     try {
-        const user = await User.findByIdAndUpdate(
-
-            req.user._id,
-            {
-                displayName: name,
-                contact : Number,
-            },
-            { new: true }
-        );
+        const updateData = { displayName: name };
+        if (contact) updateData.contact = contact;
+        await User.update(updateData, { where: { id: req.user.id } });
+        const user = await User.findByPk(req.user.id);
         res.json({ user });
     } catch (err) {
         res.status(500).json({ message: 'Update failed' });

@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios'
+import api from '../config/api'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify';
 
@@ -36,7 +36,7 @@ const Contact = () => {
     const { register, handleSubmit, formState: { errors },reset } = useForm();
     const onSubmit = (data) => {
         try {
-            axios.post('https://institute-xi.vercel.app/api/contact', data)
+            api.post('/api/contact', data)
             notifySuccess("Contact Submitted successfully");
             reset();
         } catch (error) {

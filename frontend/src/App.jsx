@@ -6,19 +6,17 @@ import Whatsapp from './Components/Whatsapp'
 import ScrollToTop from './Components/ScrollToTop'
 import { useDispatch } from 'react-redux'
 import { setUser, clearUser, setLoading } from './Redux/Auth/AuthSlice'
+import api from './config/api'
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setLoading(true));
-    fetch("https://institute-xi.vercel.app/auth/user", {
-      credentials: "include",
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.user) {
-          dispatch(setUser(data.user));
+    api.get("/auth/user")
+      .then(res => {
+        if (res.data.user) {
+          dispatch(setUser(res.data.user));
         } else {
           dispatch(clearUser());
         }

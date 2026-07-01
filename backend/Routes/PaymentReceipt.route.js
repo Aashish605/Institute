@@ -1,4 +1,4 @@
-import PaymentReceipt from '../Model/PaymentReceipt.model.js';
+import { PaymentReceipt } from '../Model/index.js';
 import express from 'express';
 import { submitReceipt, getAllReceipts } from '../Controller/PaymentReceipt.controller.js';
 
@@ -8,11 +8,11 @@ router.post('/receipt', submitReceipt);
 router.get('/receipts', getAllReceipts); // Optional: for admin
 router.patch('/receipt/:id', async (req, res) => {
     try {
-        const updated = await PaymentReceipt.findByIdAndUpdate(
-            req.params.id,
+        await PaymentReceipt.update(
             { status: req.body.status },
-            { new: true }
+            { where: { id: req.params.id } }
         );
+        const updated = await PaymentReceipt.findByPk(req.params.id);
         res.json(updated);
     } catch (err) {
         res.status(500).json({ message: "Failed to update status" });

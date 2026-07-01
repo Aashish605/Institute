@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa"; 
+import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 
 
 const Footer = () => {
@@ -11,7 +11,7 @@ const Footer = () => {
                     <div className="w-full  sm:w-[30%]">
                         <p className="text-xl max-[550px]:pt-8">About Us</p>
                         <p className="mt-3 text-wrap  ">
-                            Neo Bridge is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. We exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.
+                            Mirror is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. We exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.
                         </p>
                     </div>
 
@@ -46,13 +46,13 @@ const Footer = () => {
 
                 <div className="mx-10 py-10 flex flex-wrap items-center justify-center gap-4 text-[0.9rem] ">
                     <li className=" list-none">
-                        &copy;2025, <NavLink className="">Neo Bridge</NavLink>
+                        &copy;2025, <NavLink className="">Mirror</NavLink>
                     </li>
                     <li>
                         <NavLink className="w-fit ">ALl Right Reserved</NavLink>
                     </li>
                     <li>
-                        <NavLink to='https://www.facebook.com/aashish.khadka.37625' className="w-fit text-white  hover:underline hover:underline-offset-4">Website Developed By <p  className='inline'>Ashish Khadka</p></NavLink>
+                        <NavLink to='https://www.facebook.com/aashish.khadka.37625' className="w-fit text-white  hover:underline hover:underline-offset-4">Website Developed By <p className='inline'>Ashish Khadka</p></NavLink>
                     </li>
                 </div>
             </div>

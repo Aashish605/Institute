@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import axios from "axios";
+import api from "../config/api";
 import React, { useEffect, useState } from 'react';
 
 const Course = () => {
@@ -9,7 +9,7 @@ const Course = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('https://institute-xi.vercel.app/api/course');
+                const res = await api.get('/api/course');
                 console.log(res.data);
 
                 setCourse(res.data)

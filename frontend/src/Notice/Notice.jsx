@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from '../config/api'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux'
@@ -13,7 +13,7 @@ const Notice = () => {
 
 
     const getdata = async () => {
-        const data = await axios.get('https://institute-xi.vercel.app/api/notice/get')
+        const data = await api.get('/api/notice/get')
         setnotices(data.data)
     }
 
@@ -23,7 +23,7 @@ const Notice = () => {
 
 
     const deleteData = async (i) => {
-        await axios.post('https://institute-xi.vercel.app/api/notice/delete', { id: i })
+        await api.post('/api/notice/delete', { id: i })
         getdata(); // Refresh data after delete
     }
 
