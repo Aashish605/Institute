@@ -80,7 +80,7 @@ function Profile() {
                     </button>
                 </form>
             }
-            <button onClick={() => dispatch(clearUser())} className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
+            <button onClick={() => { api.get('/auth/logout').finally(() => dispatch(clearUser())) }} className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
                 Log Out
             </button>
         </div>

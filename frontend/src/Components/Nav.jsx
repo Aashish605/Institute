@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleSidebar, closeSidebar } from '../Redux/Sidebar/Sidebarslice'
 import { clearUser } from '../Redux/Auth/AuthSlice'
+import api from '../config/api'
 import { useEffect, useState } from "react";
 
 export default function Nav() {
@@ -9,7 +10,6 @@ export default function Nav() {
     const select = useSelector((state) => state.Sidebar.isSidebarOpen);
     const logIn = useSelector((state) => state.auth.user)
     const isAdmin = logIn?.isAdmin;
-    console.log(logIn);
 
     const [dropdown, setDropdown] = useState(false)
 
@@ -215,7 +215,7 @@ export default function Nav() {
                                         to='/profile'>
                                         <span className="line-clamp-1 text-left">Profile</span>
                                     </NavLink>
-                                    <NavLink onClick={() => { dispatch(clearUser()) }} className='my-2 flex-col flex items-start px-8  justify-center'>
+                                    <NavLink onClick={() => { api.get('/auth/logout').finally(() => dispatch(clearUser())) }} className='my-2 flex-col flex items-start px-8  justify-center'>
                                         <span className="line-clamp-1 text-left ">Log Out</span>
                                     </NavLink>
                                 </div>

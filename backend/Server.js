@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 import passport, { Passport } from 'passport'
 import session from 'express-session'
+import pgStore from 'connect-pg-simple'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import contactRoutes from './Routes/Contact.route.js'
 import mockRoutes from './Routes/Mock.route.js'
@@ -37,18 +38,23 @@ app.use(
     })
 );
 
+const PostgreSQLStore = pgStore(session)
+
 app.use(session({
-    secret: "secret",
-    resave: true,
+    store: new PostgreSQLStore({
+        conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}`,
+    }),
+    secret: process.env.SESSION_SECRET || "fallback-secret",
+    resave: false,
     proxy: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000,
         path: '/',
-    } 
+    }
 }))
 
 app.use(passport.initialize())
@@ -84,7 +90,7 @@ passport.use(
 )
 
 passport.serializeUser((user, done) => {
-    done(null, user.id); // Use MongoDB _id
+    done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
