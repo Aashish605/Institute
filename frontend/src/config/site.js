@@ -19,7 +19,7 @@ export const THEME = {
 };
 
 export const API = {
-  baseURL: import.meta.env.VITE_API_URL || 'https://institute-xi.vercel.app',
+  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://institute-xi.vercel.app' : ''),
 };
 
 export const HERO = {
