@@ -5,7 +5,12 @@ import { dirname, resolve } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-dotenv.config({ path: resolve(__dirname, '..', '.env') });
+const result = dotenv.config({ path: resolve(__dirname, '..', '.env') });
+if (result.error) {
+    console.error('Failed to load .env file:', result.error.message);
+} else {
+    console.log('DB config loaded — host:', process.env.DB_HOST, '| port:', process.env.DB_PORT, '| name:', process.env.DB_NAME);
+}
 
 
 

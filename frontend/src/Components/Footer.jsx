@@ -46,7 +46,7 @@ const Footer = () => {
 
                 <div className="mx-10 py-10 flex flex-wrap items-center justify-center gap-4 text-[0.9rem] ">
                     <li className=" list-none">
-                        &copy;2025, <NavLink className="">Mirror</NavLink>
+                        &copy;{new Date().getFullYear()}, <NavLink className="">Mirror</NavLink>
                     </li>
                     <li>
                         <NavLink className="w-fit ">ALl Right Reserved</NavLink>

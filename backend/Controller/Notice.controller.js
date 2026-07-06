@@ -3,7 +3,8 @@ import { Notice } from '../Model/index.js'
 export const postNotice = async (req, res) => {
     let { Title, Description, Img } = req.body;
     try {
-        await Notice.create({ Title, Description, Img });
+        const notice = await Notice.create({ Title, Description, Img });
+        return res.status(201).json(notice);
     } catch (error) {
         console.error("Error during saving the data", error)
         return res.status(500).json({ msg: "Error saving data" })
