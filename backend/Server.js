@@ -14,6 +14,7 @@ import courseRoutes from './Routes/Course.route.js'
 import { User } from './Model/index.js';
 import authRoutes from './Routes/Auth.route.js'
 import paymentReceiptRoutes from './Routes/PaymentReceipt.route.js';
+import contentRoutes from './Routes/Content.route.js';
 
 const app = express()
 app.use(express.json())
@@ -23,7 +24,8 @@ app.use(
         origin: (origin, callback) => {
             const allowedOrigins = [
                 "https://institute-frontend-gamma.vercel.app",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "http://localhost:5174"
             ];
             if (!origin || allowedOrigins.includes(origin)) {
                 callback(null, true);
@@ -110,6 +112,7 @@ app.use('/api/notice', noticeRoutes)
 app.use('/api/course', courseRoutes)
 app.use("/auth", authRoutes)
 app.use('/api/payment', paymentReceiptRoutes)
+app.use('/api/content', contentRoutes)
 
 
 const startServer = async () => {

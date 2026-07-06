@@ -1,5 +1,5 @@
 import { sequelize } from './Db/db.js'
-import { Course, Notice, Mock } from './Model/index.js'
+import { Course, Notice, Mock, ContentBlock } from './Model/index.js'
 
 const seed = async () => {
   try {
@@ -156,6 +156,45 @@ const seed = async () => {
       await Mock.create(mock)
     }
     console.log(`Seeded ${mocks.length} mock results`)
+
+    // --- Content Blocks ---
+    const contentBlocks = [
+        { key: 'hero_heading', value: 'Empowering Learning for' },
+        { key: 'hero_headingHighlight', value: 'Everyone' },
+        { key: 'hero_subtitle', value: 'Join Mirror where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.' },
+        { key: 'hero_image', value: 'Home/Interview.png' },
+        { key: 'hero_cta', value: 'Join Mirror Today!' },
+        { key: 'about_aboutUs_heading', value: 'About Us' },
+        { key: 'about_aboutUs_text', value: 'Mirror Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.' },
+        { key: 'about_introduction_heading', value: 'Introduction' },
+        { key: 'about_whyChooseUs_heading', value: 'Why Students Choose Us' },
+        { key: 'about_message_heading', value: 'Message From Mirror Family' },
+        { key: 'contact_phone', value: '+977 01-5360880' },
+        { key: 'contact_mobile', value: '+977 9851198288' },
+        { key: 'contact_email', value: 'info@piacademy.edu.np' },
+        { key: 'contact_location', value: 'Maitighar, Kathmandu, Nepal' },
+        { key: 'contact_hours', value: 'Sunday - Friday: 9:00 AM - 5:00 PM' },
+        { key: 'social_facebook', value: 'https://facebook.com' },
+        { key: 'social_instagram', value: 'https://instagram.com' },
+        { key: 'social_tiktok', value: 'https://tiktok.com' },
+        { key: 'social_whatsapp', value: '9779843340238' },
+        { key: 'site_name', value: 'Mirror' },
+        { key: 'site_tagline', value: 'Building a strong foundation for your future' },
+        { key: 'site_copyright', value: 'Mirror' },
+        { key: 'footer_aboutText', value: 'Mirror is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.' },
+        { key: 'footer_rights', value: 'All Right Reserved' },
+        { key: 'mock_heading', value: 'Weekly Mock Test Results' },
+        { key: 'mock_subtitle', value: 'Topper of each mock test receives a cash incentive to motivate and reward hard work!' },
+        { key: 'notice_heading', value: 'Latest Notices' },
+        { key: 'course_heading', value: 'Explore Our Courses' },
+        { key: 'course_subtitle', value: 'Transform your future with our expert-led, comprehensive courses' },
+        { key: 'login_heading', value: 'Sign in to your account' },
+    ];
+
+    for (const block of contentBlocks) {
+        await ContentBlock.create(block);
+    }
+    console.log(`Seeded ${contentBlocks.length} content blocks`)
 
     console.log('✅ All seed data inserted successfully!')
     process.exit(0)

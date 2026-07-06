@@ -1,23 +1,25 @@
 import api from '../config/api'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux'
-
-
-
+import { useContent } from '../context/ContentContext'
+import { NOTICE } from '../config/site'
 const Notice = () => {
-
-    const logIn = useSelector((state) => state.auth.user)
-    const isAdmin = logIn?.isAdmin;
+    const content = useContent();
     const [notices, setnotices] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [error, setError] = useState(null);
     const itemsPerPage = 6;
 
     const getdata = async (page = 1) => {
-        const data = await api.get(`/api/notice/get?page=${page}&limit=${itemsPerPage}`)
-        setnotices(data.data.rows)
-        setTotalPages(data.data.totalPages)
+        setError(null);
+        try {
+            const data = await api.get(`/api/notice/get?page=${page}&limit=${itemsPerPage}`)
+            setnotices(data.data.rows)
+            setTotalPages(data.data.totalPages)
+        } catch {
+            setError('Failed to load notices');
+        }
     }
 
     useEffect(() => {
@@ -28,15 +30,16 @@ const Notice = () => {
         if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
 
-    const deleteData = async (i) => {
-        await api.post('/api/notice/delete', { id: i })
-        getdata(currentPage);
-    }
-
+    if (error) return (
+        <div className='max-w-5xl mx-auto py-12 px-4 text-center'>
+            <p className="text-red-500 text-lg">{error}</p>
+            <button onClick={() => getdata(currentPage)} className="mt-4 px-4 py-2 bg-secondary text-white rounded-lg font-semibold">Retry</button>
+        </div>
+    )
 
     return (
         <div className="max-w-5xl mx-auto py-12 px-4">
-            <h1 className="text-4xl font-bold text-secondary mb-8 text-center">Latest Notices</h1>
+            <h1 className="text-4xl font-bold text-secondary mb-8 text-center">{content.notice_heading || NOTICE.heading}</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 {notices.map((notice) => (
                     <div
@@ -51,8 +54,7 @@ const Notice = () => {
                         >
                             View Notice
                         </NavLink>
-                        {isAdmin && (<img src="/delete.png" onClick={() => { deleteData(notice.id) }} alt="" className=' cursor-pointer w-9 mt-3 hover:fill-amber-700' />
-                        )}
+
                     </div>
                 ))}
             </div>

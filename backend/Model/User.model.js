@@ -7,6 +7,8 @@ const User = sequelize.define('User', {
     email: { type: DataTypes.STRING },
     photo: { type: DataTypes.STRING },
     contact: { type: DataTypes.STRING },
+    number: { type: DataTypes.STRING },
+    class: { type: DataTypes.STRING },
     isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
 }, {
     timestamps: true,

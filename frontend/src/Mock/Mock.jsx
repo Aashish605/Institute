@@ -1,21 +1,25 @@
 import api from '../config/api'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux'
-
-
+import { useContent } from '../context/ContentContext'
+import { MOCK } from '../config/site'
 const Mock = () => {
-    const logIn = useSelector((state) => state.auth.user)
-    const isAdmin = logIn?.isAdmin;
+    const content = useContent();
     const [weeklyResults, setweeklyResults] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [error, setError] = useState(null);
     const itemsPerPage = 6;
 
     const getdata = async (page = 1) => {
-        const data = await api.get(`/api/mock/get?page=${page}&limit=${itemsPerPage}`)
-        setweeklyResults(data.data.rows)
-        setTotalPages(data.data.totalPages)
+        setError(null);
+        try {
+            const data = await api.get(`/api/mock/get?page=${page}&limit=${itemsPerPage}`)
+            setweeklyResults(data.data.rows)
+            setTotalPages(data.data.totalPages)
+        } catch {
+            setError('Failed to load mock results');
+        }
     }
 
     useEffect(() => {
@@ -26,17 +30,18 @@ const Mock = () => {
         if (page >= 1 && page <= totalPages) setCurrentPage(page);
     };
 
-    const deleteData = async (i) => {
-        await api.post('/api/mock/delete', { id: i })
-        getdata(currentPage);
-    }
-
+    if (error) return (
+        <div className='max-w-[85vw] py-12 mx-auto px-8 text-center'>
+            <p className="text-red-500 text-lg">{error}</p>
+            <button onClick={() => getdata(currentPage)} className="mt-4 px-4 py-2 bg-secondary text-white rounded-lg font-semibold">Retry</button>
+        </div>
+    )
 
     return (
         <>
             <div className='max-w-[85vw] py-12 mx-auto  px-8'>
-                <h1 className="text-4xl font-bold text-secondary mt-8 text-center">Weekly Mock Test Results</h1>
-                <p className="text-center mt-2 opacity-60 font-medium mb-12">Topper of each mock test receives a cash incentive to motivate and reward hard work!</p>
+                <h1 className="text-4xl font-bold text-secondary mt-8 text-center">{content.mock_heading || MOCK.heading}</h1>
+                <p className="text-center mt-2 opacity-60 font-medium mb-12">{content.mock_subtitle || MOCK.subtitle}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                     {weeklyResults.map((result) => (
                         <div
@@ -51,8 +56,7 @@ const Mock = () => {
                             >
                                 View Result
                             </NavLink>
-                            {isAdmin && (<img src="/delete.png" onClick={() => { deleteData(result.id) }} alt="" className=' cursor-pointer w-9 mt-3 hover:fill-amber-700' />
-                            )}
+
                         </div>
                     ))}
                 </div>

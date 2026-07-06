@@ -15,12 +15,10 @@ import Mock from './Mock/Mock.jsx'
 import Notice from './Notice/Notice.jsx'
 import MockModel from './Mock/MockModel.jsx'
 import NoticeModel from './Notice/NoticeModel.jsx'
-import Post from './Components/Post.jsx'
 import Enroll from './Course/Enroll.jsx'
 import Profile from './Profile/Profile.jsx'
 import Login from './Profile/Login.jsx'
-import { RequireAuth, RequireAdmin } from './Components/ProtectedRoutes';
-import Verify from './Components/Verify.jsx'
+import { RequireAuth } from './Components/ProtectedRoutes';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -37,10 +35,6 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path='/profile' element={<Profile />} />
     </Route>
     <Route path='/notice' element={<Notice />} />
-    <Route element={<RequireAdmin />}>
-      <Route path='/post' element={<Post />} />
-      <Route path='/verify' element={<Verify />} />
-    </Route>
     <Route path='/login' element={<Login />} />
   </Route>
 ))

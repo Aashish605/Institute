@@ -7,6 +7,7 @@ import ScrollToTop from './Components/ScrollToTop'
 import { useDispatch } from 'react-redux'
 import { setUser, clearUser, setLoading } from './Redux/Auth/AuthSlice'
 import api from './config/api'
+import { ContentProvider } from './context/ContentContext'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -25,13 +26,13 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <ContentProvider>
       <ScrollToTop />
       <Nav />
       <Outlet />
       <Whatsapp />
       <Footer />
-    </>
+    </ContentProvider>
   )
 }
 

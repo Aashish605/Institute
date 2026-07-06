@@ -102,7 +102,7 @@ const Enroll = () => {
                         <p className='text-xl font-semibold my-3'>Payment Instruction</p>
                         <ul className='list-disc opacity-55 px-10'>
                             <li> Use the account details shown below</li>
-                            <li>Upload your receipt image and click on the "Submit Payment for Verification" butto</li>
+                            <li>Upload your receipt image and click on the "Submit Payment for Verification" button</li>
                             <li>Manual payments will be verified by our team within 1-2 business days</li>
                             <li>If you encounter any issues, please contact our support team</li>
                         </ul>

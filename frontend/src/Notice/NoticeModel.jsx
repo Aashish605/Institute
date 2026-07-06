@@ -23,7 +23,7 @@ const NoticeModel = () => {
     }, [model]);
 
     if (loading) return <div className="text-center py-20 text-xl">Loading...</div>;
-    if (!notice) return <div className="text-center py-20 text-xl text-red-500">Result not found.</div>;
+    if (!notice) return <div className="text-center py-20 text-xl text-red-500">Notice not found.</div>;
 
 
     return (

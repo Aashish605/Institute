@@ -75,11 +75,11 @@ const About = () => {
                             </div>
                             <h3 className="font-bold mb-2 text-center text-xl">Dedicated Support</h3>
                             <p className="text-left opacity-70">
-                                Regular QAD, doubt clearing sessions, and special guidance by IOE Ambassadors every week.
+                                Regular Q&A, doubt clearing sessions, and special guidance by IOE Ambassadors every week.
                             </p>
                         </div>
                     </div>
-                    <p className='max-w-[65vw] mx-auto text-center text-xl opacity-70 py-7 '>Founded by Pulchowk Campus graduates and front-line faculty members, PI contributes towards the development of qualitative future engineers who tend to establish a well-settled destiny in the field of engineering.</p>
+                    <p className='max-w-[65vw] mx-auto text-center text-xl opacity-70 py-7 '>Founded by Pulchowk Campus graduates and front-line faculty members, Mirror contributes towards the development of qualitative future engineers who tend to establish a well-settled destiny in the field of engineering.</p>
                 </section>
             </div >
 

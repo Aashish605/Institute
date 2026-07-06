@@ -34,3 +34,14 @@ export const getAllReceipts = async (req, res) => {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 };
+
+export const updateReceiptStatus = async (req, res) => {
+    try {
+        const receipt = await PaymentReceipt.findByPk(req.params.id);
+        if (!receipt) return res.status(404).json({ message: "Receipt not found" });
+        await receipt.update({ status: req.body.status });
+        res.json(receipt);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to update status" });
+    }
+};

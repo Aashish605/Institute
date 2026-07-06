@@ -8,9 +8,12 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './style.css'
+import { useContent } from '../context/ContentContext'
+import { HERO, COURSES, ADS } from '../config/site'
 
 
 const Home = () => {
+    const content = useContent();
 
     const [course, setCourse] = useState([]);
 
@@ -68,14 +71,14 @@ const Home = () => {
                 <section id="home" className="max-w-[85vw] mx-auto">
                     <div className=" mx-auto flex flex-col md:flex-row items-center p-8 gap-10 ">
                         <div className="md:w-1/2 space-y-6 ">
-                            <h1 className="text-5xl max-sm:text-4xl font-bold">Empowering Learning for <p className="text-primary inline">Everyone</p></h1>
-                            <p className="">Join Mirror where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.</p>
+                            <h1 className="text-5xl max-sm:text-4xl font-bold">{content.hero_heading || HERO.heading} <p className="text-primary inline">{content.hero_headingHighlight || HERO.headingHighlight}</p></h1>
+                            <p className="">{content.hero_subtitle || HERO.subtitle}</p>
                         </div>
                         <div className="md:w-1/2 max-sm:w-[95vw]  flex items-center  justify-center overflow-hidden">
                             <img onClick={() => {
                                 setIsOpen(true)
                             }
-                            } src="Home/Interview.png" className=" h-[40vh] shadow-xl   rounded-3xl  cursor-pointer  object-cover object-center  " alt="" />
+                            } src={content.hero_image || HERO.image} className=" h-[40vh] shadow-xl   rounded-3xl  cursor-pointer  object-cover object-center  " alt="" />
                         </div>
                     </div>
                 </section >
@@ -83,8 +86,8 @@ const Home = () => {
                 {/* Featured Courses */}
                 < div className="bg-[#f9fafb] w-full" >
                     <section id="courses" className="container py-12 max-sm:py-4 max-w-[85vw] mx-auto   ">
-                        <h2 className="text-5xl text-secondary font-bold text-center mb-2 ">Our Featured Courses</h2>
-                        <p className="text-center font-semibold opacity-50 mb-10">Discover our expert-led courses designed to help you achieve your goals</p>
+                        <h2 className="text-5xl text-secondary font-bold text-center mb-2 ">{content.course_heading || COURSES.heading}</h2>
+                        <p className="text-center font-semibold opacity-50 mb-10">{content.course_subtitle || COURSES.subtitle}</p>
                         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
                             {course.map((c, i) => (
                                 <div key={i} className="shadow-md hover:shadow-xl transition-shadow shadow-gray-300 bg-white rounded-lg  space-y-4">
@@ -113,9 +116,9 @@ const Home = () => {
                 <section className='w-full pb-12 text-white bg-gray-50 '>
                     <div className="flex flex-col p-8 rounded-2xl md:flex-row bg-secondary items-center max-w-[85vw] mx-auto justify-between gap-8">
                         <div className="md:w-2/3">
-                            <h2 className="text-3xl font-bold mb-2">Run your Ad's here!</h2>
+                            <h2 className="text-3xl font-bold mb-2">{ADS.title}</h2>
                             <p className="mb-4">
-                                Promote your educational services, products, or events to a highly engaged audience of learners and educators. Contact us to feature your advertisement on Mirror.
+                                {ADS.description}
                             </p>
                             <NavLink to={'/contact'} className="inline-block px-6 py-2 bg-white text-secondary font-semibold rounded-md shadow hover:bg-gray-100 transition">
                                 Contact Us
@@ -169,7 +172,7 @@ const Home = () => {
                                     <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
                                     <div className=" ">
                                         <p className="text-[1.01rem] text-wrap mb-6 ">
-                                            I've been a part of Pi Academy for the part three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, PI Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
+                                            I've been a part of Mirror Academy for the past three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, Mirror Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
                                         </p>
                                         <p className="font-semibold">Ram Shahi</p>
                                         <p className="opacity-60 text-sm">St.Xavier College ,Scholarship</p>
@@ -182,7 +185,7 @@ const Home = () => {
                                     <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
                                     <div className=" ">
                                         <p className="text-[1.01rem] text-wrap mb-6 ">
-                                            I've been a part of Pi Academy for the part three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, PI Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
+                                            I've been a part of Mirror Academy for the past three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, Mirror Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
                                         </p>
                                         <p className="font-semibold">Ram Shahi</p>
                                         <p className="opacity-60 text-sm">St.Xavier College ,Scholarship</p>
@@ -195,7 +198,7 @@ const Home = () => {
                                     <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
                                     <div className=" ">
                                         <p className="text-[1.01rem] text-wrap mb-6 ">
-                                            I've been a part of Pi Academy for the part three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, PI Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
+                                            I've been a part of Mirror Academy for the past three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, Mirror Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
                                         </p>
                                         <p className="font-semibold">Ram Shahi</p>
                                         <p className="opacity-60 text-sm">St.Xavier College ,Scholarship</p>

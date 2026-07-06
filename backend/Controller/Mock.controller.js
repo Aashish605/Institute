@@ -3,7 +3,8 @@ import { Mock } from '../Model/index.js'
 export const postMock = async (req, res) => {
     let { Title, Week, Description, Img } = req.body;
     try {
-        await Mock.create({ Title, Week, Description, Img });
+        const mock = await Mock.create({ Title, Week, Description, Img });
+        return res.status(201).json(mock);
     } catch (error) {
         console.error("Error during saving the data", error)
         return res.status(500).json({ msg: "Error saving data" })
@@ -41,8 +42,9 @@ export const getMockById = async (req, res) => {
 export const deleteMock = async (req,res) => {
     console.log(req.body.id);
     try {
-        const remove = await Mock.destroy({ where: { id: req.body.id } });
-        return res.json(remove)
+        const removed = await Mock.destroy({ where: { id: req.body.id } });
+        if (!removed) return res.status(404).json({ msg: "Mock result not found" });
+        return res.json({ msg: "Mock result deleted" })
     } catch (error) {
         console.error("Error deleting the data", error)
         return res.status(500).json({ msg: "Error deleting data" })

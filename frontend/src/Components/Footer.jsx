@@ -1,8 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
+import { useContent } from '../context/ContentContext'
+import { SOCIAL, FOOTER } from '../config/site'
 
 
 const Footer = () => {
+    const content = useContent();
     return (
         <>
             <div className="bg-primary mb-[-5vh] text-white">
@@ -11,7 +14,7 @@ const Footer = () => {
                     <div className="w-full  sm:w-[30%]">
                         <p className="text-xl max-[550px]:pt-8">About Us</p>
                         <p className="mt-3 text-wrap  ">
-                            Mirror is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. We exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.
+                            {content.footer_aboutText || FOOTER.aboutText}
                         </p>
                     </div>
 
@@ -29,13 +32,13 @@ const Footer = () => {
                     <div className="w-full sm:w-[30%] text-center">
                         <p className="text-lg font-semibold">Connect with Us</p>
                         <div className="flex justify-center gap-6 mt-4">
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className=" hover:text-white">
+                            <a href={content.social_facebook || SOCIAL.facebook} target="_blank" rel="noopener noreferrer" className=" hover:text-white">
                                 <FaFacebook size={20} />
                             </a>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className=" hover:text-white">
+                            <a href={content.social_instagram || SOCIAL.instagram} target="_blank" rel="noopener noreferrer" className=" hover:text-white">
                                 <FaInstagram size={20} />
                             </a>
-                            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className=" hover:text-white">
+                            <a href={content.social_tiktok || SOCIAL.tiktok} target="_blank" rel="noopener noreferrer" className=" hover:text-white">
                                 <FaTiktok size={20} />
                             </a>
                         </div>
@@ -46,10 +49,10 @@ const Footer = () => {
 
                 <div className="mx-10 py-10 flex flex-wrap items-center justify-center gap-4 text-[0.9rem] ">
                     <li className=" list-none">
-                        &copy;{new Date().getFullYear()}, <NavLink className="">Mirror</NavLink>
+                        &copy;{new Date().getFullYear()}, <span>{content.site_name || 'Mirror'}</span>
                     </li>
                     <li>
-                        <NavLink className="w-fit ">ALl Right Reserved</NavLink>
+                        <span className="w-fit">{content.footer_rights || 'All Right Reserved'}</span>
                     </li>
                     <li>
                         <NavLink to='https://www.facebook.com/aashish.khadka.37625' className="w-fit text-white  hover:underline hover:underline-offset-4">Website Developed By <p className='inline'>Ashish Khadka</p></NavLink>

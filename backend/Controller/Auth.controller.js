@@ -16,7 +16,10 @@ export const getuser = (req, res) => {
                 displayName: req.user.displayName,
                 email: req.user.email,
                 photo: req.user.photo,
-                isAdmin: req.user.isAdmin // <-- Add this line
+                contact: req.user.contact,
+                number: req.user.number,
+                class: req.user.class,
+                isAdmin: req.user.isAdmin
             }
         });
     } else {

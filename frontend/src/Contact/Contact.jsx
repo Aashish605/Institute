@@ -34,13 +34,13 @@ const Contact = () => {
 
 
     const { register, handleSubmit, formState: { errors },reset } = useForm();
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         try {
-            api.post('/api/contact', data)
+            await api.post('/api/contact', data)
             notifySuccess("Contact Submitted successfully");
             reset();
         } catch (error) {
-            notifyError("Error druing Submitting")
+            notifyError("Error during Submitting")
             console.error("Error during item saving", error);
         }
     }
@@ -53,7 +53,7 @@ const Contact = () => {
                     {/* Section Title */}
                     <h1 className="text-4xl font-bold mb-2 text-center decoration-[3px] underline underline-offset-[12px] decoration-secondary">Get in Touch</h1>
                     <p className="text-center text-xl my-8 text-gray-600">
-                        Have questions about our programs or want to learn more about PI Academy? We'd love to hear from you.
+                        Have questions about our programs or want to learn more about Mirror Academy? We'd love to hear from you.
                     </p>
 
                     {/* Responsive Grid: Form and Info */}
@@ -70,7 +70,7 @@ const Contact = () => {
                             <label htmlFor="">Subject</label>
                             <input required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="text" placeholder="How can we help you?" {...register("subject")} />
                             <label htmlFor="">Message</label>
-                            <textarea placeholder='Descirbe your inquiry' className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' {...register("message")} />
+                            <textarea placeholder='Describe your inquiry' className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' {...register("message")} />
 
                             <input required className="w-full bg-secondary cursor-pointer text-white py-2 rounded font-semibold hover:bg-secondary/90 transition" type="Submit" />
                         </form>
@@ -95,9 +95,7 @@ const Contact = () => {
                                     <a href="tel:+9779851198288" className="opacity-70 block">+977 9851198288</a>
                                 </div>
                             </div>
-                            <div>
 
-                            </div>
                             <div className='flex gap-4 items-center'>
                                 <img src="contact/mail.png" className='w-5 h-5' alt="" />
                                 <div>

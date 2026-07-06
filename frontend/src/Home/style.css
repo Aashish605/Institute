@@ -21,5 +21,10 @@
 }
 
 .swiper-button-prev::after {
-background-image: url(person.png);
+    content: '';
+    background-image: url(person.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
 }
