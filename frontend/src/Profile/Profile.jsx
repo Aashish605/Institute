@@ -2,8 +2,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { clearUser, setUser } from '../Redux/Auth/AuthSlice'
 import { useEffect, useState } from 'react'
 import api from '../config/api'
+import { toast } from 'react-toastify'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 function Profile() {
+    useDocumentTitle('Profile')
 
 
 
@@ -36,12 +39,12 @@ function Profile() {
             const data = res.data;
             if (data.user) {
                 dispatch(setUser(data.user));
-                alert('Profile updated!');
+                toast.success('Profile updated!');
             } else {
-                alert('Update failed');
+                toast.error('Update failed');
             }
         } catch {
-            alert('Update failed');
+            toast.error('Update failed');
         }
         setLoading(false);
     };
@@ -107,7 +110,7 @@ function Profile() {
                     <button
                         type="submit"
                         className="bg-blue-500 text-white rounded px-4 py-2 mt-2"
-                        disabled={loading || updated}
+                        disabled={loading}
                     >
                         {updated ? 'Already Updated' : loading ? 'Updating...' : 'Update Profile'}
                     </button>

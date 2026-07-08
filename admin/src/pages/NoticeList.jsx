@@ -5,9 +5,12 @@ import api from '../config/api'
 
 export default function NoticeList() {
   const [notices, setNotices] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const fetchData = () => {
+    setLoading(true)
     api.get('/api/notice/get?limit=50').then(res => setNotices(res.data.rows)).catch(() => toast.error('Failed to load notices'))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => { fetchData() }, [])
@@ -20,6 +23,12 @@ export default function NoticeList() {
       fetchData()
     } catch { toast.error('Delete failed') }
   }
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f7921d]" />
+    </div>
+  )
 
   return (
     <div>

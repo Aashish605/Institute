@@ -1,8 +1,10 @@
 import { NavLink } from 'react-router-dom'
 import api from "../config/api";
 import React, { useEffect, useState } from 'react';
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 const Course = () => {
+    useDocumentTitle('Courses')
     const [course, setCourse] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,7 +36,7 @@ const Course = () => {
             <div className="grid gap-[10vh] grid-cols-1 py-[10vh] ">
                 {course.map((c) => (
                     <div key={c.id} className="shadow-md overflow-hidden flex max-[975px]:flex-col max-w-[85vw] mx-auto transition-shadow hover:shadow-xl shadow-gray-300 bg-white rounded-lg  space-y-4">
-                        <img src={c.image} className=" w-[40%] max-[975px]:w-full h-full " alt="" />
+                        <img src={c.image} className=" w-[40%] max-[975px]:w-full h-full " alt={c.title} />
                         <div className=" flex  flex-col space-y-4 py-6 px-10">
                             <h3 className="text-xl font-semibold overflow-clip">{c.title}</h3>
                             <p className=" line-clamp-3 ">{c.description} </p>

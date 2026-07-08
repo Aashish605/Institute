@@ -5,10 +5,13 @@ import api from '../config/api'
 
 export default function CourseList() {
   const [courses, setCourses] = useState([])
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
+    setLoading(true)
     api.get('/api/course').then(res => setCourses(res.data)).catch(() => toast.error('Failed to load courses'))
+      .finally(() => setLoading(false))
   }, [])
 
   const handleDelete = async (id, title) => {
@@ -21,6 +24,12 @@ export default function CourseList() {
       toast.error('Delete failed')
     }
   }
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f7921d]" />
+    </div>
+  )
 
   return (
     <div>

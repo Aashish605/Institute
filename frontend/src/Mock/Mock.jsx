@@ -37,6 +37,16 @@ const Mock = () => {
         </div>
     )
 
+    if (!loading && weeklyResults.length === 0) {
+        return (
+            <div className="max-w-[85vw] py-12 mx-auto px-8 text-center">
+                <h1 className="text-4xl font-bold text-secondary mt-8 text-center">{content.mock_heading || MOCK.heading}</h1>
+                <p className="text-center mt-2 opacity-60 font-medium mb-12">{content.mock_subtitle || MOCK.subtitle}</p>
+                <p className="text-gray-500 text-lg">No mock results found.</p>
+            </div>
+        )
+    }
+
     return (
         <>
             <div className='max-w-[85vw] py-12 mx-auto  px-8'>

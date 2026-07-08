@@ -1,7 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import { useContent } from '../context/ContentContext'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 const About = () => {
+    useDocumentTitle('About')
     const content = useContent()
     return (
         <div className="max-w-[85vw] mx-auto">
@@ -85,7 +87,7 @@ const About = () => {
             {/* MirrorFamily Message */}
             <section className="mb-12 h-fit rounded-2xl shadow-md overflow-hidden  flex items-center bg-secondary max-[1130px]:bg-white justify-center gap-7 max-[1130px]:flex-col ">
                 <div className=' flex flex-col items-center justify-center py-6 bg-secondary max-[1130px]:w-full w-1/3 h-full   '>
-                    <img src="About/person.png" alt="" className='' />
+                    <img src="About/person.png" alt="Mirror Family" className='' />
                     <span className='text-2xl text-white font-bold text-center'>{content.about_message_heading || 'Message From Mirror Family'}</span>
                 </div>
                 <div className=' w-2/3 max-[1130px]:w-full max-[1130px]:px-4 max-[1130px]:py-6 py-12 px-6 bg-white'>

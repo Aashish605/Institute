@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from "../config/api";
 import { useParams,NavLink } from 'react-router-dom';
 
@@ -50,7 +50,7 @@ const CourseModel = () => {
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {course.features && course.features.map((feature, idx) => (
                         <li key={idx} className="flex items-center mx-10 gap-3">
-                            <img src={feature.icon} alt="" className="w-8 h-8" />
+                            <img src={feature.icon} alt={feature.text} className="w-8 h-8" />
                             <span className="text-lg text-gray-700">{feature.text}</span>
                         </li>
                     ))}

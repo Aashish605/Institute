@@ -19,6 +19,8 @@ import MockForm from './pages/MockForm'
 import Payments from './pages/Payments'
 import Contacts from './pages/Contacts'
 import ContentEditor from './pages/ContentEditor'
+import ErrorBoundary from './components/ErrorBoundary'
+import NotFound from './pages/NotFound'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -36,14 +38,17 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/content" element={<ContentEditor />} />
     </Route>
+    <Route path="*" element={<NotFound />} />
   </Route>
 ))
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
-    <ToastContainer limit={1} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <RouterProvider router={router} />
+        <ToastContainer limit={1} />
+      </AuthProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )

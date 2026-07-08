@@ -37,6 +37,15 @@ const Notice = () => {
         </div>
     )
 
+    if (!loading && notices.length === 0) {
+        return (
+            <div className="max-w-5xl mx-auto py-12 px-4 text-center">
+                <h1 className="text-4xl font-bold text-secondary mb-8 text-center">{content.notice_heading || NOTICE.heading}</h1>
+                <p className="text-gray-500 text-lg">No notices found.</p>
+            </div>
+        )
+    }
+
     return (
         <div className="max-w-5xl mx-auto py-12 px-4">
             <h1 className="text-4xl font-bold text-secondary mb-8 text-center">{content.notice_heading || NOTICE.heading}</h1>

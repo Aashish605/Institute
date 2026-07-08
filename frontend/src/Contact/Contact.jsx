@@ -2,9 +2,11 @@ import api from '../config/api'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify';
 import { useContent } from '../context/ContentContext'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 
 const Contact = () => {
+    useDocumentTitle('Contact')
     const content = useContent()
 
     const notifySuccess = (message) => {
@@ -62,15 +64,20 @@ const Contact = () => {
                         <form className="bg-white shadow-xl rounded-2xl p-6 " onSubmit={handleSubmit(onSubmit)}>
                             <h2 className="text-2xl font-semibold mb-4">Contact Form</h2>
                             <label htmlFor="fullName">Full Name</label>
-                            <input id="fullName" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2  ' type="text" placeholder="Your Name" {...register("fullName")} />
+                            <input id="fullName" className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2  ' type="text" placeholder="Your Name" {...register("fullName", { required: "Full name is required" })} />
+                            {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
                             <label htmlFor="email">Email Address</label>
-                            <input id="email" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="email" placeholder="YourEmail@gmail.com" {...register("email")} />
+                            <input id="email" className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="email" placeholder="YourEmail@gmail.com" {...register("email", { required: "Email is required", pattern: { value: /^\S+@\S+$/i, message: "Invalid email" } })} />
+                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                             <label htmlFor="phone">Phone Number</label>
-                            <input id="phone" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="number" placeholder="+977 XXXXXXXXXX" {...register("phone")} />
+                            <input id="phone" className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="number" placeholder="+977 XXXXXXXXXX" {...register("phone", { required: "Phone number is required" })} />
+                            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
                             <label htmlFor="subject">Subject</label>
-                            <input id="subject" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="text" placeholder="How can we help you?" {...register("subject")} />
+                            <input id="subject" className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="text" placeholder="How can we help you?" {...register("subject", { required: "Subject is required" })} />
+                            {errors.subject && <p className="text-red-500 text-sm mt-1">{errors.subject.message}</p>}
                             <label htmlFor="message">Message</label>
-                            <textarea id="message" placeholder='Describe your inquiry' className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' {...register("message")} />
+                            <textarea id="message" placeholder='Describe your inquiry' className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' {...register("message", { required: "Message is required" })} />
+                            {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
 
                             <input required className="w-full bg-secondary cursor-pointer text-white py-2 rounded font-semibold hover:bg-secondary/90 transition" type="Submit" />
                         </form>

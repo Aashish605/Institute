@@ -3,7 +3,7 @@ import cors from 'cors';
 import { connectDB, sequelize } from './Db/db.js'
 import dotenv from 'dotenv'
 dotenv.config()
-import passport, { Passport } from 'passport'
+import passport from 'passport'
 import session from 'express-session'
 import pgStore from 'connect-pg-simple'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'

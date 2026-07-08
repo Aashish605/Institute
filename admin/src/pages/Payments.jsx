@@ -45,7 +45,9 @@ export default function Payments() {
         </button>
       </div>
       {loading ? (
-        <div className="text-center py-16 text-gray-500 font-semibold">Loading...</div>
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f7921d]" />
+        </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 text-gray-400">No {filter} receipts found.</div>
       ) : (

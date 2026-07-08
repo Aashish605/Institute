@@ -45,25 +45,29 @@ export default function Nav() {
 
     return (
         <>
-            <nav className={`min-[815px]:hidden sidebar sticky top-0 z-30 shadow-md w-[100vw]  bg-white h-[10vh] `}>
+            <nav role="navigation" aria-label="Main navigation" className={`min-[815px]:hidden sidebar sticky top-0 z-30 shadow-md w-[100vw]  bg-white h-[10vh] `}>
                 <div className={` px-3  flex items-center justify-between  `}>
                     <NavLink onClick={() => (dispatch(toggleSidebar()))} to=''>
                         <img src="/logo.png" alt="logo" className=" sm:w-[18vw]  sm:h-[10vh] w-[25vw] h-[10vh] " />
                     </NavLink>
                     <div>
-                        <svg className={`ml-2 menu  ${select ? 'hidden' : ''}`} onClick={() => { dispatch(toggleSidebar()) }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="34" height="34" viewBox="0 0 70 40">
-                            <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"></path>
-                        </svg>
-                        <svg className={`ml-2 close ${select ? '' : 'hidden'} `} onClick={() => { dispatch(toggleSidebar()) }} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="34" height="34" viewBox="0 0 24 24">
-                            <path d="M 4.9902344 3.9902344 A 1.0001 1.0001 0 0 0 4.2929688 5.7070312 L 10.585938 12 L 4.2929688 18.292969 A 1.0001 1.0001 0 1 0 5.7070312 19.707031 L 12 13.414062 L 18.292969 19.707031 A 1.0001 1.0001 0 1 0 19.707031 18.292969 L 13.414062 12 L 19.707031 5.7070312 A 1.0001 1.0001 0 0 0 18.980469 3.9902344 A 1.0001 1.0001 0 0 0 18.292969 4.2929688 L 12 10.585938 L 5.7070312 4.2929688 A 1.0001 1.0001 0 0 0 4.9902344 3.9902344 z"></path>
-                        </svg>
+                        <button aria-label="Toggle menu" aria-expanded={select} onClick={() => { dispatch(toggleSidebar()) }}>
+                            <svg className={`ml-2 menu  ${select ? 'hidden' : ''}`} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="34" height="34" viewBox="0 0 70 40">
+                                <path d="M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z"></path>
+                            </svg>
+                        </button>
+                        <button aria-label="Close menu" onClick={() => { dispatch(toggleSidebar()) }}>
+                            <svg className={`ml-2 close ${select ? '' : 'hidden'} `} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="34" height="34" viewBox="0 0 24 24">
+                                <path d="M 4.9902344 3.9902344 A 1.0001 1.0001 0 0 0 4.2929688 5.7070312 L 10.585938 12 L 4.2929688 18.292969 A 1.0001 1.0001 0 1 0 5.7070312 19.707031 L 12 13.414062 L 18.292969 19.707031 A 1.0001 1.0001 0 1 0 19.707031 18.292969 L 13.414062 12 L 19.707031 5.7070312 A 1.0001 1.0001 0 0 0 18.980469 3.9902344 A 1.0001 1.0001 0 0 0 18.292969 4.2929688 L 12 10.585938 L 5.7070312 4.2929688 A 1.0001 1.0001 0 0 0 4.9902344 3.9902344 z"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <div className={`absolute flex flex-col shadow-md shadow-gray-200  left-0 top-[100%] text-create  overflow-scroll  w-full max-[425px]:w-full   h-fit  z-10  gap-10 bg-white ${select ? ' ' : ' hidden '}  `} >
+                    <div aria-hidden={!select} className={`absolute flex flex-col shadow-md shadow-gray-200  left-0 top-[100%] text-create  overflow-scroll  w-full max-[425px]:w-full   h-fit  z-10  gap-10 bg-white ${select ? ' ' : ' hidden '}  `} >
                         <div className=" overflow-scroll overflow-x-hidden flex flex-col  flex-grow gap-y-2 ">
                             <NavLink onClick={() => (dispatch(toggleSidebar()))} to="" className={({ isActive }) => `relative hover:opacity-85 mx-4  ${isActive ? `` : " opacity-70"}`}>
                                 Home
                             </NavLink>
-                            <div onClick={() => { setCourses(!Courses) }} to="" className={`dropdown relative hover:opacity-85 w-full  flex flex-col ${Courses ? 'bg-gray-100 opacity-80 group' : " opacity-70"}`}>
+                            <button onClick={() => { setCourses(!Courses) }} aria-expanded={Courses} aria-haspopup="true" className={`dropdown relative hover:opacity-85 w-full  flex flex-col ${Courses ? 'bg-gray-100 opacity-80 group' : " opacity-70"}`}>
                                 <div className=" flex items-center justify-between">
                                     <p className="mx-4 group-even:font-medium ">Courses</p>
                                     <img src="/darrow.png" className={`w-5 h-5 mx-2 ${Courses ? "rotate-180" : ""} duration-500`} alt="" />
@@ -90,7 +94,7 @@ export default function Nav() {
                                         <p className="opacity-50 text-sm">NPR.2000</p>
                                     </NavLink>
                                 </div>
-                            </div>
+                            </button>
                             <NavLink onClick={() => (dispatch(toggleSidebar()))}
                                 to="/mock"
                                 className={({ isActive }) =>
@@ -124,7 +128,7 @@ export default function Nav() {
                     </div>
                 </div>
             </nav >
-            <nav className={` hidden top-0 z-30  bg-white shadow-md w-full min-[815px]:sticky min-[815px]:flex justify-around items-center px-10 py-2 gap-20 `}>
+            <nav role="navigation" aria-label="Main navigation" className={` hidden top-0 z-30  bg-white shadow-md w-full min-[815px]:sticky min-[815px]:flex justify-around items-center px-10 py-2 gap-20 `}>
                 <NavLink to=''>
                     <img src="/logo.png" alt="logo" className=" w-[13vw] h-[12vh]   " />
                 </NavLink>
@@ -137,7 +141,7 @@ export default function Nav() {
                     >
                         Home
                     </NavLink>
-                    <div onClick={() => { setCourses(!Courses) }} className={`dropdown relative  cursor-pointer   ${Courses ? '' : `before:content-[''] hover:opacity-100 before:absolute  before:left-0 before:right-0 before:bottom-[-5px] before:h-[2px] before:bg-gray-300  group`}`}>
+                    <button onClick={() => { setCourses(!Courses) }} aria-expanded={Courses} aria-haspopup="true" className={`dropdown relative  cursor-pointer   ${Courses ? '' : `before:content-[''] hover:opacity-100 before:absolute  before:left-0 before:right-0 before:bottom-[-5px] before:h-[2px] before:bg-gray-300  group`}`}>
                         <div className=" flex items-center justify-between">
                             <p className="mx-2 ">Courses</p>
                             <img src="/darrow.png" className={`w-4 h-4 ${Courses ? 'rotate-180 duration-500' : 'rotate-0 duration-500 '} `} alt="" />
@@ -166,7 +170,7 @@ export default function Nav() {
                                 </NavLink>
                             </div>
                         </div>
-                    </div>
+                    </button>
                     <NavLink
                         to="/mock"
                         className={({ isActive }) =>
@@ -195,9 +199,9 @@ export default function Nav() {
                 <div className="flex items-center gap-4">
                     {logIn ?
                         <div className="relative drop cursor-pointer" >
-                            <div className=" ">
-                                <img onClick={() => { setDropdown(!dropdown) }} src={logIn.photo} className="rounded-[50%] border-secondary border object-center object-cover  w-[50px] " alt="" />
-                            </div>
+                            <button aria-expanded={dropdown} aria-haspopup="true" onClick={() => { setDropdown(!dropdown) }}>
+                                <img src={logIn.photo} className="rounded-[50%] border-secondary border object-center object-cover  w-[50px] " alt={logIn.displayName} />
+                            </button>
                             <div className={`drop ${dropdown ? ' absolute w-fit px-2 left-[-30px] right-0 lg:left-0  gap-y-4 z-50  rounded-2xl shadow-2xl   bg-[#f9fafb] top-[100%]' : 'hidden'}`}>
                                 <div className=" flex flex-col w-[150px] opacity-100 my-2">
                                     <NavLink className='my-2 flex-col flex  items-start px-8 justify-center '

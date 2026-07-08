@@ -10,21 +10,26 @@ import 'swiper/css/navigation';
 import './style.css'
 import { useContent } from '../context/ContentContext'
 import { HERO, COURSES, ADS } from '../config/site'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 
 const Home = () => {
+    useDocumentTitle('Home')
     const content = useContent();
 
     const [course, setCourse] = useState([]);
-
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const res = await api.get('/api/course');
                 setCourse(res.data)
             } catch (error) {
                 console.log(error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -39,19 +44,28 @@ const Home = () => {
             }
         }
 
+        const handleEsc = (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                setIsOpen(false)
+            }
+        }
+
         document.addEventListener("click", handleModal)
+        document.addEventListener("keydown", handleEsc)
         return () => {
             document.removeEventListener("click", handleModal)
+            document.removeEventListener("keydown", handleEsc)
         };
     }, [isOpen]);
 
 
     return (
         <>
-            <div>
+            <div aria-hidden={!isOpen}>
                 {isOpen && (
                     <div className='Modal z-50 fixed w-full h-full top-0 left-0 flex items-center justify-center '
                         style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", }}
+                        onKeyDown={(e) => { if (e.key === 'Escape') setIsOpen(false) }}
                     >
                         <div className='bg-white rounded-2xl'>
                             <iframe
@@ -78,7 +92,7 @@ const Home = () => {
                             <img onClick={() => {
                                 setIsOpen(true)
                             }
-                            } src={content.hero_image || HERO.image} className=" h-[40vh] shadow-xl   rounded-3xl  cursor-pointer  object-cover object-center  " alt="" />
+                            } src={content.hero_image || HERO.image} className=" h-[40vh] shadow-xl   rounded-3xl  cursor-pointer  object-cover object-center  " alt="Hero banner" />
                         </div>
                     </div>
                 </section >
@@ -89,9 +103,21 @@ const Home = () => {
                         <h2 className="text-5xl text-secondary font-bold text-center mb-2 ">{content.course_heading || COURSES.heading}</h2>
                         <p className="text-center font-semibold opacity-50 mb-10">{content.course_subtitle || COURSES.subtitle}</p>
                         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
-                            {course.map((c, i) => (
-                                <div key={i} className="shadow-md hover:shadow-xl transition-shadow shadow-gray-300 bg-white rounded-lg  space-y-4">
-                                    <img src={c.image} className="rounded-t-2xl " alt="" />
+                            {loading ? (
+                                Array.from({ length: 3 }).map((_, i) => (
+                                    <div key={i} className="shadow-md animate-pulse shadow-gray-300 bg-white rounded-lg space-y-4">
+                                        <div className="rounded-t-2xl h-48 bg-gray-200" />
+                                        <div className="p-6 space-y-3">
+                                            <div className="h-4 bg-gray-200 rounded w-3/4" />
+                                            <div className="h-3 bg-gray-200 rounded w-1/2" />
+                                            <div className="h-3 bg-gray-200 rounded w-full" />
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                course.map((c) => (
+                                <div key={c.id} className="shadow-md hover:shadow-xl transition-shadow shadow-gray-300 bg-white rounded-lg  space-y-4">
+                                    <img src={c.image} className="rounded-t-2xl " alt={c.title} loading="lazy" />
                                     <div className=" flex  flex-col space-y-4 p-6">
                                         <h3 className="text-xl font-semibold overflow-clip">{c.title}</h3>
                                         <p className="line-clamp-3  ">{c.description} </p>
@@ -108,7 +134,7 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                            )))}
                         </div>
                     </section>
                 </div >
@@ -145,7 +171,7 @@ const Home = () => {
                             { title: "Comprehensive Course Library", icon: "Home/Libray.png", feature: "Access a structured content library that simplifies your study process and enriches your learning experience across various subjects." },
                         ].map((f, i) => (
                             <div key={i} className="text-center flex flex-col items-center space-y-4 ">
-                                <img src={`${f.icon}`} alt="" className=" w-[5vw]  rounded-[50%] border-secondary max-sm:w-[10vw] " />
+                                <img src={`${f.icon}`} alt={f.title} className=" w-[5vw]  rounded-[50%] border-secondary max-sm:w-[10vw] " loading="lazy" />
                                 <h4 className=" font-semibold">{f.title}</h4>
                                 <p className="opacity-70">{f.feature} </p>
                             </div>
@@ -169,7 +195,7 @@ const Home = () => {
                         >
                             <SwiperSlide className="">
                                 <div className="flex justify-center items-center mx-auto   w-[60vw]  h-fit py-10 px-2 gap-10 max-[960px]:flex-col max-[960px]:w-[95vw] ">
-                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
+                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="Testimonial" loading="lazy" />
                                     <div className=" ">
                                         <p className="text-[1.01rem] text-wrap mb-6 ">
                                             I've been a part of Mirror Academy for the past three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, Mirror Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
@@ -182,7 +208,7 @@ const Home = () => {
                             </SwiperSlide>
                             <SwiperSlide className="">
                                 <div className="flex justify-center items-center mx-auto   w-[60vw]  h-fit py-10 px-2 gap-10 max-[960px]:flex-col max-[960px]:w-[95vw] ">
-                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
+                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="Testimonial" loading="lazy" />
                                     <div className=" ">
                                         <p className="text-[1.01rem] text-wrap mb-6 ">
                                             I've been a part of Mirror Academy for the past three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, Mirror Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
@@ -195,7 +221,7 @@ const Home = () => {
                             </SwiperSlide>
                             <SwiperSlide className="">
                                 <div className="flex justify-center items-center mx-auto   w-[60vw]  h-fit py-10 px-2 gap-10 max-[960px]:flex-col max-[960px]:w-[95vw] ">
-                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
+                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="Testimonial" loading="lazy" />
                                     <div className=" ">
                                         <p className="text-[1.01rem] text-wrap mb-6 ">
                                             I've been a part of Mirror Academy for the past three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, Mirror Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!

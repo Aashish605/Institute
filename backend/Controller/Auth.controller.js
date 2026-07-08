@@ -6,8 +6,8 @@ export const callback = [
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
         const redirectUrl = req.user.isAdmin
-            ? process.env.ADMIN_URL || "http://localhost:5174"
-            : `${process.env.CLIENT_URL || "https://institute-frontend-gamma.vercel.app"}/profile`;
+            ? process.env.ADMIN_URL || `${process.env.CLIENT_URL}/profile`
+            : `${process.env.CLIENT_URL}/profile`;
         res.redirect(redirectUrl);
     }
 ];

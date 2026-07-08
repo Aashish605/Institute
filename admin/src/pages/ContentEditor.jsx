@@ -78,11 +78,14 @@ const textareas = ['hero_subtitle', 'about_aboutUs_text', 'footer_aboutText']
 
 export default function ContentEditor() {
   const [content, setContent] = useState({})
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [openSection, setOpenSection] = useState(0)
 
   useEffect(() => {
+    setLoading(true)
     api.get('/api/content').then(res => setContent(res.data)).catch(() => toast.error('Failed to load content'))
+      .finally(() => setLoading(false))
   }, [])
 
   const updateValue = (key, value) => {
@@ -99,6 +102,12 @@ export default function ContentEditor() {
     }
     setSaving(false)
   }
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f7921d]" />
+    </div>
+  )
 
   return (
     <div>

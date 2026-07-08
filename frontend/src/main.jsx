@@ -19,6 +19,8 @@ import Enroll from './Course/Enroll.jsx'
 import Profile from './Profile/Profile.jsx'
 import Login from './Profile/Login.jsx'
 import { RequireAuth } from './Components/ProtectedRoutes';
+import ErrorBoundary from './components/ErrorBoundary';
+import NotFound from './components/NotFound'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -36,14 +38,17 @@ const router = createBrowserRouter(createRoutesFromElements(
     </Route>
     <Route path='/notice' element={<Notice />} />
     <Route path='/login' element={<Login />} />
+    <Route path="*" element={<NotFound />} />
   </Route>
 ))
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-    <ToastContainer limit={1} />
+    <ErrorBoundary>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+        <ToastContainer limit={1} />
+      </Provider>
+    </ErrorBoundary>
   </StrictMode>,
 )

@@ -1,8 +1,22 @@
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { useContent } from '../context/ContentContext'
 import { LOGIN } from '../config/site'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 
 const Login = () => {
+    useDocumentTitle('Login')
     const content = useContent();
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/profile'
+    const logIn = useSelector(state => state.auth.user)
+
+    useEffect(() => {
+        if (logIn) navigate(from, { replace: true })
+    }, [logIn, navigate, from])
+
     return (
         <div>
             <div className=" flex p-8 justify-center ">

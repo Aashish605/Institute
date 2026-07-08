@@ -24,7 +24,7 @@ router.put('/update', async (req, res) => {
         const user = await User.findByPk(req.user.id);
         res.json({ user });
     } catch (err) {
-        res.status(500).json({ message: 'Update failed' });
+        res.status(500).json({ msg: 'Update failed' });
     }
 });
 
