@@ -7,7 +7,7 @@ import { isAdmin } from '../Middleware/adminAuth.js'
 router.post("/post", isAdmin, postNotice)
 router.get('/get', getNotice)
 router.get('/get/:id', getNoticeById)
-router.post('/delete', isAdmin, deleteNotice)
+router.delete('/delete', isAdmin, deleteNotice)
 router.put('/update', isAdmin, updateNotice)
 
 export default router;

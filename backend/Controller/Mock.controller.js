@@ -40,7 +40,6 @@ export const getMockById = async (req, res) => {
 }
 
 export const deleteMock = async (req,res) => {
-    console.log(req.body.id);
     try {
         const removed = await Mock.destroy({ where: { id: req.body.id } });
         if (!removed) return res.status(404).json({ msg: "Mock result not found" });

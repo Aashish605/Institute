@@ -57,7 +57,7 @@ export const HERO = {
 };
 
 export const ADS = {
-  title: "Run your Ad's here!",
+  title: "Run your Ads here!",
   description:
     "Promote your educational services, products, or events to a highly engaged audience of learners and educators. Contact us to feature your advertisement on Mirror.",
   image: "/ad.png",
@@ -141,7 +141,7 @@ export const ABOUT = {
 export const CONTACT = {
   heading: "Get in Touch",
   subtitle:
-    "Have questions about our programs or want to learn more about PI Academy? We'd love to hear from you.",
+    "Have questions about our programs or want to learn more about Mirror Academy? We'd love to hear from you.",
   info: {
     location: {
       label: "Our Location",

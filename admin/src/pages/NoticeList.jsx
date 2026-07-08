@@ -15,7 +15,7 @@ export default function NoticeList() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this notice?')) return
     try {
-      await api.post('/api/notice/delete', { id })
+      await api.delete('/api/notice/delete', { data: { id } })
       toast.success('Notice deleted')
       fetchData()
     } catch { toast.error('Delete failed') }

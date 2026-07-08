@@ -15,7 +15,7 @@ export default function MockList() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this mock result?')) return
     try {
-      await api.post('/api/mock/delete', { id })
+      await api.delete('/api/mock/delete', { data: { id } })
       toast.success('Mock result deleted')
       fetchData()
     } catch { toast.error('Delete failed') }

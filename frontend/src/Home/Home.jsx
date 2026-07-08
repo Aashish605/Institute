@@ -159,7 +159,7 @@ const Home = () => {
                         <h2 className="text-4xl font-bold text-center mb-2 ">What People <p className="text-secondary inline">Say</p> About Us</h2>
                         <p className="mb-8 text-center opacity-70">See what people are saying about us</p>
                         <Swiper className="mySwiper my-6 "
-                            loop={'true'}
+                            loop={true}
                             pagination={{
                                 dynamicBullets: true,
                             }}

@@ -1,6 +1,9 @@
 import { PaymentReceipt, Course } from '../Model/index.js';
 
 export const submitReceipt = async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+    }
     try {
         const { reference, receipt, notes, course, userName, userEmail } = req.body;
         if ( !receipt || !course || !userName || !userEmail) {

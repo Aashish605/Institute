@@ -10,6 +10,9 @@ function Profile() {
     const dispatch = useDispatch();
     const logIn = useSelector((state) => state.auth.user)
     const [name, setname] = useState(logIn?.displayName || '')
+    const [contact, setContact] = useState(logIn?.contact || '')
+    const [number, setNumber] = useState(logIn?.number || '')
+    const [userClass, setUserClass] = useState(logIn?.class || '')
     const [loading, setLoading] = useState(false);
 
     // Derive updated from user data (persists after refresh)
@@ -17,7 +20,10 @@ function Profile() {
 
     useEffect(() => {
         setname(logIn?.displayName || '');
-    }, [logIn?.displayName]);
+        setContact(logIn?.contact || '');
+        setNumber(logIn?.number || '');
+        setUserClass(logIn?.class || '');
+    }, [logIn?.displayName, logIn?.contact, logIn?.number, logIn?.class]);
 
     if (!logIn) return <div className='min-h-[60vh] flex items-center justify-center text-4xl text-red-700 '>Not logged in</div>;
     if (loading) return <div className='min-h-[60vh] flex items-center justify-center text-4xl text-green-700 '>Loading Your Data</div>;
@@ -26,7 +32,7 @@ function Profile() {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await api.put('/auth/update', { name });
+            const res = await api.put('/auth/update', { name, contact, number, class: userClass });
             const data = res.data;
             if (data.user) {
                 dispatch(setUser(data.user));
@@ -69,6 +75,33 @@ function Profile() {
                             type="text"
                             value={logIn.email}
                             className="border rounded my-2 px-2 py-1 w-full"
+                        />
+                    </label>
+                    <label>
+                        Contact:
+                        <input
+                            type="text"
+                            value={contact}
+                            onChange={e => setContact(e.target.value)}
+                            className="border rounded px-2 my-2 py-1 w-full"
+                        />
+                    </label>
+                    <label>
+                        Phone Number:
+                        <input
+                            type="text"
+                            value={number}
+                            onChange={e => setNumber(e.target.value)}
+                            className="border rounded px-2 my-2 py-1 w-full"
+                        />
+                    </label>
+                    <label>
+                        Class:
+                        <input
+                            type="text"
+                            value={userClass}
+                            onChange={e => setUserClass(e.target.value)}
+                            className="border rounded px-2 my-2 py-1 w-full"
                         />
                     </label>
                     <button

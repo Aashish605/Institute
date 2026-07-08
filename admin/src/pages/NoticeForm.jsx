@@ -25,12 +25,12 @@ export default function NoticeForm() {
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Notice</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
         <div>
-          <label className="block font-semibold mb-1">Title</label>
-          <input {...register('Title', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          <label htmlFor="Title" className="block font-semibold mb-1">Title</label>
+          <input id="Title" {...register('Title', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div>
-          <label className="block font-semibold mb-1">Description</label>
-          <textarea {...register('Description', { required: true })} rows={4} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          <label htmlFor="Description" className="block font-semibold mb-1">Description</label>
+          <textarea id="Description" {...register('Description', { required: true })} rows={4} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div>
           <ImageUpload onUpload={(url) => setImgUrl(url)} label="Upload Image" />

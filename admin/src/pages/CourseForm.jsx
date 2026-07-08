@@ -66,30 +66,30 @@ export default function CourseForm() {
       <h1 className="text-3xl font-bold text-gray-800 mb-6">{isEdit ? 'Edit Course' : 'Add Course'}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
         <div>
-          <label className="block font-semibold mb-1">Title</label>
-          <input {...register('title', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          <label htmlFor="title" className="block font-semibold mb-1">Title</label>
+          <input id="title" {...register('title', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div>
-          <label className="block font-semibold mb-1">Description</label>
-          <textarea {...register('description', { required: true })} rows={4} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          <label htmlFor="description" className="block font-semibold mb-1">Description</label>
+          <textarea id="description" {...register('description', { required: true })} rows={4} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div>
-          <label className="block font-semibold mb-1">Image URL</label>
-          <input {...register('image')} placeholder="Paste image URL or upload below" className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 mb-2" />
+          <label htmlFor="image" className="block font-semibold mb-1">Image URL</label>
+          <input id="image" {...register('image')} placeholder="Paste image URL or upload below" className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30 mb-2" />
           <ImageUpload onUpload={(url) => { const ev = { target: { value: url } }; register('image').onChange(ev) }} label="Or upload new image" />
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block font-semibold mb-1">Old Price</label>
-            <input type="number" {...register('oldPrice', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            <label htmlFor="oldPrice" className="block font-semibold mb-1">Old Price</label>
+            <input id="oldPrice" type="number" {...register('oldPrice', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
           </div>
           <div>
-            <label className="block font-semibold mb-1">New Price</label>
-            <input type="number" {...register('newPrice', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            <label htmlFor="newPrice" className="block font-semibold mb-1">New Price</label>
+            <input id="newPrice" type="number" {...register('newPrice', { required: true })} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
           </div>
           <div>
-            <label className="block font-semibold mb-1">Discount</label>
-            <input {...register('discount', { required: true })} placeholder="e.g. 38%" className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+            <label htmlFor="discount" className="block font-semibold mb-1">Discount</label>
+            <input id="discount" {...register('discount', { required: true })} placeholder="e.g. 38%" className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
           </div>
         </div>
         <div>
@@ -118,12 +118,12 @@ export default function CourseForm() {
           <button type="button" onClick={addSubject} className="text-sm text-primary font-medium hover:underline">+ Add subject</button>
         </div>
         <div>
-          <label className="block font-semibold mb-1">Materials Link</label>
-          <input {...register('materialsLink')} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          <label htmlFor="materialsLink" className="block font-semibold mb-1">Materials Link</label>
+          <input id="materialsLink" {...register('materialsLink')} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div>
-          <label className="block font-semibold mb-1">Mock Test Link</label>
-          <input {...register('mockTestLink')} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          <label htmlFor="mockTestLink" className="block font-semibold mb-1">Mock Test Link</label>
+          <input id="mockTestLink" {...register('mockTestLink')} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div className="flex gap-4 pt-4">
           <button type="submit" className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold">

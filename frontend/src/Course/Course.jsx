@@ -10,7 +10,7 @@ const Course = () => {
         const fetchData = async () => {
             try {
                 const res = await api.get('/api/course');
-                console.log(res.data);
+
 
                 setCourse(res.data)
             } catch (error) {
@@ -32,8 +32,8 @@ const Course = () => {
             </h1>
             <p className='text-xl opacity-70 text-center mt-4'>Transform your future with our expert-led, comprehensive courses</p>
             <div className="grid gap-[10vh] grid-cols-1 py-[10vh] ">
-                {course.map((c, i) => (
-                    <div key={i} className="shadow-md overflow-hidden flex max-[975px]:flex-col max-w-[85vw] mx-auto transition-shadow hover:shadow-xl shadow-gray-300 bg-white rounded-lg  space-y-4">
+                {course.map((c) => (
+                    <div key={c.id} className="shadow-md overflow-hidden flex max-[975px]:flex-col max-w-[85vw] mx-auto transition-shadow hover:shadow-xl shadow-gray-300 bg-white rounded-lg  space-y-4">
                         <img src={c.image} className=" w-[40%] max-[975px]:w-full h-full " alt="" />
                         <div className=" flex  flex-col space-y-4 py-6 px-10">
                             <h3 className="text-xl font-semibold overflow-clip">{c.title}</h3>

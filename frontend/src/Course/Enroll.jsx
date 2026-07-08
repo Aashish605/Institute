@@ -58,7 +58,7 @@ const Enroll = () => {
         setError('');
         setSuccess(false);
         if (!receipt) {
-            setError('Transaction reference and receipt are required.');
+            setError('Receipt image is required.');
             setSubmitting(false);
             return;
         }
@@ -198,8 +198,9 @@ const Enroll = () => {
                         </div>
                         <form onSubmit={handleSubmit} className="bg-white rounded-xl  flex flex-col gap-6 ">
                             <div>
-                                <label className="block font-semibold mb-1">Transaction Reference Number</label>
+                                <label htmlFor="reference" className="block font-semibold mb-1">Transaction Reference Number</label>
                                 <input
+                                    id="reference"
                                     type="text"
                                     className="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200"
                                     placeholder="Bank transaction ID or reference number"
@@ -208,8 +209,9 @@ const Enroll = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block font-semibold mb-1">Upload Payment Receipt <span className="text-red-500">*</span></label>
+                                <label htmlFor="receipt" className="block font-semibold mb-1">Upload Payment Receipt <span className="text-red-500">*</span></label>
                                 <input
+                                    id="receipt"
                                     type="file"
                                     accept="image/*,application/pdf"
                                     className="block"
@@ -220,8 +222,9 @@ const Enroll = () => {
                                 {receipt && <span className="text-green-600 text-sm">{receipt.name}</span>}
                             </div>
                             <div>
-                                <label className="block font-semibold mb-1">Payment Notes (Optional)</label>
+                                <label htmlFor="notes" className="block font-semibold mb-1">Payment Notes (Optional)</label>
                                 <textarea
+                                    id="notes"
                                     className="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200"
                                     placeholder="Any additional information about your payment"
                                     value={notes}

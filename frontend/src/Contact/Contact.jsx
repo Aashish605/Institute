@@ -46,7 +46,6 @@ const Contact = () => {
         }
     }
 
-    console.log(errors);
     return (
         <>
             <div className="w-full bg-gray-50">
@@ -62,16 +61,16 @@ const Contact = () => {
                         {/* Contact Form */}
                         <form className="bg-white shadow-xl rounded-2xl p-6 " onSubmit={handleSubmit(onSubmit)}>
                             <h2 className="text-2xl font-semibold mb-4">Contact Form</h2>
-                            <label htmlFor="">Full Name</label>
-                            <input required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2  ' type="text" placeholder="Your Name" {...register("fullName")} />
-                            <label htmlFor="">Email Address</label>
-                            <input required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="email" placeholder="YourEmail@gmail.com" {...register("email")} />
-                            <label htmlFor="">Phone Number</label>
-                            <input required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="number" placeholder="+977 XXXXXXXXXX" {...register("phone")} />
-                            <label htmlFor="">Subject</label>
-                            <input required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="text" placeholder="How can we help you?" {...register("subject")} />
-                            <label htmlFor="">Message</label>
-                            <textarea placeholder='Describe your inquiry' className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' {...register("message")} />
+                            <label htmlFor="fullName">Full Name</label>
+                            <input id="fullName" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2  ' type="text" placeholder="Your Name" {...register("fullName")} />
+                            <label htmlFor="email">Email Address</label>
+                            <input id="email" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="email" placeholder="YourEmail@gmail.com" {...register("email")} />
+                            <label htmlFor="phone">Phone Number</label>
+                            <input id="phone" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="number" placeholder="+977 XXXXXXXXXX" {...register("phone")} />
+                            <label htmlFor="subject">Subject</label>
+                            <input id="subject" required className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' type="text" placeholder="How can we help you?" {...register("subject")} />
+                            <label htmlFor="message">Message</label>
+                            <textarea id="message" placeholder='Describe your inquiry' className='w-full border rounded-md opacity-80 border-gray-400 px-3 mt-2 mb-6  py-2' {...register("message")} />
 
                             <input required className="w-full bg-secondary cursor-pointer text-white py-2 rounded font-semibold hover:bg-secondary/90 transition" type="Submit" />
                         </form>
