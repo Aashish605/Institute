@@ -109,7 +109,7 @@ function Profile() {
                     </label>
                     <button
                         type="submit"
-                        className="bg-blue-500 text-white rounded px-4 py-2 mt-2"
+                        className="bg-secondary text-white rounded px-4 py-2 mt-2"
                         disabled={loading}
                     >
                         {updated ? 'Already Updated' : loading ? 'Updating...' : 'Update Profile'}

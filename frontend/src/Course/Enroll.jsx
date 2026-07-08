@@ -234,7 +234,7 @@ const Enroll = () => {
                             </div>
                             <button
                                 type="submit"
-                                className="bg-pink-700 hover:bg-pink-800 text-white font-semibold rounded py-3 mt-2 transition disabled:opacity-60"
+                                className="bg-secondary hover:bg-secondary/90 text-white font-semibold rounded py-3 mt-2 transition disabled:opacity-60"
                                 disabled={submitting}
                             >
                                 {submitting ? "Submitting..." : "Submit Payment for Verification"}

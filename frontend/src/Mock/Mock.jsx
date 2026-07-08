@@ -66,7 +66,7 @@ const Mock = () => {
                             <div className="text-sm  font-semibold opacity-65 mb-2">Week: {result.Week}</div>
                             <div className="text-lg  font-bold text-gray-800 mb-4 text-center">{result.Title}</div>
                             <NavLink to={`/mock/${result.id}`}
-                                className="mt-auto px-4 py-2 bg-secondary text-white rounded-lg font-semibold hover:bg-yellow-400 hover:text-blue-900 transition-colors"
+                                className="mt-auto px-4 py-2 bg-secondary text-white rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors"
                             >
                                 View Result
                             </NavLink>
@@ -80,7 +80,7 @@ const Mock = () => {
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className={`px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
+                            className={`px-4 py-2 rounded bg-primary/10 text-primary font-semibold ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/20'}`}
                         >
                             Previous
                         </button>
@@ -88,7 +88,7 @@ const Mock = () => {
                             <button
                                 key={i}
                                 onClick={() => handlePageChange(i + 1)}
-                                className={`px-3 py-2 rounded font-semibold ${currentPage === i + 1 ? 'bg-secondary text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'}`}
+                                className={`px-3 py-2 rounded font-semibold ${currentPage === i + 1 ? 'bg-secondary text-white' : 'bg-primary/5 text-primary hover:bg-primary/10'}`}
                             >
                                 {i + 1}
                             </button>
@@ -96,7 +96,7 @@ const Mock = () => {
                         <button
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className={`px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
+                            className={`px-4 py-2 rounded bg-primary/10 text-primary font-semibold ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/20'}`}
                         >
                             Next
                         </button>

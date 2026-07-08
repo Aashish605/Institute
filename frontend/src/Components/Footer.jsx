@@ -21,10 +21,10 @@ const Footer = () => {
                     {/* Quick Links Section */}
                     <div className="w-full text-center sm:w-[30%]">
                         <p className="text-xl">Quick Links</p>
-                        <div className=" text-[0.9rem]">
-                            <li className="hover:text-white hover:underline decoration-0 hover:underline-offset-4 cursor-pointer list-none mt-5">Menu</li>
-                            <li className="hover:text-white hover:underline decoration-0 hover:underline-offset-4 cursor-pointer list-none mt-2">About Us</li>
-                            <li className="hover:text-white hover:underline decoration-0 hover:underline-offset-4 cursor-pointer list-none mt-2">Log In</li>
+                        <div className="text-[0.9rem] flex flex-col items-center">
+                            <NavLink to="" className="hover:text-white hover:underline decoration-0 hover:underline-offset-4 mt-5">Menu</NavLink>
+                            <NavLink to="/about" className="hover:text-white hover:underline decoration-0 hover:underline-offset-4 mt-2">About Us</NavLink>
+                            <NavLink to="/login" className="hover:text-white hover:underline decoration-0 hover:underline-offset-4 mt-2">Log In</NavLink>
                         </div>
                     </div>
 

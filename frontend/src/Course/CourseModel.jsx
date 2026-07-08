@@ -46,7 +46,7 @@ const CourseModel = () => {
 
             {/* Features Section */}
             <div className="bg-white rounded-xl shadow p-6 mb-10">
-                <h2 className="text-2xl font-bold text-blue-900 mb-4">Why Choose This Course?</h2>
+                <h2 className="text-2xl font-bold text-primary mb-4">Why Choose This Course?</h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {course.features && course.features.map((feature, idx) => (
                         <li key={idx} className="flex items-center mx-10 gap-3">
@@ -59,18 +59,18 @@ const CourseModel = () => {
 
             {/* Subjects Covered */}
             <div className="bg-white rounded-xl shadow p-6 mb-10">
-                <h2 className="text-2xl font-bold text-blue-900 mb-4">Subjects Covered</h2>
+                <h2 className="text-2xl font-bold text-primary mb-4">Subjects Covered</h2>
                 <div className="flex flex-wrap gap-3">
                     {course.subjects && course.subjects.map((subject, idx) => (
-                        <span key={idx} className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold text-sm">{subject}</span>
+                        <span key={idx} className="bg-primary/10 text-primary px-4 py-2 rounded-full font-semibold text-sm">{subject}</span>
                     ))}
                 </div>
             </div>
 
             {/* Call to Action */}
             <div className="text-center mt-12">
-                <NavLink to={course.materialsLink} className="inline-block bg-blue-700 text-white px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 hover:text-blue-900 transition-colors mr-4">Access Course Materials →</NavLink>
-                <NavLink to='/mock' className="inline-block bg-secondary text-white px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 hover:text-blue-900 transition-colors">Access Mock Tests →</NavLink>
+                <NavLink to={course.materialsLink} className="inline-block bg-primary text-white px-6 py-3 rounded-lg font-bold hover:bg-secondary hover:text-white transition-colors mr-4">Access Course Materials →</NavLink>
+                <NavLink to='/mock' className="inline-block bg-secondary text-white px-6 py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition-colors">Access Mock Tests →</NavLink>
             </div>
         </div>
     );

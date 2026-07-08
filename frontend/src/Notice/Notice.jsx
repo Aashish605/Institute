@@ -77,7 +77,7 @@ const Notice = () => {
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className={`px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
+                        className={`px-4 py-2 rounded bg-primary/10 text-primary font-semibold ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/20'}`}
                     >
                         Previous
                     </button>
@@ -85,7 +85,7 @@ const Notice = () => {
                         <button
                             key={i}
                             onClick={() => handlePageChange(i + 1)}
-                            className={`px-3 py-2 rounded font-semibold ${currentPage === i + 1 ? 'bg-secondary text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'}`}
+                            className={`px-3 py-2 rounded font-semibold ${currentPage === i + 1 ? 'bg-secondary text-white' : 'bg-primary/5 text-primary hover:bg-primary/10'}`}
                         >
                             {i + 1}
                         </button>
@@ -93,7 +93,7 @@ const Notice = () => {
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className={`px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
+                        className={`px-4 py-2 rounded bg-primary/10 text-primary font-semibold ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/20'}`}
                     >
                         Next
                     </button>

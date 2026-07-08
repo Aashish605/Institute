@@ -29,7 +29,7 @@ const NoticeModel = () => {
     return (
         <div className="max-w-[85vw] mx-auto max-sm:px-0 px-6">
             <div className="bg-white rounded-2xl   flex flex-col items-center max-sm:p-0 p-8">
-                <div className="text-4xl font-bold pt-6 text-secondary mb-2 text-center"> Result of {notice.Title}</div>
+                <div className="text-4xl font-bold pt-6 text-secondary mb-2 text-center">{notice.Title}</div>
                 <div className="text-gray-700 text-lg mb-6 text-center">{notice.Description}</div>
                 <img src={notice.Img} alt={notice.Title} className="w-full h-full  rounded-xl mb-6  " />
                 <div className="text-xs text-gray-400 mt-4">Published: {new Date(notice.createdAt).toLocaleDateString()}</div>
