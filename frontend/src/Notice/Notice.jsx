@@ -9,9 +9,11 @@ const Notice = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const itemsPerPage = 6;
 
     const getdata = async (page = 1) => {
+        setLoading(true);
         setError(null);
         try {
             const data = await api.get(`/api/notice/get?page=${page}&limit=${itemsPerPage}`)
@@ -19,6 +21,8 @@ const Notice = () => {
             setTotalPages(data.data.totalPages)
         } catch {
             setError('Failed to load notices');
+        } finally {
+            setLoading(false);
         }
     }
 
