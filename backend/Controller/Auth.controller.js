@@ -5,7 +5,10 @@ export const passportAuth = passport.authenticate('google', { scope: ['profile',
 export const callback = [
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
-        res.redirect(`${process.env.CLIENT_URL || "https://institute-frontend-gamma.vercel.app"}/profile`);
+        const redirectUrl = req.user.isAdmin
+            ? process.env.ADMIN_URL || "http://localhost:5174"
+            : `${process.env.CLIENT_URL || "https://institute-frontend-gamma.vercel.app"}/profile`;
+        res.redirect(redirectUrl);
     }
 ];
 
