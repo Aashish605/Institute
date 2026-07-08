@@ -1,216 +1,311 @@
 import { useState, useEffect } from 'react'
-import { Swiper, SwiperSlide } from "swiper/react";
 import api from "../config/api";
 import { NavLink } from 'react-router-dom'
-import "swiper/css";
-import { Navigation, Pagination } from "swiper/modules";
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import './style.css'
+import { useContent } from '../context/ContentContext'
+import { HERO, COURSES } from '../config/site'
+import useDocumentTitle from '../hooks/useDocumentTitle'
+import { motion } from "motion/react"
+import { Award, Users, GraduationCap, BookOpen, MonitorPlay, UserCheck, Library } from 'lucide-react'
+import CourseCard, { CourseCardSkeleton } from '../Components/CourseCard'
+import Testimonials from '../Components/Testimonials'
 
+const stats = [
+  { label: "Years of Excellence", value: "5+", icon: Award },
+  { label: "Students Taught", value: "1000+", icon: Users },
+  { label: "Expert Faculty", value: "25+", icon: GraduationCap },
+  { label: "Courses Offered", value: "10+", icon: BookOpen },
+]
+
+const features = [
+  {
+    icon: MonitorPlay,
+    title: "Hybrid Learning",
+    description: "Blend of live and recorded sessions by top professionals tailored to your pace.",
+    highlights: ["Live interactive classes", "Recorded session library", "Flexible scheduling"],
+  },
+  {
+    icon: UserCheck,
+    title: "Personal Mentorship",
+    description: "Tailored guidance from experienced mentors who help you navigate your academic journey.",
+    highlights: ["One-on-one mentoring", "Progress tracking", "Doubt resolution"],
+  },
+  {
+    icon: Library,
+    title: "Resource Library",
+    description: "Structured content library with curated materials for enriched learning across all subjects.",
+    highlights: ["Topic-wise modules", "Practice sets", "Study materials"],
+  },
+]
+
+const fadeUp = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" },
+  transition: { duration: 0.5 },
+}
 
 const Home = () => {
+  useDocumentTitle('Home')
+  const content = useContent()
+  const [course, setCourse] = useState([])
+  const [loading, setLoading] = useState(true)
 
-    const [course, setCourse] = useState([]);
+  useEffect(() => {
+    api.get('/api/course')
+      .then(res => setCourse(res.data))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await api.get('/api/course');
-                setCourse(res.data)
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => {
-        const handleModal = (e) => {
-            if (e.target.closest('.Modal') && isOpen) {
-                setIsOpen(false)
-            }
-        }
-
-        document.addEventListener("click", handleModal)
-        return () => {
-            document.removeEventListener("click", handleModal)
-        };
-    }, [isOpen]);
+  return (
+    <div>
+      {/* Hero Section */}
+      <section className="relative min-h-[92vh] flex items-center overflow-hidden pt-20">
 
 
-    return (
-        <>
-            <div>
-                {isOpen && (
-                    <div className='Modal z-50 fixed w-full h-full top-0 left-0 flex items-center justify-center '
-                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", }}
-                    >
-                        <div className='bg-white rounded-2xl'>
-                            <iframe
-                                className="rounded-2xl"
-                                src="https://www.facebook.com/plugins/video.php?height=500&href=https%3A%2F%2Fwww.facebook.com%2F61555638202803%2Fvideos%2F1042443771036432%2F&show_text=false&width=560&t=0"
-                                width="560"
-                                height="472"
-                                allowfullscreen="true"
-                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                                allowFullScreen="true"
-                            ></iframe>
-                        </div>
+        <div className="max-w-7xl mx-auto px-6 w-full py-16">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left — Text */}
+            <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-secondary/30 bg-secondary/10 text-secondary text-sm font-medium mb-8">
+                <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+                {content.hero_tagline || "Nepal's Premier Learning Institute"}
+              </div>
+
+              {/* Heading */}
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-extrabold leading-[1.1] text-text mb-6 tracking-tight">
+                {content.hero_heading || HERO.heading}{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                  {content.hero_headingHighlight || HERO.headingHighlight}
+                </span>
+              </h1>
+
+              {/* Subtitle */}
+              <p className="text-base sm:text-lg text-text-secondary leading-relaxed mb-10 max-w-lg">
+                {content.hero_subtitle || HERO.subtitle}
+              </p>
+
+              {/* CTAs */}
+              <div className="flex flex-wrap gap-4 mb-12">
+                <NavLink
+                  to="/course"
+                  className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-secondary text-white font-semibold shadow-lg shadow-secondary/30 hover:bg-secondary-light hover:shadow-secondary/50 hover:scale-[1.03] transition-all duration-200"
+                >
+                  {content.hero_cta || HERO.cta}
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </NavLink>
+                <NavLink
+                  to="/about"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border border-border text-text-secondary font-semibold hover:bg-surface hover:border-primary/20 hover:text-primary transition-all duration-200"
+                >
+                  Learn More
+                </NavLink>
+              </div>
+
+
+            </motion.div>
+
+            {/* Right — Image card */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+              className="relative"
+            >
+
+
+              {/* Main image */}
+              <div className="relative rounded-2xl overflow-hidden">
+                <img
+                  src={content.hero_image || HERO.image}
+                  alt="Hero"
+                  className="w-full h-[420px] sm:h-[500px] object-cover"
+                />
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#02122b]/60 via-transparent to-transparent" />
+
+                {/* Floating card — top right */}
+                <div className="absolute top-5 right-5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-3 text-white shadow-xl">
+                  <div className="text-xs text-white/60 mb-0.5">Success Rate</div>
+                  <div className="text-xl font-bold">98%</div>
+                </div>
+
+                {/* Floating card — bottom left */}
+                <div className="absolute bottom-5 left-5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-3 text-white shadow-xl flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-secondary/80 flex items-center justify-center flex-shrink-0">
+                    <GraduationCap className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-white/60">New Batch</div>
+                    <div className="text-sm font-semibold">Enrolling Now</div>
+                  </div>
+                </div>
+              </div>
+
+
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="bg-white overflow-hidden py-14">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat, i) => {
+              const Icon = stat.icon
+              return (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="group relative"
+                >
+                  <div className="relative bg-white border rounded-xl p-6 text-center hover:shadow-md home-info-card">
+                    <div className="w-11 h-11 mx-auto mb-3 rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="w-5 h-5 text-primary" />
                     </div>
-                )}
+                    <div className="text-2xl sm:text-3xl font-bold text-primary mb-0.5">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs sm:text-sm text-text-muted">
+                      {stat.label}
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Courses */}
+      <div className="rounded-2xl border border-border mx-4 mb-6 overflow-hidden">
+        <section className="relative py-20 bg-surface overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+            <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-primary rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/70 rounded-full blur-3xl" />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-6">
+            <motion.div {...fadeUp} className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3">
+              {content.course_heading || COURSES.heading}
+            </h2>
+            <p className="text-text-secondary max-w-xl mx-auto">
+              {content.course_subtitle || COURSES.subtitle}
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loading ? (
+            Array.from({ length: 3 }).map((_, i) => <CourseCardSkeleton key={i} />)
+          ) : (
+            course.slice(0, 3).map((c, i) => (
+              <motion.div
+                key={c.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <CourseCard course={c} index={i} />
+              </motion.div>
+            ))
+          )}
+          </div>
+
+          {course.length > 3 && (
+            <motion.div {...fadeUp} className="text-center mt-10">
+              <NavLink to="/course" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-border text-text-secondary font-semibold hover:bg-surface transition-colors">
+                View All Courses
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              </NavLink>
+            </motion.div>
+          )}
+        </div>
+      </section>
+      </div>
+
+      {/* Why Choose Us */}
+      <section className="relative py-20 mb-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <motion.div {...fadeUp} className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 text-primary text-sm font-medium mb-4">
+              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+              Why Us
             </div>
-            <div>
-                <section id="home" className="max-w-[85vw] mx-auto">
-                    <div className=" mx-auto flex flex-col md:flex-row items-center p-8 gap-10 ">
-                        <div className="md:w-1/2 space-y-6 ">
-                            <h1 className="text-5xl max-sm:text-4xl font-bold">Empowering Learning for <p className="text-primary inline">Everyone</p></h1>
-                            <p className="">Join Mirror where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.</p>
-                        </div>
-                        <div className="md:w-1/2 max-sm:w-[95vw]  flex items-center  justify-center overflow-hidden">
-                            <img onClick={() => {
-                                setIsOpen(true)
-                            }
-                            } src="Home/Interview.png" className=" h-[40vh] shadow-xl   rounded-3xl  cursor-pointer  object-cover object-center  " alt="" />
-                        </div>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Why Choose <span className="text-secondary">Mirror</span></h2>
+            <p className="text-text-secondary max-w-xl mx-auto">Everything you need to excel in your entrance exams</p>
+            <div className="w-16 h-1 bg-gradient-to-r from-primary/20 via-secondary/30 to-primary/20 rounded-full mx-auto mt-6" />
+          </motion.div>
+          <div className="grid sm:grid-cols-3 gap-8">
+            {features.map((f, i) => {
+              const Icon = f.icon
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="group"
+                >
+                  <div className="h-full p-8 rounded-2xl bg-white border hover:shadow-xl hover:border-secondary/20 transition-all duration-300">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="w-7 h-7 text-primary" />
                     </div>
-                </section >
+                    <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
+                    <p className="text-sm text-text-secondary mb-4 leading-relaxed">{f.description}</p>
+                    <ul className="space-y-2">
+                      {f.highlights.map((h, j) => (
+                        <li key={j} className="flex items-center gap-2 text-sm text-text-muted">
+                          <div className="w-1.5 h-1.5 rounded-full bg-secondary flex-shrink-0" />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
 
-                {/* Featured Courses */}
-                < div className="bg-[#f9fafb] w-full" >
-                    <section id="courses" className="container py-12 max-sm:py-4 max-w-[85vw] mx-auto   ">
-                        <h2 className="text-5xl text-secondary font-bold text-center mb-2 ">Our Featured Courses</h2>
-                        <p className="text-center font-semibold opacity-50 mb-10">Discover our expert-led courses designed to help you achieve your goals</p>
-                        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
-                            {course.map((c, i) => (
-                                <div key={i} className="shadow-md hover:shadow-xl transition-shadow shadow-gray-300 bg-white rounded-lg  space-y-4">
-                                    <img src={c.image} className="rounded-t-2xl " alt="" />
-                                    <div className=" flex  flex-col space-y-4 p-6">
-                                        <h3 className="text-xl font-semibold overflow-clip">{c.title}</h3>
-                                        <p className="line-clamp-3  ">{c.description} </p>
-                                        <div className="flex items-center justify-between space-x-2">
-                                            <div className="flex flex-col ">
-                                                <span className="text-gray-500 text-sm line-through">Rs. {c.oldPrice}</span>
-                                                <span className="text-xl text-secondary font-bold">Rs. {c.newPrice}</span>
-                                            </div>
-                                            <button className="text-sm px-2 py-1 rounded-3xl bg-green-200">{c.discount} off</button>
-                                        </div>
-                                        <div className="w-full flex  gap-3">
-                                            <NavLink to={`/course/${c.title}/enroll`} className=" w-1/2 px-4 py-2 cursor-pointer bg-secondary text-white rounded">Enroll Now</NavLink>
-                                            <NavLink to={`/course/${c.title}`} className=" w-1/2 px-4 py-2 cursor-pointer border border-secondary text-secondary rounded">Learn More</NavLink>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                </div >
+      <div className="mb-6">
+        <Testimonials />
+      </div>
 
-                <section className='w-full pb-12 text-white bg-gray-50 '>
-                    <div className="flex flex-col p-8 rounded-2xl md:flex-row bg-secondary items-center max-w-[85vw] mx-auto justify-between gap-8">
-                        <div className="md:w-2/3">
-                            <h2 className="text-3xl font-bold mb-2">Run your Ad's here!</h2>
-                            <p className="mb-4">
-                                Promote your educational services, products, or events to a highly engaged audience of learners and educators. Contact us to feature your advertisement on Mirror.
-                            </p>
-                            <NavLink to={'/contact'} className="inline-block px-6 py-2 bg-white text-secondary font-semibold rounded-md shadow hover:bg-gray-100 transition">
-                                Contact Us
-                            </NavLink>
-                        </div>
-                        <div className="md:w-1/3 flex justify-center">
-                            <img
-                                src="/ad.png"
-                                alt=""
-                                className="rounded-xl shadow-lg w-64 h-40 object-cover object-center bg-gray-200"
-                            />
-                        </div>
-                    </div>
-                </section>
-
-                {/* Features */}
-                < section className="bg-white  max-w-[85vw] mx-auto my-[10vh] " >
-                    <h1 className="text-5xl text-center font-semibold ">Unlock Your Potential with</h1>
-                    <h1 className="text-5xl text-center font-semibold text-secondary ">Mirror</h1>
-                    <div className="container mx-auto grid  gap-8 my-16  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 jus ">
-                        {[
-                            { title: "Engaging Hybrid Learning Experiences", icon: "Home/Learning.png", feature: "Experience a perfect blend of live sessions and recorded classes delivered by top professionals tailored to meet your needs." },
-                            { title: "Personalized Mentorship", icon: "/Home/Mentor.png", feature: "Enjoy tailored guidance from experienced mentors who assist you in navigating your academic journey effectively." },
-                            { title: "Comprehensive Course Library", icon: "Home/Libray.png", feature: "Access a structured content library that simplifies your study process and enriches your learning experience across various subjects." },
-                        ].map((f, i) => (
-                            <div key={i} className="text-center flex flex-col items-center space-y-4 ">
-                                <img src={`${f.icon}`} alt="" className=" w-[5vw]  rounded-[50%] border-secondary max-sm:w-[10vw] " />
-                                <h4 className=" font-semibold">{f.title}</h4>
-                                <p className="opacity-70">{f.feature} </p>
-                            </div>
-                        ))}
-                    </div>
-                </section >
-
-                {/* Testimonials */}
-                < div className="bg-gray-50 w-full" >
-                    <section className=" py-12 max-w-[85vw] mx-auto">
-                        <h2 className="text-4xl font-bold text-center mb-2 ">What People <p className="text-secondary inline">Say</p> About Us</h2>
-                        <p className="mb-8 text-center opacity-70">See what people are saying about us</p>
-                        <Swiper className="mySwiper my-6 "
-                            loop={'true'}
-                            pagination={{
-                                dynamicBullets: true,
-                            }}
-                            // navigation={true}
-                            modules={[Pagination, Navigation]}
-
-                        >
-                            <SwiperSlide className="">
-                                <div className="flex justify-center items-center mx-auto   w-[60vw]  h-fit py-10 px-2 gap-10 max-[960px]:flex-col max-[960px]:w-[95vw] ">
-                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
-                                    <div className=" ">
-                                        <p className="text-[1.01rem] text-wrap mb-6 ">
-                                            I've been a part of Pi Academy for the part three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, PI Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
-                                        </p>
-                                        <p className="font-semibold">Ram Shahi</p>
-                                        <p className="opacity-60 text-sm">St.Xavier College ,Scholarship</p>
-                                        <p className="opacity-60 text-sm">Rank : 1 Entrance 2081</p>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide className="">
-                                <div className="flex justify-center items-center mx-auto   w-[60vw]  h-fit py-10 px-2 gap-10 max-[960px]:flex-col max-[960px]:w-[95vw] ">
-                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
-                                    <div className=" ">
-                                        <p className="text-[1.01rem] text-wrap mb-6 ">
-                                            I've been a part of Pi Academy for the part three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, PI Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
-                                        </p>
-                                        <p className="font-semibold">Ram Shahi</p>
-                                        <p className="opacity-60 text-sm">St.Xavier College ,Scholarship</p>
-                                        <p className="opacity-60 text-sm">Rank : 1 Entrance 2081</p>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                            <SwiperSlide className="">
-                                <div className="flex justify-center items-center mx-auto   w-[60vw]  h-fit py-10 px-2 gap-10 max-[960px]:flex-col max-[960px]:w-[95vw] ">
-                                    <img src="Home/person.png" className="w-[30vh] max-[960px]:w-[20vh] object-center object-cover " alt="" />
-                                    <div className=" ">
-                                        <p className="text-[1.01rem] text-wrap mb-6 ">
-                                            I've been a part of Pi Academy for the part three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, PI Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!
-                                        </p>
-                                        <p className="font-semibold">Ram Shahi</p>
-                                        <p className="opacity-60 text-sm">St.Xavier College ,Scholarship</p>
-                                        <p className="opacity-60 text-sm">Rank : 1 Entrance 2081</p>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                        </Swiper>
-                    </section>
-                </div >
-            </div >
-        </>
-    )
+      {/* CTA */}
+      <div className="rounded-2xl border border-border mx-4 mb-6 overflow-hidden">
+        <section className="relative py-20 bg-surface overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.05]">
+          <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-secondary rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent rounded-full blur-3xl" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
+          <motion.div {...fadeUp}>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 text-primary text-sm font-medium mb-6">
+              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+              Join 1000+ Students
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">Ready to Start Your Journey?</h2>
+            <p className="text-text-secondary mb-10 max-w-lg mx-auto text-lg">Join Mirror Academy today and take the first step toward your dream career.</p>
+            <NavLink to="/contact" className="inline-flex items-center gap-3 px-8 py-3.5 rounded-xl bg-secondary text-white font-semibold hover:bg-secondary-light hover:shadow-xl hover:shadow-secondary/30 transition-all duration-300 group">
+              Get Started Now
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+            </NavLink>
+          </motion.div>
+        </div>
+      </section>
+      </div>
+    </div>
+  )
 }
 
 export default Home
-
-

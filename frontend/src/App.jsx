@@ -29,7 +29,9 @@ const App = () => {
     <ContentProvider>
       <ScrollToTop />
       <Nav />
-      <Outlet />
+      <main className="min-h-screen">
+        <Outlet />
+      </main>
       <Whatsapp />
       <Footer />
     </ContentProvider>

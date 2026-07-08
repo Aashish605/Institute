@@ -1,0 +1,8 @@
+Error: The following dependencies are imported but could not be resolved:
+
+  [36mclass-variance-authority[39m [37m[2m(imported by D:/Projects/Institute/frontend/src/Components/ui/button.jsx)[22m[39m
+
+Are they installed?
+    at file:///D:/Projects/Institute/frontend/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:14849:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///D:/Projects/Institute/frontend/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:46985:28

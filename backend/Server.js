@@ -45,6 +45,7 @@ const PostgreSQLStore = pgStore(session)
 app.use(session({
     store: new PostgreSQLStore({
         conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}`,
+        createTableIfMissing: true,
     }),
     secret: process.env.SESSION_SECRET || "fallback-secret",
     resave: false,

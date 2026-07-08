@@ -3,104 +3,113 @@ import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import { useContent } from '../context/ContentContext'
 import { NOTICE } from '../config/site'
+import { motion } from "motion/react"
+
 const Notice = () => {
-    const content = useContent();
-    const [notices, setnotices] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const itemsPerPage = 6;
+  const content = useContent();
+  const [notices, setNotices] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const itemsPerPage = 6;
 
-    const getdata = async (page = 1) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const data = await api.get(`/api/notice/get?page=${page}&limit=${itemsPerPage}`)
-            setnotices(data.data.rows)
-            setTotalPages(data.data.totalPages)
-        } catch {
-            setError('Failed to load notices');
-        } finally {
-            setLoading(false);
-        }
+  const getdata = async (page = 1) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await api.get(`/api/notice/get?page=${page}&limit=${itemsPerPage}`)
+      setNotices(data.data.rows)
+      setTotalPages(data.data.totalPages)
+    } catch {
+      setError('Failed to load notices');
+    } finally {
+      setLoading(false);
     }
+  }
 
-    useEffect(() => {
-        getdata(currentPage)
-    }, [currentPage]);
+  useEffect(() => { getdata(currentPage) }, [currentPage]);
 
-    const handlePageChange = (page) => {
-        if (page >= 1 && page <= totalPages) setCurrentPage(page);
-    };
+  if (error) return (
+    <div className="pt-24 pb-12 text-center">
+      <p className="text-error text-lg mb-4">{error}</p>
+      <button onClick={() => getdata(currentPage)} className="px-4 py-2 rounded-lg bg-primary text-white font-semibold">Retry</button>
+    </div>
+  )
 
-    if (error) return (
-        <div className='max-w-5xl mx-auto py-12 px-4 text-center'>
-            <p className="text-red-500 text-lg">{error}</p>
-            <button onClick={() => getdata(currentPage)} className="mt-4 px-4 py-2 bg-secondary text-white rounded-lg font-semibold">Retry</button>
-        </div>
-    )
+  return (
+    <div className="pt-24 pb-16">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{content.notice_heading || NOTICE.heading}</h1>
+        </motion.div>
 
-    if (!loading && notices.length === 0) {
-        return (
-            <div className="max-w-5xl mx-auto py-12 px-4 text-center">
-                <h1 className="text-4xl font-bold text-secondary mb-8 text-center">{content.notice_heading || NOTICE.heading}</h1>
-                <p className="text-gray-500 text-lg">No notices found.</p>
-            </div>
-        )
-    }
-
-    return (
-        <div className="max-w-5xl mx-auto py-12 px-4">
-            <h1 className="text-4xl font-bold text-secondary mb-8 text-center">{content.notice_heading || NOTICE.heading}</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {notices.map((notice) => (
-                    <div
-                        key={notice.id}
-                        className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden  pb-6 flex flex-col items-center cursor-pointer hover:bg-secondary-50"
-                    >
-                        <img src={notice.Img} alt={notice.title} className="w-full h-[15vh]  object-center object-cover mb-4  " />
-                        <div className="text-lg px-6 font-bold text-gray-800 mb-2 text-center">{notice.Title}</div>
-                        <div className="text-sm px-6 text-gray-600 line-clamp-2 mb-4 text-center">{notice.Description}</div>
-                        <NavLink to={`/notice/${notice.id}`}
-                            className="mt-auto px-4 py-2 bg-secondary text-white rounded-lg font-semibold hover:bg-yellow-400 hover:text-secondary-900 transition-colors"
-                        >
-                            View Notice
-                        </NavLink>
-
-                    </div>
-                ))}
-            </div>
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-                <div className="flex justify-center mt-10 gap-2">
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className={`px-4 py-2 rounded bg-primary/10 text-primary font-semibold ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/20'}`}
-                    >
-                        Previous
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => (
-                        <button
-                            key={i}
-                            onClick={() => handlePageChange(i + 1)}
-                            className={`px-3 py-2 rounded font-semibold ${currentPage === i + 1 ? 'bg-secondary text-white' : 'bg-primary/5 text-primary hover:bg-primary/10'}`}
-                        >
-                            {i + 1}
-                        </button>
-                    ))}
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className={`px-4 py-2 rounded bg-primary/10 text-primary font-semibold ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/20'}`}
-                    >
-                        Next
-                    </button>
+        {loading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="bg-white rounded-xl overflow-hidden border border-border">
+                <div className="h-36 skeleton" />
+                <div className="p-5 space-y-2">
+                  <div className="h-5 skeleton rounded w-3/4" />
+                  <div className="h-3 skeleton rounded w-full" />
                 </div>
+              </div>
+            ))}
+          </div>
+        ) : notices.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-text-muted text-lg">No notices found.</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {notices.map((notice, i) => (
+                <motion.div
+                  key={notice.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="group bg-white rounded-xl border border-border hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden"
+                >
+                  <div className="h-36 overflow-hidden">
+                    <img src={notice.Img} alt={notice.Title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-semibold mb-2 line-clamp-1">{notice.Title}</h3>
+                    <p className="text-sm text-text-secondary line-clamp-2 mb-4">{notice.Description}</p>
+                    <NavLink to={`/notice/${notice.id}`} className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-semibold hover:bg-secondary-dark transition-colors">
+                      {content.notice_viewButton || NOTICE.viewButton}
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                    </NavLink>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-10">
+                <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}
+                  className="px-3 py-2 rounded-lg text-sm font-medium border border-border hover:bg-surface transition-colors disabled:opacity-30">
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button key={i} onClick={() => setCurrentPage(i + 1)}
+                    className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-primary text-white' : 'border border-border hover:bg-surface'}`}>
+                    {i + 1}
+                  </button>
+                ))}
+                <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}
+                  className="px-3 py-2 rounded-lg text-sm font-medium border border-border hover:bg-surface transition-colors disabled:opacity-30">
+                  Next
+                </button>
+              </div>
             )}
-        </div>
-    );
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
-export default Notice;
+export default Notice

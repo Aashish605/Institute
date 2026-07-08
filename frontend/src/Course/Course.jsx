@@ -1,62 +1,88 @@
-import { NavLink } from 'react-router-dom'
 import api from "../config/api";
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import useDocumentTitle from '../hooks/useDocumentTitle'
+import { motion } from "motion/react"
+import CourseCard, { CourseCardSkeleton } from '../Components/CourseCard'
 
 const Course = () => {
-    useDocumentTitle('Courses')
-    const [course, setCourse] = useState([]);
-    const [loading, setLoading] = useState(true);
+  useDocumentTitle('Courses')
+  const [course, setCourse] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await api.get('/api/course');
+  useEffect(() => {
+    api.get('/api/course')
+      .then(res => setCourse(res.data))
+      .catch(() => setCourse(null))
+      .finally(() => setLoading(false))
+  }, []);
 
+  const filtered = useMemo(() => {
+    if (!course || !search) return course;
+    return course.filter(c =>
+      c.title?.toLowerCase().includes(search.toLowerCase()) ||
+      c.description?.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [course, search]);
 
-                setCourse(res.data)
-            } catch (error) {
-                setCourse(null);
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
+  if (!course) return (
+    <div className="pt-24 pb-12 text-center">
+      <p className="text-error text-lg">Failed to load courses.</p>
+      <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 rounded-lg bg-primary text-white font-semibold">Retry</button>
+    </div>
+  );
 
-    if (loading) return <div className="text-center py-20 text-xl">Loading...</div>;
-    if (!course) return <div className="text-center py-20 text-xl text-red-500">Course not found.</div>;
-    return (
-        <>
-            <h1 className='text-5xl text-center font-bold text-secondary mt-16'>
-                Explore Our Courses
-            </h1>
-            <p className='text-xl opacity-70 text-center mt-4'>Transform your future with our expert-led, comprehensive courses</p>
-            <div className="grid gap-[10vh] grid-cols-1 py-[10vh] ">
-                {course.map((c) => (
-                    <div key={c.id} className="shadow-md overflow-hidden flex max-[975px]:flex-col max-w-[85vw] mx-auto transition-shadow hover:shadow-xl shadow-gray-300 bg-white rounded-lg  space-y-4">
-                        <img src={c.image} className=" w-[40%] max-[975px]:w-full h-full " alt={c.title} />
-                        <div className=" flex  flex-col space-y-4 py-6 px-10">
-                            <h3 className="text-xl font-semibold overflow-clip">{c.title}</h3>
-                            <p className=" line-clamp-3 ">{c.description} </p>
-                            <div className="flex items-center justify-between space-x-2">
-                                <div className="flex flex-col ">
-                                    <span className="text-gray-500 text-sm line-through">Rs. {c.oldPrice}</span>
-                                    <span className="text-xl text-secondary font-bold">Rs. {c.newPrice}</span>
-                                </div>
-                                <button className="text-sm px-2 py-1 rounded-3xl bg-green-200">{c.discount} off</button>
-                            </div>
-                            <div className="w-full flex  gap-3">
-                                <NavLink to={`/course/${c.title}/enroll`} className=" w-1/2 px-4 py-2 cursor-pointer bg-secondary text-white rounded">Enroll Now</NavLink>
-                                <NavLink to={`/course/${c.title}`} className=" w-1/2 px-4 py-2 cursor-pointer border border-secondary text-secondary rounded">Learn More</NavLink>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+  return (
+    <div className="pt-24 pb-16">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">Explore Our Courses</h1>
+          <p className="text-text-secondary max-w-xl mx-auto">Transform your future with our expert-led, comprehensive courses</p>
+        </motion.div>
+
+        {course.length > 0 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="max-w-md mx-auto mb-10">
+            <div className="relative">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+              />
             </div>
-        </>
-    )
+          </motion.div>
+        )}
+
+        {loading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map(i => <CourseCardSkeleton key={i} />)}
+          </div>
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(filtered || []).map((c, i) => (
+                <motion.div
+                  key={c.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.03 }}
+                >
+                  <CourseCard course={c} index={i} />
+                </motion.div>
+              ))}
+            </div>
+            {filtered && filtered.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-text-muted text-lg">No courses match your search.</p>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default Course

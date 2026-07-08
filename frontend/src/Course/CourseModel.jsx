@@ -1,79 +1,95 @@
 import { useEffect, useState } from 'react';
 import api from "../config/api";
-import { useParams,NavLink } from 'react-router-dom';
-
-
+import { useParams, NavLink } from 'react-router-dom';
+import { motion } from "motion/react"
 
 const CourseModel = () => {
-    const { model } = useParams();
-    const [course, setCourse] = useState();
-    const [loading, setLoading] = useState(true);
+  const { model } = useParams();
+  const [course, setCourse] = useState();
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await api.get(`/api/course/${encodeURIComponent(model)}`);
-                setCourse(res.data)
-            } catch (error) {
-                setCourse(null);
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [model]);
+  useEffect(() => {
+    api.get(`/api/course/${encodeURIComponent(model)}`)
+      .then(res => setCourse(res.data))
+      .catch(() => setCourse(null))
+      .finally(() => setLoading(false))
+  }, [model]);
 
-    if (loading) return <div className="text-center py-20 text-xl">Loading...</div>;
-    if (!course) return <div className="text-center py-20 text-xl text-red-500">Course not found.</div>;
-
-    return (
-        <div className="max-w-[85vw] mx-auto py-12 px-4">
-            {/* Hero Section */}
-            <div className="flex flex-col md:flex-row items-center gap-8 mb-10">
-                <img src={course.image} alt={course.title} className="w-full h-full md:w-1/2 rounded-xl shadow-lg object-fill  bg-gray-50" />
-                <div className="flex-1">
-                    <h1 className="text-3xl md:text-4xl font-bold text-secondary mb-4">{course.title}</h1>
-                    <p className="text-lg text-gray-700 mb-4">{course.description}</p>
-                    <div className="flex items-center gap-4 mb-4">
-                        <span className="text-gray-500 text-lg line-through">NPR {course.oldPrice}</span>
-                        <span className="text-2xl text-secondary font-bold">NPR {course.newPrice}</span>
-                        <span className="bg-green-200 text-green-800 px-3 py-1 rounded-2xl font-semibold text-sm">{course.discount} OFF</span>
-                    </div>
-                    <NavLink to={`/course/${course.title}/enroll`} className="bg-secondary text-white px-6 py-2 rounded-lg font-semibold cursor-pointer hover:bg-secondary/90 transition">Enroll Now</NavLink>
-                </div>
-            </div>
-
-            {/* Features Section */}
-            <div className="bg-white rounded-xl shadow p-6 mb-10">
-                <h2 className="text-2xl font-bold text-primary mb-4">Why Choose This Course?</h2>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {course.features && course.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center mx-10 gap-3">
-                            <img src={feature.icon} alt={feature.text} className="w-8 h-8" />
-                            <span className="text-lg text-gray-700">{feature.text}</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-            {/* Subjects Covered */}
-            <div className="bg-white rounded-xl shadow p-6 mb-10">
-                <h2 className="text-2xl font-bold text-primary mb-4">Subjects Covered</h2>
-                <div className="flex flex-wrap gap-3">
-                    {course.subjects && course.subjects.map((subject, idx) => (
-                        <span key={idx} className="bg-primary/10 text-primary px-4 py-2 rounded-full font-semibold text-sm">{subject}</span>
-                    ))}
-                </div>
-            </div>
-
-            {/* Call to Action */}
-            <div className="text-center mt-12">
-                <NavLink to={course.materialsLink} className="inline-block bg-primary text-white px-6 py-3 rounded-lg font-bold hover:bg-secondary hover:text-white transition-colors mr-4">Access Course Materials →</NavLink>
-                <NavLink to='/mock' className="inline-block bg-secondary text-white px-6 py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition-colors">Access Mock Tests →</NavLink>
-            </div>
+  if (loading) return (
+    <div className="pt-24 pb-12">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="h-64 skeleton rounded-xl mb-6" />
+        <div className="space-y-3">
+          <div className="h-8 skeleton rounded w-1/2" />
+          <div className="h-4 skeleton rounded w-full" />
+          <div className="h-4 skeleton rounded w-3/4" />
         </div>
-    );
+      </div>
+    </div>
+  );
+
+  if (!course) return (
+    <div className="pt-24 pb-12 text-center">
+      <p className="text-error text-lg">Course not found.</p>
+      <NavLink to="/course" className="mt-4 inline-block px-4 py-2 rounded-lg bg-primary text-white font-semibold">Back to Courses</NavLink>
+    </div>
+  );
+
+  return (
+    <div className="pt-24 pb-16">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid lg:grid-cols-2 gap-10 mb-12">
+          <div className="rounded-xl overflow-hidden shadow-lg">
+            <img src={course.image} alt={course.title} className="w-full h-[350px] sm:h-[450px] object-cover" />
+          </div>
+          <div className="flex flex-col justify-center">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4">{course.title}</h1>
+            <p className="text-text-secondary leading-relaxed mb-6">{course.description}</p>
+            <div className="flex items-center gap-4 mb-6">
+              {course.oldPrice && <span className="text-text-muted line-through">NPR {course.oldPrice}</span>}
+              <span className="text-3xl font-bold text-primary">NPR {course.newPrice}</span>
+              {course.discount && <span className="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-semibold">{course.discount} OFF</span>}
+            </div>
+            <NavLink to={`/course/${course.title}/enroll`} className="self-start px-6 py-3 rounded-lg bg-secondary text-white font-semibold hover:bg-secondary-dark transition-colors shadow-lg shadow-secondary/20">
+              Enroll Now
+            </NavLink>
+          </div>
+        </motion.div>
+
+        {course.features?.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10 p-6 rounded-xl bg-white border border-border">
+            <h2 className="text-xl font-bold mb-4">Why Choose This Course?</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {course.features.map((f, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-surface">
+                  <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center flex-shrink-0">
+                    {f.icon && <img src={f.icon} alt="" className="w-4 h-4" />}
+                  </div>
+                  <span className="text-sm text-text-secondary">{f.text}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {course.subjects?.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10 p-6 rounded-xl bg-white border border-border">
+            <h2 className="text-xl font-bold mb-4">Subjects Covered</h2>
+            <div className="flex flex-wrap gap-2">
+              {course.subjects.map((s, i) => (
+                <span key={i} className="px-4 py-2 rounded-full bg-primary/5 text-primary text-sm font-medium">{s}</span>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        <div className="flex flex-wrap gap-4 justify-center">
+          <NavLink to={course.materialsLink || '#'} className="px-6 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary-light transition-colors">Access Course Materials</NavLink>
+          <NavLink to="/mock" className="px-6 py-3 rounded-lg bg-secondary text-white font-semibold hover:bg-secondary-light transition-colors">Access Mock Tests</NavLink>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default CourseModel;

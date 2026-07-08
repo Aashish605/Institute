@@ -19,8 +19,8 @@ import Enroll from './Course/Enroll.jsx'
 import Profile from './Profile/Profile.jsx'
 import Login from './Profile/Login.jsx'
 import { RequireAuth } from './Components/ProtectedRoutes';
-import ErrorBoundary from './components/ErrorBoundary';
-import NotFound from './components/NotFound'
+import ErrorBoundary from './Components/ErrorBoundary';
+import NotFound from './Components/NotFound'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -32,7 +32,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/mock/:model' element={<MockModel />} />
     <Route path='/notice/:model' element={<NoticeModel />} />
     <Route element={<RequireAuth />}>
-    <Route path='/course/:model/enroll' element={<Enroll />} />
+      <Route path='/course/:model/enroll' element={<Enroll />} />
       <Route path='/mock' element={<Mock />} />
       <Route path='/profile' element={<Profile />} />
     </Route>
