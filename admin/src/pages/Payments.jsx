@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { motion, AnimatePresence } from 'motion/react'
 import api from '../config/api'
+import { LoaderThree } from '../components/ui/loader'
+import { AnimatedTabs } from '../components/ui/animated-tabs'
+
+const filterTabs = [
+  { label: 'Pending', value: 'pending' },
+  { label: 'Verified', value: 'verified' },
+]
 
 export default function Payments() {
   const [receipts, setReceipts] = useState([])
@@ -32,54 +40,99 @@ export default function Payments() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Payment Receipts</h1>
-      <p className="text-gray-500 mb-6">View and verify submitted payment receipts.</p>
-      <div className="flex gap-4 mb-6">
-        <button onClick={() => setFilter('pending')}
-          className={`px-6 py-2 rounded-lg font-semibold transition ${filter === 'pending' ? 'bg-blue-600 text-white' : 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50'}`}>
-          Pending
-        </button>
-        <button onClick={() => setFilter('verified')}
-          className={`px-6 py-2 rounded-lg font-semibold transition ${filter === 'verified' ? 'bg-green-600 text-white' : 'bg-white text-green-700 border border-green-200 hover:bg-green-50'}`}>
-          Verified
-        </button>
-      </div>
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Payment Receipts</h1>
+        <p className="text-gray-500 mt-1">View and verify submitted payment receipts</p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="mb-6"
+      >
+        <AnimatedTabs
+          tabs={filterTabs}
+          containerClassName="bg-white rounded-xl p-1.5 shadow-sm border border-gray-100 w-fit"
+          onTabChange={(value) => setFilter(value)}
+        />
+      </motion.div>
+
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f7921d]" />
+          <LoaderThree />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">No {filter} receipts found.</div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-20 text-gray-400 bg-white rounded-2xl border border-gray-100"
+        >
+          <p className="text-lg">No {filter} receipts found.</p>
+        </motion.div>
       ) : (
-        <div className="space-y-4">
-          {filtered.map(r => (
-            <div key={r.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row gap-6 items-center hover:shadow-md transition">
-              <img src={r.receipt} onClick={() => window.open(r.receipt, '_blank')} className="w-28 h-28 object-contain border rounded-lg bg-gray-50 cursor-pointer" alt="receipt" />
-              <div className="flex-1 w-full">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-2">
-                  <div><span className="font-semibold text-gray-700">Course:</span> <span className="ml-2">{r.course}</span></div>
-                  <div><span className="font-semibold text-gray-700">Reference:</span> <span className="ml-2">{r.reference || 'N/A'}</span></div>
-                  <div><span className="font-semibold text-gray-700">Name:</span> <span className="ml-2">{r.userName}</span></div>
-                  <div><span className="font-semibold text-gray-700">Email:</span> <span className="ml-2">{r.userEmail}</span></div>
-                </div>
-                {r.notes && <div className="mb-2"><span className="font-semibold text-gray-700">Notes:</span> <span className="ml-2">{r.notes}</span></div>}
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-700">Status:</span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold ${r.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'}`}>
-                    {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
-                  </span>
-                  {r.status === 'pending' && (
-                    <button onClick={() => handleVerify(r.id)} disabled={updating === r.id}
-                      className="ml-4 px-4 py-1 rounded bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition disabled:opacity-50">
-                      {updating === r.id ? 'Verifying...' : 'Mark as Verified'}
-                    </button>
+        <AnimatePresence mode="popLayout">
+          <motion.div layout className="space-y-4">
+            {filtered.map((r, i) => (
+              <motion.div
+                key={r.id}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ delay: i * 0.03 }}
+                whileHover={{ y: -2, boxShadow: '0 12px 24px rgba(0,0,0,0.06)' }}
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row gap-6 items-center hover:shadow-md transition-all duration-300"
+              >
+                <motion.img
+                  whileHover={{ scale: 1.05 }}
+                  src={r.receipt}
+                  onClick={() => window.open(r.receipt, '_blank')}
+                  className="w-28 h-28 object-contain border rounded-xl bg-gray-50 cursor-pointer shrink-0"
+                  alt="payment receipt"
+                  loading="lazy"
+                />
+                <div className="flex-1 w-full">
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-3">
+                    <div><span className="font-semibold text-gray-700">Course:</span> <span className="ml-2 text-gray-600">{r.course}</span></div>
+                    <div><span className="font-semibold text-gray-700">Reference:</span> <span className="ml-2 text-gray-600">{r.reference || 'N/A'}</span></div>
+                    <div><span className="font-semibold text-gray-700">Name:</span> <span className="ml-2 text-gray-600">{r.userName}</span></div>
+                    <div><span className="font-semibold text-gray-700">Email:</span> <span className="ml-2 text-gray-600">{r.userEmail}</span></div>
+                  </div>
+                  {r.notes && (
+                    <div className="mb-3 p-3 bg-gray-50 rounded-lg text-sm">
+                      <span className="font-semibold text-gray-700">Notes:</span>
+                      <p className="text-gray-600 mt-1">{r.notes}</p>
+                    </div>
                   )}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-semibold text-gray-700">Status:</span>
+                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                      r.status === 'pending'
+                        ? 'bg-yellow-100 text-yellow-700'
+                        : 'bg-green-100 text-green-700'
+                    }`}>
+                      {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
+                    </span>
+                    {r.status === 'pending' && (
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleVerify(r.id)}
+                        disabled={updating === r.id}
+                        className="px-4 py-1.5 rounded-lg bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition disabled:opacity-50"
+                      >
+                        {updating === r.id ? 'Verifying...' : 'Mark as Verified'}
+                      </motion.button>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-400 mt-2">
+                    Submitted: {new Date(r.createdAt).toLocaleString()}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-400 mt-1">Submitted: {new Date(r.createdAt).toLocaleString()}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       )}
     </div>
   )

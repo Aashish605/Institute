@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react'
 import { FiBook, FiFileText, FiClipboard, FiCreditCard, FiMail, FiEdit3 } from 'react-icons/fi'
+import { motion } from 'motion/react'
 import api from '../config/api'
+import { LoaderThree } from '../components/ui/loader'
 
 const cards = [
-  { label: 'Courses', key: 'courses', icon: FiBook, color: 'bg-blue-500', endpoint: '/api/course' },
-  { label: 'Notices', key: 'notices', icon: FiFileText, color: 'bg-green-500', endpoint: '/api/notice/get' },
-  { label: 'Mock Results', key: 'mocks', icon: FiClipboard, color: 'bg-purple-500', endpoint: '/api/mock/get' },
-  { label: 'Pending Payments', key: 'pendingPayments', icon: FiCreditCard, color: 'bg-yellow-500', endpoint: '/api/payment/receipts' },
-  { label: 'Contacts', key: 'contacts', icon: FiMail, color: 'bg-red-500', endpoint: '/api/contact' },
-  { label: 'Content Blocks', key: 'contentBlocks', icon: FiEdit3, color: 'bg-indigo-500', endpoint: '/api/content' },
+  { label: 'Courses', key: 'courses', icon: FiBook, color: 'from-blue-500 to-blue-600', endpoint: '/api/course' },
+  { label: 'Notices', key: 'notices', icon: FiFileText, color: 'from-green-500 to-green-600', endpoint: '/api/notice/get' },
+  { label: 'Mock Results', key: 'mocks', icon: FiClipboard, color: 'from-purple-500 to-purple-600', endpoint: '/api/mock/get' },
+  { label: 'Pending Payments', key: 'pendingPayments', icon: FiCreditCard, color: 'from-yellow-500 to-orange-500', endpoint: '/api/payment/receipts' },
+  { label: 'Contacts', key: 'contacts', icon: FiMail, color: 'from-red-500 to-red-600', endpoint: '/api/contact' },
+  { label: 'Content Blocks', key: 'contentBlocks', icon: FiEdit3, color: 'from-indigo-500 to-indigo-600', endpoint: '/api/content' },
 ]
 
 export default function Dashboard() {
   const [counts, setCounts] = useState({})
+  const [loadingCounts, setLoadingCounts] = useState(true)
 
   useEffect(() => {
     Promise.all(
@@ -33,25 +36,72 @@ export default function Dashboard() {
       const obj = {}
       results.forEach(r => { obj[r.key] = r.value })
       setCounts(obj)
+      setLoadingCounts(false)
     })
   }, [])
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  }
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  }
+
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Dashboard</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cards.map(c => (
-          <div key={c.key} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4 hover:shadow-md transition">
-            <div className={`${c.color} p-4 rounded-xl text-white`}>
-              <c.icon size={24} />
-            </div>
-            <div>
-              <p className="text-gray-500 text-sm">{c.label}</p>
-              <p className="text-3xl font-bold text-gray-800">{counts[c.key] ?? '...'}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between mb-8"
+      >
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+          <p className="text-gray-500 mt-1">Overview of your institute</p>
+        </div>
+      </motion.div>
+
+      {loadingCounts ? (
+        <div className="flex items-center justify-center py-20">
+          <LoaderThree />
+        </div>
+      ) : (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {cards.map(c => (
+            <motion.div
+              key={c.key}
+              variants={cardVariants}
+              whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
+            >
+              <div className={`bg-gradient-to-br ${c.color} p-4 rounded-xl text-white shadow-lg`}>
+                <c.icon size={24} />
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm">{c.label}</p>
+                <motion.p
+                  key={counts[c.key]}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="text-3xl font-bold text-gray-800"
+                >
+                  {counts[c.key] ?? 0}
+                </motion.p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
     </div>
   )
 }

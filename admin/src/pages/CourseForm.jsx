@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { motion } from 'motion/react'
 import api from '../config/api'
 import ImageUpload from '../components/ImageUpload'
 
@@ -62,7 +63,7 @@ export default function CourseForm() {
   const removeSubject = (i) => setSubjects(subjects.filter((_, idx) => idx !== i))
 
   return (
-    <div className="max-w-2xl">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">{isEdit ? 'Edit Course' : 'Add Course'}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
         <div>
@@ -141,6 +142,6 @@ export default function CourseForm() {
           </button>
         </div>
       </form>
-    </div>
+    </motion.div>
   )
 }

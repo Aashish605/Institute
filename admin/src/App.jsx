@@ -7,17 +7,17 @@ export default function App() {
 
   if (isLogin) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <Outlet />
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen">
       <Sidebar />
       <main className="flex-1 overflow-auto">
-        <div className="p-8">
+        <div className="p-8 max-sm:p-4">
           <Outlet />
         </div>
       </main>

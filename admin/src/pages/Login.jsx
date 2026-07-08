@@ -1,12 +1,31 @@
+import { motion } from "motion/react"
+import { BackgroundBeams } from "../components/ui/background-beams"
+
 export default function Login() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="bg-white p-10 rounded-2xl shadow-md text-center max-w-md w-full">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-gradient-to-br from-primary/5 via-white to-secondary/5">
+      <BackgroundBeams />
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+        className="relative z-10 bg-white/90 backdrop-blur-lg p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border border-white/20"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
+        >
+          <span className="text-white text-3xl font-bold">M</span>
+        </motion.div>
         <h1 className="text-3xl font-bold text-primary mb-2">Mirror Admin</h1>
         <p className="text-gray-500 mb-8">Sign in to manage your website</p>
-        <a
+        <motion.a
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           href="/auth/google"
-          className="flex items-center justify-center gap-3 border px-6 py-3 rounded-xl border-gray-200 bg-gray-50 hover:bg-gray-100 transition font-medium w-full"
+          className="flex items-center justify-center gap-3 border px-6 py-3 rounded-xl border-gray-200 bg-gray-50 hover:bg-gray-100 transition font-medium w-full shadow-sm"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -15,8 +34,16 @@ export default function Login() {
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
           Sign in with Google
-        </a>
-      </div>
+        </motion.a>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-6 text-xs text-gray-400"
+        >
+          Authorized administrators only
+        </motion.p>
+      </motion.div>
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { motion } from 'motion/react'
 import api from '../config/api'
+import { LoaderThree } from '../components/ui/loader'
 
 export default function MockList() {
   const [mocks, setMocks] = useState([])
@@ -26,19 +28,22 @@ export default function MockList() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f7921d]" />
+      <LoaderThree />
     </div>
   )
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Mock Results</h1>
-        <NavLink to="/mocks/new" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium">
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">Mock Results</h1>
+          <p className="text-gray-500 mt-1">Manage weekly mock test results</p>
+        </div>
+        <NavLink to="/mocks/new" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium shadow-sm">
           + Add Mock Result
         </NavLink>
-      </div>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      </motion.div>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 text-gray-600 text-sm">
             <tr>
@@ -49,24 +54,30 @@ export default function MockList() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {mocks.map(m => (
-              <tr key={m.id} className="hover:bg-gray-50">
+            {mocks.map((m, i) => (
+              <motion.tr
+                key={m.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.03 }}
+                className="hover:bg-gray-50 transition-colors"
+              >
                 <td className="px-6 py-4 font-medium text-gray-800">{m.Title}</td>
-                <td className="px-6 py-4 text-gray-600">{m.Week}</td>
-                <td className="px-6 py-4 text-gray-600 line-clamp-2">{m.Description}</td>
+                <td className="px-6 py-4"><span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">{m.Week}</span></td>
+                <td className="px-6 py-4 text-gray-600 line-clamp-2 max-w-xs">{m.Description}</td>
                 <td className="px-6 py-4">
                   <button onClick={() => handleDelete(m.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium">
                     Delete
                   </button>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
             {mocks.length === 0 && (
               <tr><td colSpan={4} className="px-6 py-10 text-center text-gray-400">No mock results yet</td></tr>
             )}
           </tbody>
         </table>
-      </div>
+      </motion.div>
     </div>
   )
 }

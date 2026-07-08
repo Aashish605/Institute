@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { motion } from 'motion/react'
 import api from '../config/api'
 import ImageUpload from '../components/ImageUpload'
 
@@ -21,7 +22,7 @@ export default function NoticeForm() {
   }
 
   return (
-    <div className="max-w-xl">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Notice</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
         <div>
@@ -41,6 +42,6 @@ export default function NoticeForm() {
           <button type="button" onClick={() => navigate('/notices')} className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-semibold">Cancel</button>
         </div>
       </form>
-    </div>
+    </motion.div>
   )
 }
