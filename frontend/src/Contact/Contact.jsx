@@ -1,10 +1,11 @@
-import React from 'react'
 import api from '../config/api'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify';
+import { useContent } from '../context/ContentContext'
 
 
 const Contact = () => {
+    const content = useContent()
 
     const notifySuccess = (message) => {
         toast.success(message, {
@@ -82,7 +83,7 @@ const Contact = () => {
                                 <img src="contact/location.png" className='w-5 h-5' alt="" />
                                 <div className='opacity-70'>
                                     <h3 className="font-bold">Our Location</h3>
-                                    <p>Maitighar, Kathmandu, Nepal</p>
+                                    <p>{content.contact_location || 'Maitighar, Kathmandu, Nepal'}</p>
                                     <p>Opposite St. Xavier's College, Kathmandu, Nepal</p>
                                 </div>
                             </div>
@@ -90,9 +91,9 @@ const Contact = () => {
                                 <img src="contact/phone.png" className='w-5 h-5' alt="" />
                                 <div>
                                     <h3 className="font-bold">Phone</h3>
-                                    <a href="tel:+977015360880" className="opacity-70 block">+977 01-5360880</a>
+                                    <a href={`tel:${(content.contact_phone || '+977015360880').replace(/[^0-9]/g, '')}`} className="opacity-70 block">{content.contact_phone || '+977 01-5360880'}</a>
                                     <h3 className="font-bold">Mobile</h3>
-                                    <a href="tel:+9779851198288" className="opacity-70 block">+977 9851198288</a>
+                                    <a href={`tel:${(content.contact_mobile || '+9779851198288').replace(/[^0-9]/g, '')}`} className="opacity-70 block">{content.contact_mobile || '+977 9851198288'}</a>
                                 </div>
                             </div>
 
@@ -100,14 +101,14 @@ const Contact = () => {
                                 <img src="contact/mail.png" className='w-5 h-5' alt="" />
                                 <div>
                                     <h3 className="font-bold">Email</h3>
-                                    <a href="mailto:info@piacademy.edu.np" className="opacity-70 block">info@piacademy.edu.np</a>
+                                    <a href={`mailto:${content.contact_email || 'info@piacademy.edu.np'}`} className="opacity-70 block">{content.contact_email || 'info@piacademy.edu.np'}</a>
                                 </div>
                             </div>
                             <div className='flex gap-4 items-center'>
                                 <img src="contact/time.png" className='w-6 h-6' alt="" />
                                 <div>
                                     <h3 className="opacity-70 font-bold">Office Hours</h3>
-                                    <p className='opacity-70 '>Sunday - Friday: 9:00 AM - 5:00 PM</p>
+                                    <p className='opacity-70 '>{content.contact_hours || 'Sunday - Friday: 9:00 AM - 5:00 PM'}</p>
                                     <p className='opacity-70 '>Saturday: Closed</p>
                                 </div>
                             </div>

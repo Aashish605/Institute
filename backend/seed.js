@@ -191,9 +191,7 @@ const seed = async () => {
         { key: 'login_heading', value: 'Sign in to your account' },
     ];
 
-    for (const block of contentBlocks) {
-        await ContentBlock.create(block);
-    }
+    await ContentBlock.bulkCreate(contentBlocks, { updateOnDuplicate: ['value', 'updatedAt'] });
     console.log(`Seeded ${contentBlocks.length} content blocks`)
 
     console.log('✅ All seed data inserted successfully!')

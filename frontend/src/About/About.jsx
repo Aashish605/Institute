@@ -1,7 +1,8 @@
-import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { useContent } from '../context/ContentContext'
 
 const About = () => {
+    const content = useContent()
     return (
         <div className="max-w-[85vw] mx-auto">
 
@@ -12,16 +13,14 @@ const About = () => {
                     }}
                 ></div>
                 <div className='text-white relative top-[-80%] max-sm:top-[-95%] px-16 max-sm:px-3 '>
-                    <span className='my-4 font-bold text-4xl max-sm:text-3xl '>About Mirror</span>
-                    <p className='text-xl'>Building a strong foundation for  your future</p>
+                    <span className='my-4 font-bold text-4xl max-sm:text-3xl '>{content.about_hero_title || 'About Mirror'}</span>
+                    <p className='text-xl'>{content.about_hero_subtitle || 'Building a strong foundation for  your future'}</p>
                 </div>
             </div>
 
             <section className="mb-12 ">
-                <span className="text-3xl font-bold mb-12 underline underline-offset-[10px] decoration-secondary ">About Us</span>
-                <p className="my-6">
-                    <span className='font-semibold inline'>Mirror</span> Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.
-                </p>
+                <span className="text-3xl font-bold mb-12 underline underline-offset-[10px] decoration-secondary ">{content.about_aboutUs_heading || 'About Us'}</span>
+                <p className="my-6">{content.about_aboutUs_text || 'Mirror Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.'}</p>
                 <p>
                     Our approach combines <span className='font-semibold inline'> expert-led teaching, data-driven performance analytics,</span>  and a strong mentorship-driven community to give students the clarity, confidence, and competence they need to excel.
                 </p>
@@ -29,7 +28,7 @@ const About = () => {
 
             {/* Introduction */}
             <section className="mb-12  ">
-                <h2 className="text-3xl font-bold mb-4 underline underline-offset-[10px] decoration-secondary ">Introduction</h2>
+                <h2 className="text-3xl font-bold mb-4 underline underline-offset-[10px] decoration-secondary ">{content.about_introduction_heading || 'Introduction'}</h2>
                 <p className="mb-4">
                     At <span className='font-semibold inline'>Mirror Academy</span>, we believe that every student has the potential to excel — with the right guidance, strategy, and environment. That's why we offer a comprehensive, student-focused approach to entrance exam preparation, available both online and offline. Here's what sets us apart:
                 </p>
@@ -48,7 +47,7 @@ const About = () => {
             {/* Why Students Choose Us */}
             < div className="bg-gray-50 w-full" >
                 <section className="mb-12 ">
-                    <h2 className="text-3xl font-bold py-12 text-center underline underline-offset-[10px] mx-2 decoration-secondary">Why Students Choose Us</h2>
+                    <h2 className="text-3xl font-bold py-12 text-center underline underline-offset-[10px] mx-2 decoration-secondary">{content.about_whyChooseUs_heading || 'Why Students Choose Us'}</h2>
                     <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-8 mx-6 pb-12">
                         <div className='bg-white shadow-md rounded-xl px-2 py-6 '>
                             <div className="w-16 h-16 rounded-full mb-2 mx-auto flex items-center justify-center">
@@ -87,7 +86,7 @@ const About = () => {
             <section className="mb-12 h-fit rounded-2xl shadow-md overflow-hidden  flex items-center bg-secondary max-[1130px]:bg-white justify-center gap-7 max-[1130px]:flex-col ">
                 <div className=' flex flex-col items-center justify-center py-6 bg-secondary max-[1130px]:w-full w-1/3 h-full   '>
                     <img src="About/person.png" alt="" className='' />
-                    <span className='text-2xl text-white font-bold text-center'>Message From <br /> Mirror Family </span>
+                    <span className='text-2xl text-white font-bold text-center'>{content.about_message_heading || 'Message From Mirror Family'}</span>
                 </div>
                 <div className=' w-2/3 max-[1130px]:w-full max-[1130px]:px-4 max-[1130px]:py-6 py-12 px-6 bg-white'>
                     <p className="mb-4">
