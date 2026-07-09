@@ -1,9 +1,9 @@
 import { Mock } from '../Model/index.js'
 
 export const postMock = async (req, res) => {
-    let { Title, Week, Description, Img } = req.body;
+    let { Title, Week, Description, FileUrl, FileType } = req.body;
     try {
-        const mock = await Mock.create({ Title, Week, Description, Img });
+        const mock = await Mock.create({ Title, Week, Description, FileUrl, FileType });
         return res.status(201).json(mock);
     } catch (error) {
         console.error("Error during saving the data", error)

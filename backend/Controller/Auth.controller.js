@@ -11,9 +11,10 @@ const serializeUser = (user) => ({
     displayName: user.displayName,
     email: user.email,
     photo: user.photo,
-    contact: user.contact,
+    age: user.age,
     number: user.number,
     class: user.class,
+    school: user.school,
     isAdmin: user.isAdmin,
 });
 

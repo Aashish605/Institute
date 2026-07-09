@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { FiGrid, FiBook, FiFileText, FiClipboard, FiCreditCard, FiMail, FiEdit3, FiLogOut } from 'react-icons/fi'
+import { FiGrid, FiBook, FiFileText, FiClipboard, FiCreditCard, FiMail, FiEdit3, FiStar, FiLogOut } from 'react-icons/fi'
 import { IconMenu2, IconX } from '@tabler/icons-react'
 import api from '../config/api'
 import { useAuth } from '../context/AuthContext'
@@ -14,6 +14,7 @@ const links = [
   { to: '/payments', label: 'Payments', icon: FiCreditCard },
   { to: '/contacts', label: 'Contacts', icon: FiMail },
   { to: '/content', label: 'Content', icon: FiEdit3 },
+  { to: '/testimonials', label: 'Testimonials', icon: FiStar },
 ]
 
 export default function Sidebar() {

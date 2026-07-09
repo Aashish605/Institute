@@ -31,12 +31,14 @@ router.put('/update', async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ message: 'Not authenticated' });
     }
-    const { name, contact, number, class: userClass } = req.body;
+    const { name, age, number, class: userClass, school, photo } = req.body;
     try {
         const updateData = { displayName: name };
-        if (contact !== undefined) updateData.contact = contact;
+        if (age !== undefined) updateData.age = age;
         if (number !== undefined) updateData.number = number;
         if (userClass !== undefined) updateData.class = userClass;
+        if (school !== undefined) updateData.school = school;
+        if (photo !== undefined) updateData.photo = photo;
         await User.update(updateData, { where: { id: req.user.id } });
         const user = await User.findByPk(req.user.id);
         res.json({ user });

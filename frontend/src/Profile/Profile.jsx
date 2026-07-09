@@ -1,37 +1,54 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { clearUser, setUser } from '../Redux/Auth/AuthSlice'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import axios from 'axios'
 import api from '../config/api'
+import { PAYMENTS } from '../config/site'
 import { toast } from 'react-toastify'
 import useDocumentTitle from '../hooks/useDocumentTitle'
 import { motion } from 'motion/react'
-import { BadgeCheck, GraduationCap, LogOut, Mail, Phone, Sparkles, UserRound, ShieldCheck } from 'lucide-react'
+import { BadgeCheck, Building2, Camera, GraduationCap, LogOut, Mail, Phone, Sparkles, UserRound, ShieldCheck } from 'lucide-react'
 
 function Profile() {
   useDocumentTitle('Profile')
   const dispatch = useDispatch()
   const logIn = useSelector((state) => state.auth.user)
   const [name, setname] = useState(logIn?.displayName || '')
-  const [contact, setContact] = useState(logIn?.contact || '')
+  const [age, setAge] = useState(logIn?.age || '')
   const [number, setNumber] = useState(logIn?.number || '')
   const [userClass, setUserClass] = useState(logIn?.class || '')
+  const [school, setSchool] = useState(logIn?.school || '')
+  const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const fileInputRef = useRef(null)
 
-  const updated = !!(logIn?.number && logIn?.class)
+  const updated = !!(logIn?.number && logIn?.class && logIn?.age && logIn?.school)
   const profileImage = logIn?.photo?.trim() ? logIn.photo : '/profile.jpg'
 
   useEffect(() => {
     setname(logIn?.displayName || '')
-    setContact(logIn?.contact || '')
+    setAge(logIn?.age || '')
     setNumber(logIn?.number || '')
     setUserClass(logIn?.class || '')
-  }, [logIn?.displayName, logIn?.contact, logIn?.number, logIn?.class])
+    setSchool(logIn?.school || '')
+  }, [logIn?.displayName, logIn?.age, logIn?.number, logIn?.class, logIn?.school])
+
+  const validate = () => {
+    const errs = {}
+    if (!name?.trim()) errs.name = 'Name is required'
+    if (age && (!/^\d+$/.test(age) || Number(age) < 1 || Number(age) > 120)) errs.age = 'Enter a valid age (1–120)'
+    if (number && !/^[\d\s+\-()]{7,20}$/.test(number)) errs.number = 'Enter a valid phone number'
+    setErrors(errs)
+    return Object.keys(errs).length === 0
+  }
 
   const handleUpdate = async (e) => {
     e.preventDefault()
+    if (!validate()) return
     setLoading(true)
     try {
-      const res = await api.put('/auth/update', { name, contact, number, class: userClass })
+      const res = await api.put('/auth/update', { name, age, number, class: userClass, school })
       if (res.data.user) {
         dispatch(setUser(res.data.user))
         toast.success('Profile updated!')
@@ -42,6 +59,24 @@ function Profile() {
       toast.error('Update failed')
     }
     setLoading(false)
+  }
+
+  const uploadPhoto = async (file) => {
+    setUploadingPhoto(true)
+    try {
+      const data = new FormData()
+      data.append('file', file)
+      data.append('upload_preset', PAYMENTS.cloudinary.uploadPreset)
+      const res = await axios.post(`https://api.cloudinary.com/v1_1/${PAYMENTS.cloudinary.cloudName}/image/upload`, data)
+      const updateRes = await api.put('/auth/update', { photo: res.data.secure_url })
+      if (updateRes.data.user) {
+        dispatch(setUser(updateRes.data.user))
+        toast.success('Profile photo updated!')
+      }
+    } catch {
+      toast.error('Failed to update profile photo')
+    }
+    setUploadingPhoto(false)
   }
 
   if (!logIn) {
@@ -74,8 +109,21 @@ function Profile() {
 
               <div className="mt-6 flex flex-col items-center text-center">
                 <div className="relative">
-                  <img src={profileImage} alt={logIn.displayName || 'Profile'} className="h-28 w-28 rounded-full border-4 border-white object-cover shadow-lg" />
-                  <div className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-white shadow-md">
+                  <div className="cursor-pointer group" onClick={() => fileInputRef.current?.click()}>
+                    <img src={profileImage} alt={logIn.displayName || 'Profile'} className="h-28 w-28 rounded-full border-4 border-white object-cover shadow-lg" />
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 group-hover:bg-black/30 transition-all duration-200">
+                      {uploadingPhoto ? (
+                        <svg className="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                      ) : (
+                        <Camera className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      )}
+                    </div>
+                  </div>
+                  <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={(e) => { if (e.target.files[0]) uploadPhoto(e.target.files[0]); e.target.value = '' }} />
+                  <div className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-white shadow-md pointer-events-none">
                     <BadgeCheck className="h-4 w-4" />
                   </div>
                 </div>
@@ -122,6 +170,16 @@ function Profile() {
                     <p className="text-sm font-medium text-text">{userClass || 'Not added yet'}</p>
                   </div>
                 </div>
+
+                <div className="flex items-center gap-3 rounded-2xl border border-border/50 bg-white/70 px-4 py-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
+                    <Building2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-text-muted">School</p>
+                    <p className="text-sm font-medium text-text">{school || 'Not added yet'}</p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -141,7 +199,8 @@ function Profile() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-sm font-medium text-text">Full Name</label>
-                    <input type="text" value={name} onChange={(e) => setname(e.target.value)} className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                    <input type="text" value={name} onChange={(e) => setname(e.target.value)} className={`w-full rounded-xl border bg-white px-4 py-3 text-sm text-text outline-none transition focus:ring-2 ${errors.name ? 'border-error focus:border-error focus:ring-error/20' : 'border-border focus:border-primary focus:ring-primary/20'}`} />
+                    {errors.name && <p className="mt-1 text-xs text-error">{errors.name}</p>}
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-text">Email</label>
@@ -151,12 +210,14 @@ function Profile() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-text">Contact</label>
-                    <input type="text" value={contact} onChange={(e) => setContact(e.target.value)} className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                    <label className="mb-2 block text-sm font-medium text-text">Age</label>
+                    <input type="text" value={age} onChange={(e) => setAge(e.target.value)} className={`w-full rounded-xl border bg-white px-4 py-3 text-sm text-text outline-none transition focus:ring-2 ${errors.age ? 'border-error focus:border-error focus:ring-error/20' : 'border-border focus:border-primary focus:ring-primary/20'}`} />
+                    {errors.age && <p className="mt-1 text-xs text-error">{errors.age}</p>}
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-text">Phone Number</label>
-                    <input type="text" value={number} onChange={(e) => setNumber(e.target.value)} className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                    <input type="text" value={number} onChange={(e) => setNumber(e.target.value)} className={`w-full rounded-xl border bg-white px-4 py-3 text-sm text-text outline-none transition focus:ring-2 ${errors.number ? 'border-error focus:border-error focus:ring-error/20' : 'border-border focus:border-primary focus:ring-primary/20'}`} />
+                    {errors.number && <p className="mt-1 text-xs text-error">{errors.number}</p>}
                   </div>
                 </div>
 
@@ -165,9 +226,14 @@ function Profile() {
                   <input type="text" value={userClass} onChange={(e) => setUserClass(e.target.value)} className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
                 </div>
 
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-text">School / College</label>
+                  <input type="text" value={school} onChange={(e) => setSchool(e.target.value)} className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                </div>
+
                 <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-                  <button type="submit" disabled={loading || updated} className="flex-1 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50">
-                    {loading ? 'Updating...' : updated ? 'Profile Up to Date ✓' : 'Update Profile'}
+                  <button type="submit" disabled={loading} className="flex-1 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50">
+                    {loading ? 'Updating...' : 'Update Profile'}
                   </button>
                   <button type="button" onClick={() => { api.get('/auth/logout').finally(() => dispatch(clearUser())) }} className="inline-flex items-center justify-center gap-2 rounded-xl border border-error/20 bg-error/5 px-5 py-3 text-sm font-semibold text-error transition-all duration-200 hover:bg-error/10">
                     <LogOut className="h-4 w-4" />

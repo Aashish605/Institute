@@ -4,16 +4,18 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { motion } from 'motion/react'
 import api from '../config/api'
-import ImageUpload from '../components/ImageUpload'
+import FileUpload from '../components/FileUpload'
 
 export default function MockForm() {
   const navigate = useNavigate()
   const { register, handleSubmit } = useForm()
-  const [imgUrl, setImgUrl] = useState('')
+  const [fileUrl, setFileUrl] = useState('')
+  const [fileType, setFileType] = useState('')
 
   const onSubmit = async (data) => {
-    data.Img = imgUrl
-    if (!data.Img) { toast.error('Please upload an image'); return }
+    data.FileUrl = fileUrl
+    data.FileType = fileType
+    if (!data.FileUrl) { toast.error('Please upload a result file'); return }
     try {
       await api.post('/api/mock/post', data)
       toast.success('Mock result created')
@@ -38,8 +40,7 @@ export default function MockForm() {
           <textarea id="Description" {...register('Description', { required: true })} rows={4} className="w-full border rounded-lg px-4 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div>
-          <ImageUpload onUpload={(url) => setImgUrl(url)} label="Upload Image" />
-          {imgUrl && <img src={imgUrl} alt="preview" className="mt-2 h-32 rounded-lg object-cover" />}
+          <FileUpload onUpload={({ url, fileType: ft }) => { setFileUrl(url); setFileType(ft) }} label="Upload Result File (Image / PDF / Excel)" />
         </div>
         <div className="flex gap-4 pt-4">
           <button type="submit" className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold">Create Mock Result</button>

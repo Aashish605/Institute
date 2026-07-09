@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import { motion } from 'motion/react'
 import api from '../config/api'
 import { LoaderThree } from '../components/ui/loader'
+import { FiFileText, FiDownload, FiImage } from 'react-icons/fi'
 
 export default function MockList() {
   const [mocks, setMocks] = useState([])
@@ -50,6 +51,7 @@ export default function MockList() {
               <th className="px-6 py-4 font-semibold">Title</th>
               <th className="px-6 py-4 font-semibold">Week</th>
               <th className="px-6 py-4 font-semibold">Description</th>
+              <th className="px-6 py-4 font-semibold">File</th>
               <th className="px-6 py-4 font-semibold">Actions</th>
             </tr>
           </thead>
@@ -66,6 +68,17 @@ export default function MockList() {
                 <td className="px-6 py-4"><span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">{m.Week}</span></td>
                 <td className="px-6 py-4 text-gray-600 line-clamp-2 max-w-xs">{m.Description}</td>
                 <td className="px-6 py-4">
+                  {m.FileType === 'image' ? (
+                    <span className="inline-flex items-center gap-1 text-sm text-gray-500"><FiImage /> Image</span>
+                  ) : m.FileType === 'pdf' ? (
+                    <span className="inline-flex items-center gap-1 text-sm text-red-500"><FiFileText /> PDF</span>
+                  ) : m.FileType === 'xlsx' ? (
+                    <span className="inline-flex items-center gap-1 text-sm text-green-600"><FiDownload /> Excel</span>
+                  ) : (
+                    <span className="text-sm text-gray-400">—</span>
+                  )}
+                </td>
+                <td className="px-6 py-4">
                   <button onClick={() => handleDelete(m.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium">
                     Delete
                   </button>
@@ -73,7 +86,7 @@ export default function MockList() {
               </motion.tr>
             ))}
             {mocks.length === 0 && (
-              <tr><td colSpan={4} className="px-6 py-10 text-center text-gray-400">No mock results yet</td></tr>
+              <tr><td colSpan={5} className="px-6 py-10 text-center text-gray-400">No mock results yet</td></tr>
             )}
           </tbody>
         </table>

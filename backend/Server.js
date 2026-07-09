@@ -14,6 +14,7 @@ import courseRoutes from './Routes/Course.route.js'
 import authRoutes from './Routes/Auth.route.js'
 import paymentReceiptRoutes from './Routes/PaymentReceipt.route.js';
 import contentRoutes from './Routes/Content.route.js';
+import testimonialRoutes from './Routes/Testimonial.route.js';
 
 const app = express()
 app.use(express.json())
@@ -70,6 +71,7 @@ app.use('/api/course', courseRoutes)
 app.use("/auth", authRoutes)
 app.use('/api/payment', paymentReceiptRoutes)
 app.use('/api/content', contentRoutes)
+app.use('/api/testimonial', testimonialRoutes)
 
 
 const startServer = async () => {

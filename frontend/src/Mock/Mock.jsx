@@ -5,7 +5,7 @@ import { useContent } from '../context/ContentContext'
 import { MOCK } from '../config/site'
 import { motion } from "motion/react"
 import ErrorState from '../Components/ErrorState'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, FileText, Table } from 'lucide-react'
 
 const Mock = () => {
   const content = useContent();
@@ -105,8 +105,22 @@ const Mock = () => {
                   transition={{ delay: i * 0.05 }}
                   className="group bg-white rounded-xl border border-border hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden"
                 >
-                  <div className="h-36 overflow-hidden">
-                    <img src={result.Img || MOCK.placeholderImage} alt={result.Title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="h-36 overflow-hidden bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center">
+                    {result.FileType === 'image' ? (
+                      <img src={result.FileUrl} alt={result.Title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : result.FileType === 'pdf' ? (
+                      <div className="flex flex-col items-center gap-1 text-red-500">
+                        <FileText size={40} />
+                        <span className="text-xs font-medium">PDF</span>
+                      </div>
+                    ) : result.FileType === 'xlsx' ? (
+                      <div className="flex flex-col items-center gap-1 text-green-600">
+                        <Table size={40} />
+                        <span className="text-xs font-medium">Excel</span>
+                      </div>
+                    ) : (
+                      <img src={MOCK.placeholderImage} alt="" className="w-full h-full object-cover opacity-30" />
+                    )}
                   </div>
                   <div className="p-5">
                     <div className="text-xs text-text-muted font-medium mb-1">Week {result.Week}</div>

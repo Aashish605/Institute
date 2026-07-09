@@ -2,6 +2,12 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../Db/db.js';
 
 const Notice = sequelize.define('Notice', {
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+        allowNull: false,
+    },
     Title: { type: DataTypes.STRING, allowNull: false },
     Description: { type: DataTypes.TEXT, allowNull: false },
     Img: { type: DataTypes.STRING, allowNull: false },

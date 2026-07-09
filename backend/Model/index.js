@@ -6,6 +6,8 @@ import Mock from './Mock.model.js';
 import Notice from './Notice.model.js';
 import PaymentReceipt from './PaymentReceipt.model.js';
 import ContentBlock from './ContentBlock.model.js';
+import Enrollment from './Enrollment.model.js';
+import Testimonial from './Testimonial.model.js';
 
 // PaymentReceipt -> User
 PaymentReceipt.belongsTo(User, { foreignKey: 'userId' });
@@ -20,8 +22,8 @@ Contact.belongsTo(User, { foreignKey: 'userId' });
 User.hasMany(Contact, { foreignKey: 'userId' });
 
 // Many-to-many: User <-> Course (enrollments)
-User.belongsToMany(Course, { through: 'Enrollments', foreignKey: 'userId' });
-Course.belongsToMany(User, { through: 'Enrollments', foreignKey: 'courseId' });
+User.belongsToMany(Course, { through: Enrollment, foreignKey: 'userId' });
+Course.belongsToMany(User, { through: Enrollment, foreignKey: 'courseId' });
 
 const db = {
     sequelize,
@@ -32,7 +34,9 @@ const db = {
     Notice,
     PaymentReceipt,
     ContentBlock,
+    Enrollment,
+    Testimonial,
 };
 
 export default db;
-export { sequelize, User, Course, Contact, Mock, Notice, PaymentReceipt, ContentBlock };
+export { sequelize, User, Course, Contact, Mock, Notice, PaymentReceipt, ContentBlock, Enrollment, Testimonial };

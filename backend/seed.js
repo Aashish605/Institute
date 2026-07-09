@@ -1,5 +1,5 @@
 import { sequelize } from './Db/db.js'
-import { Course, Notice, Mock, ContentBlock } from './Model/index.js'
+import { Course, Notice, Mock, ContentBlock, Testimonial } from './Model/index.js'
 
 const seed = async () => {
   try {
@@ -193,6 +193,18 @@ const seed = async () => {
 
     await ContentBlock.bulkCreate(contentBlocks, { updateOnDuplicate: ['value', 'updatedAt'] });
     console.log(`Seeded ${contentBlocks.length} content blocks`)
+
+    // --- Testimonials ---
+    const testimonials = [
+      { name: 'Sarah Johnson', role: 'Software Engineer', company: 'Tech Corp', avatar: 'https://i.pravatar.cc/100?img=1', content: 'The comprehensive curriculum and hands-on projects gave me the confidence to transition into a software engineering role. The instructors were incredibly supportive throughout my journey.', rating: 5 },
+      { name: 'Michael Chen', role: 'Data Analyst', company: 'DataFlow Inc', avatar: 'https://i.pravatar.cc/100?img=3', content: 'I was able to upskill and land my dream job within 6 months of completing the program. The practical approach to learning made all the difference in my career growth.', rating: 5 },
+      { name: 'Emily Rodriguez', role: 'Product Manager', company: 'InnovateLab', avatar: 'https://i.pravatar.cc/100?img=5', content: 'The flexible scheduling allowed me to balance work and study effectively. The real-world projects helped me build a portfolio that impressed recruiters.', rating: 5 },
+      { name: 'David Kim', role: 'Full Stack Developer', company: 'WebCraft Studio', avatar: 'https://i.pravatar.cc/100?img=8', content: 'What sets this institute apart is the personalized mentorship. My mentor guided me through complex concepts and helped me build a network in the industry.', rating: 4 },
+    ];
+    for (const t of testimonials) {
+      await Testimonial.findOrCreate({ where: { name: t.name }, defaults: t });
+    }
+    console.log(`Seeded ${testimonials.length} testimonials`)
 
     console.log('✅ All seed data inserted successfully!')
     process.exit(0)

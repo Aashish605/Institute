@@ -19,6 +19,8 @@ import MockForm from './pages/MockForm'
 import Payments from './pages/Payments'
 import Contacts from './pages/Contacts'
 import ContentEditor from './pages/ContentEditor'
+import TestimonialList from './pages/TestimonialList'
+import TestimonialForm from './pages/TestimonialForm'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './pages/NotFound'
 
@@ -37,6 +39,8 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="/payments" element={<Payments />} />
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/content" element={<ContentEditor />} />
+      <Route path="/testimonials" element={<TestimonialList />} />
+      <Route path="/testimonials/new" element={<TestimonialForm />} />
     </Route>
     <Route path="*" element={<NotFound />} />
   </Route>

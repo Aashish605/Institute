@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Star, Quote } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -6,6 +7,7 @@ import { motion } from 'motion/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
+import api from '../config/api'
 
 const styles = `
 .testimonials-swiper .swiper-wrapper {
@@ -15,63 +17,6 @@ const styles = `
   height: auto !important;
 }
 `
-
-const testimonials = [
-  {
-    id: 1,
-    name: 'Sarah Johnson',
-    role: 'Software Engineer',
-    company: 'Tech Corp',
-    avatar: 'https://i.pravatar.cc/100?img=1',
-    content: 'The comprehensive curriculum and hands-on projects gave me the confidence to transition into a software engineering role. The instructors were incredibly supportive throughout my journey.',
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    role: 'Data Analyst',
-    company: 'DataFlow Inc',
-    avatar: 'https://i.pravatar.cc/100?img=3',
-    content: 'I was able to upskill and land my dream job within 6 months of completing the program. The practical approach to learning made all the difference in my career growth.',
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: 'Emily Rodriguez',
-    role: 'Product Manager',
-    company: 'InnovateLab',
-    avatar: 'https://i.pravatar.cc/100?img=5',
-    content: 'The flexible scheduling allowed me to balance work and study effectively. The real-world projects helped me build a portfolio that impressed recruiters.',
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: 'David Kim',
-    role: 'Full Stack Developer',
-    company: 'WebCraft Studio',
-    avatar: 'https://i.pravatar.cc/100?img=8',
-    content: 'What sets this institute apart is the personalized mentorship. My mentor guided me through complex concepts and helped me build a network in the industry.',
-    rating: 4,
-  },
-  {
-    id: 5,
-    name: 'Priya Sharma',
-    role: 'UI/UX Designer',
-    company: 'DesignCraft',
-    avatar: 'https://i.pravatar.cc/100?img=9',
-    content: 'The design thinking workshops and portfolio reviews were invaluable. I learned to approach problems creatively and landed my dream design role.',
-    rating: 5,
-  },
-  {
-    id: 6,
-    name: 'James Wilson',
-    role: 'DevOps Engineer',
-    company: 'CloudScale',
-    avatar: 'https://i.pravatar.cc/100?img=12',
-    content: 'The cloud and DevOps program was rigorous and up-to-date with industry standards. The hands-on labs prepared me for real-world challenges.',
-    rating: 4,
-  },
-]
 
 const TestimonialCard = ({ testimonial }) => (
   <div className="h-full">
@@ -92,14 +37,14 @@ const TestimonialCard = ({ testimonial }) => (
         <p className="text-text-secondary text-sm leading-relaxed mb-6 flex-1">&ldquo;{testimonial.content}&rdquo;</p>
         <div className="flex items-center gap-3 mt-auto">
           <img
-            src={testimonial.avatar}
+            src={testimonial.avatar || 'https://i.pravatar.cc/100?img=1'}
             alt={testimonial.name}
             className="w-10 h-10 rounded-full object-cover ring-2 ring-border flex-shrink-0"
             loading="lazy"
           />
           <div className="min-w-0">
             <p className="font-semibold text-sm truncate">{testimonial.name}</p>
-            <p className="text-xs text-text-muted truncate">{testimonial.role} at {testimonial.company}</p>
+            <p className="text-xs text-text-muted truncate">{testimonial.role}{testimonial.role && testimonial.company ? ' at ' : ''}{testimonial.company}</p>
           </div>
         </div>
       </CardContent>
@@ -108,6 +53,18 @@ const TestimonialCard = ({ testimonial }) => (
 )
 
 const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    api.get('/api/testimonial/get')
+      .then(res => setTestimonials(res.data))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading || testimonials.length === 0) return null
+
   return (
     <section className="py-16 sm:py-20 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-72 h-72 bg-secondary/5 rounded-full blur-3xl" />
