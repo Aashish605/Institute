@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react'
-import { FiBook, FiFileText, FiClipboard, FiCreditCard, FiMail, FiEdit3 } from 'react-icons/fi'
+import { useNavigate } from 'react-router-dom'
+import { FiBook, FiFileText, FiClipboard, FiCreditCard, FiMail, FiEdit3, FiUsers, FiUserCheck } from 'react-icons/fi'
 import { motion } from 'motion/react'
 import api from '../config/api'
 import { LoaderThree } from '../components/ui/loader'
 
 const cards = [
-  { label: 'Courses', key: 'courses', icon: FiBook, color: 'from-blue-500 to-blue-600', endpoint: '/api/course' },
-  { label: 'Notices', key: 'notices', icon: FiFileText, color: 'from-green-500 to-green-600', endpoint: '/api/notice/get' },
-  { label: 'Mock Results', key: 'mocks', icon: FiClipboard, color: 'from-purple-500 to-purple-600', endpoint: '/api/mock/get' },
-  { label: 'Pending Payments', key: 'pendingPayments', icon: FiCreditCard, color: 'from-yellow-500 to-orange-500', endpoint: '/api/payment/receipts' },
-  { label: 'Contacts', key: 'contacts', icon: FiMail, color: 'from-red-500 to-red-600', endpoint: '/api/contact' },
-  { label: 'Content Blocks', key: 'contentBlocks', icon: FiEdit3, color: 'from-indigo-500 to-indigo-600', endpoint: '/api/content' },
+  { label: 'Courses', key: 'courses', icon: FiBook, color: 'from-blue-500 to-blue-600', endpoint: '/api/course', to: '/courses' },
+  { label: 'Notices', key: 'notices', icon: FiFileText, color: 'from-green-500 to-green-600', endpoint: '/api/notice/get', to: '/notices' },
+  { label: 'Mock Results', key: 'mocks', icon: FiClipboard, color: 'from-purple-500 to-purple-600', endpoint: '/api/mock/get', to: '/mocks' },
+  { label: 'Pending Payments', key: 'pendingPayments', icon: FiCreditCard, color: 'from-yellow-500 to-orange-500', endpoint: '/api/payment/receipts', to: '/payments' },
+  { label: 'Contacts', key: 'contacts', icon: FiMail, color: 'from-red-500 to-red-600', endpoint: '/api/contact', to: '/contacts' },
+  { label: 'Content Blocks', key: 'contentBlocks', icon: FiEdit3, color: 'from-indigo-500 to-indigo-600', endpoint: '/api/content', to: '/content' },
+  { label: 'Users', key: 'users', icon: FiUsers, color: 'from-teal-500 to-teal-600', endpoint: '/api/user/all', to: '/users' },
+  { label: 'Enrollments', key: 'enrollments', icon: FiUserCheck, color: 'from-cyan-500 to-cyan-600', endpoint: '/api/enrollment/all', to: '/enrollments' },
 ]
 
 export default function Dashboard() {
+  const navigate = useNavigate()
   const [counts, setCounts] = useState({})
   const [loadingCounts, setLoadingCounts] = useState(true)
 
@@ -83,6 +87,7 @@ export default function Dashboard() {
               variants={cardVariants}
               whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}
               className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
+              onClick={() => navigate(c.to)}
             >
               <div className={`bg-gradient-to-br ${c.color} p-4 rounded-xl text-white shadow-lg`}>
                 <c.icon size={24} />

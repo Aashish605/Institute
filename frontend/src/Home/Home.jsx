@@ -52,7 +52,7 @@ const Home = () => {
 
   useEffect(() => {
     api.get('/api/course')
-      .then(res => setCourse(res.data))
+      .then(res => setCourse(res.data.courses))
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])

@@ -25,6 +25,9 @@ User.hasMany(Contact, { foreignKey: 'userId' });
 User.belongsToMany(Course, { through: Enrollment, foreignKey: 'userId' });
 Course.belongsToMany(User, { through: Enrollment, foreignKey: 'courseId' });
 
+Enrollment.belongsTo(User, { foreignKey: 'userId' });
+Enrollment.belongsTo(Course, { foreignKey: 'courseId' });
+
 const db = {
     sequelize,
     User,

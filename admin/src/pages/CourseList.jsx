@@ -12,7 +12,7 @@ export default function CourseList() {
 
   useEffect(() => {
     setLoading(true)
-    api.get('/api/course').then(res => setCourses(res.data)).catch(() => toast.error('Failed to load courses'))
+    api.get('/api/course').then(res => setCourses(res.data.courses)).catch(() => toast.error('Failed to load courses'))
       .finally(() => setLoading(false))
   }, [])
 

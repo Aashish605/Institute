@@ -21,6 +21,8 @@ import Contacts from './pages/Contacts'
 import ContentEditor from './pages/ContentEditor'
 import TestimonialList from './pages/TestimonialList'
 import TestimonialForm from './pages/TestimonialForm'
+import UserList from './pages/UserList'
+import EnrollmentList from './pages/EnrollmentList'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './pages/NotFound'
 
@@ -41,6 +43,8 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="/content" element={<ContentEditor />} />
       <Route path="/testimonials" element={<TestimonialList />} />
       <Route path="/testimonials/new" element={<TestimonialForm />} />
+      <Route path="/users" element={<UserList />} />
+      <Route path="/enrollments" element={<EnrollmentList />} />
     </Route>
     <Route path="*" element={<NotFound />} />
   </Route>

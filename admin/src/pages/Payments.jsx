@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import api from '../config/api'
 import { LoaderThree } from '../components/ui/loader'
 import { AnimatedTabs } from '../components/ui/animated-tabs'
+import { FiSearch } from 'react-icons/fi'
 
 const filterTabs = [
   { label: 'Pending', value: 'pending' },
@@ -15,14 +16,17 @@ export default function Payments() {
   const [filter, setFilter] = useState('pending')
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     setLoading(true)
-    api.get('/api/payment/receipts')
+    const params = new URLSearchParams()
+    if (searchQuery.trim()) params.set('search', searchQuery)
+    api.get(`/api/payment/receipts?${params}`)
       .then(res => setReceipts(res.data))
       .catch(() => setReceipts([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [searchQuery])
 
   const filtered = receipts
     .filter(r => filter === 'pending' ? r.status === 'pending' : r.status === 'verified')
@@ -45,18 +49,29 @@ export default function Payments() {
         <p className="text-gray-500 mt-1">View and verify submitted payment receipts</p>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
-        className="mb-6"
-      >
-        <AnimatedTabs
+      <div className="mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="relative w-full sm:w-80">
+          <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search by name, email, course..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+          />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+        >
+          <AnimatedTabs
           tabs={filterTabs}
           containerClassName="bg-white rounded-xl p-1.5 shadow-sm border border-gray-100 w-fit"
           onTabChange={(value) => setFilter(value)}
         />
       </motion.div>
+      </div>
 
       {loading ? (
         <div className="flex items-center justify-center py-20">

@@ -307,7 +307,7 @@ const Enroll = () => {
           </div>
 
           {/* Right Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-6 sticky top-28">
             
             {/* Payment Instructions */}
             <Card className="border-slate-100 shadow-xl shadow-slate-100/50 bg-white/95 rounded-3xl">

@@ -226,11 +226,19 @@ const CourseModel = () => {
                         To unlock the study syllabus, past questions sheets, and recorded class links, please complete your enrollment process.
                       </p>
                     </div>
-                    <Button asChild className="bg-secondary hover:bg-secondary/90 text-white rounded-xl px-6 py-5 text-sm font-bold shadow-md shadow-secondary/10">
-                      <NavLink to={`/course/${course.title}`}>
-                        Learn More
-                      </NavLink>
-                    </Button>
+                    <motion.div
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="inline-block relative group rounded-xl"
+                    >
+                      <div className="absolute inset-0 bg-secondary opacity-30 blur-md group-hover:opacity-50 transition-opacity duration-300 rounded-xl" />
+                      <Button asChild className="relative bg-secondary hover:bg-secondary/90 text-white rounded-xl px-6 py-5 text-sm font-bold shadow-lg shadow-secondary/15 flex items-center justify-center gap-1.5 border-none">
+                        <NavLink to={`/course/${course.title}/enroll`}>
+                          Enroll Now to Unlock
+                          <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                        </NavLink>
+                      </Button>
+                    </motion.div>
                   </div>
                 )}
               </CardContent>
@@ -238,7 +246,7 @@ const CourseModel = () => {
           </div>
 
           {/* Right Sidebar Column */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-6 sticky top-28">
             
             {/* Purchase Details */}
             <Card className="border-slate-100 shadow-xl shadow-slate-100/50 bg-white/95 rounded-3xl">
@@ -273,11 +281,20 @@ const CourseModel = () => {
                       Enrolled
                     </Button>
                   ) : (
-                    <Button className="w-full bg-gradient-to-r from-primary to-primary-light hover:shadow-lg hover:shadow-primary/20 text-white rounded-xl py-5 font-bold" asChild>
-                      <NavLink to={`/course/${course.title}/enroll`}>
-                        Enroll in Course
-                      </NavLink>
-                    </Button>
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="relative group rounded-xl"
+                    >
+                      {/* Subtly glowing backglow matching theme primary */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary-light opacity-30 blur-md group-hover:opacity-50 transition-opacity duration-300 rounded-xl" />
+                      <Button className="relative w-full bg-gradient-to-r from-primary to-primary-light text-white rounded-xl py-5 font-bold shadow-lg shadow-primary/15 flex items-center justify-center gap-1.5 border-none" asChild>
+                        <NavLink to={`/course/${course.title}/enroll`}>
+                          Enroll in Course
+                          <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                        </NavLink>
+                      </Button>
+                    </motion.div>
                   )}
                   
                   <Button variant="outline" className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl py-5 font-semibold" asChild>

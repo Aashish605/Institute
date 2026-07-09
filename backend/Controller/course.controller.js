@@ -1,9 +1,29 @@
+import { Op } from 'sequelize';
 import { Course } from '../Model/index.js'
 
 export const getCourse = async (req, res) => {
     try {
-        const data = await Course.findAll()
-        return res.json(data);
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 6));
+        const offset = (page - 1) * limit;
+
+        const where = {};
+        if (req.query.search) {
+            const q = `%${req.query.search}%`;
+            where[Op.or] = [
+                { title: { [Op.iLike]: q } },
+                { description: { [Op.iLike]: q } },
+            ];
+        }
+
+        const { rows: courses, count: total } = await Course.findAndCountAll({
+            where,
+            offset,
+            limit,
+            order: [['createdAt', 'DESC']],
+        });
+
+        return res.json({ courses, total, page, limit, totalPages: Math.ceil(total / limit) });
     } catch (error) {
         console.error("Error during getting the data", error)
         return res.status(500).json({ msg: "Error getting data" })
