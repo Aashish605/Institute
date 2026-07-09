@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useContent } from '../context/ContentContext'
-import { LOGIN } from '../config/site'
+import { LOGIN, API } from '../config/site'
 import useDocumentTitle from '../hooks/useDocumentTitle'
 import { motion } from "motion/react"
 
@@ -27,7 +27,7 @@ const Login = () => {
             <p className="text-sm text-text-secondary">{content.login_subtitle || LOGIN.subtitle}</p>
           </div>
           <a
-            href="/auth/google"
+            href={`${API.baseURL}/auth/google`}
             className="flex items-center justify-center gap-3 w-full px-6 py-3 rounded-lg border border-border bg-surface hover:bg-surface-alt transition-colors font-medium text-sm"
           >
             <img src="/google.png" alt="" className="w-5 h-5" />

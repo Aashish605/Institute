@@ -38,8 +38,8 @@ const Mock = () => {
   )
 
   return (
-    <div className="pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="pt-24 pb-16 min-h-screen flex flex-col">
+      <div className="max-w-7xl mx-auto px-6 flex-1 flex flex-col">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">{content.mock_heading || MOCK.heading}</h1>
           <p className="text-text-secondary max-w-xl mx-auto">{content.mock_subtitle || MOCK.subtitle}</p>
@@ -62,8 +62,8 @@ const Mock = () => {
             <p className="text-text-muted text-lg">No mock results found yet.</p>
           </div>
         ) : (
-          <>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col flex-1">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 flex-1 content-start">
               {results.map((result, i) => (
                 <motion.div
                   key={result.id}
@@ -106,7 +106,7 @@ const Mock = () => {
                 </button>
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

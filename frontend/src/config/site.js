@@ -171,7 +171,7 @@ export const CONTACT = {
       title: "Find Us",
       subtitle: "Visit our institute in Birendranagar, Surkhet, Nepal",
       embedUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d463.9261731741432!2d81.6145144607149!3d28.596655761428817!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a2856f6815a925%3A0xe39c3b7fb150b978!2sExpert%20Education%20and%20Visa%20Service%2C%20Surkhet%20Pvt.%20Ltd.!5e0!3m2!1sen!2snp!4v1750089763717!5m2!1sen!2snp",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.264619619895!2d81.62840969396086!3d28.59183730054133!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a2858da90f964b%3A0x190aacc454506fab!2sMirror%20Institute%20Pvt.%20Ltd.!5e0!3m2!1sen!2sus!4v1783579743628!5m2!1sen!2sus",
     },
   },
 };
