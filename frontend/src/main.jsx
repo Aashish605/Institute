@@ -18,6 +18,7 @@ import NoticeModel from './Notice/NoticeModel.jsx'
 import Enroll from './Course/Enroll.jsx'
 import Profile from './Profile/Profile.jsx'
 import Login from './Profile/Login.jsx'
+import ForgotPassword from './Profile/ForgotPassword.jsx'
 import { RequireAuth } from './Components/ProtectedRoutes';
 import ErrorBoundary from './Components/ErrorBoundary';
 import NotFound from './Components/NotFound'
@@ -38,6 +39,8 @@ const router = createBrowserRouter(createRoutesFromElements(
     </Route>
     <Route path='/notice' element={<Notice />} />
     <Route path='/login' element={<Login />} />
+    <Route path='/forgot-password' element={<ForgotPassword />} />
+    <Route path='/reset-password' element={<ForgotPassword />} />
     <Route path="*" element={<NotFound />} />
   </Route>
 ))

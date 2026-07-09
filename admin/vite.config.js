@@ -8,8 +8,8 @@ export default defineConfig({
     host: true,
     port: 5174,
     proxy: {
-      '/api': 'http://localhost:5000',
-      '/auth': 'http://localhost:5000',
+      '/api': 'http://localhost:3000',
+      '/auth': 'http://localhost:3000',
     },
   },
 })
