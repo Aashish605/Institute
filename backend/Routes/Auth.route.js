@@ -2,8 +2,12 @@ import express from 'express';
 import { User } from '../Model/index.js';
 
 const router = express.Router();
-import { passportAuth, callback, getuser, logout } from '../Controller/Auth.controller.js'
+import { passportAuth, callback, getuser, logout, signup, login, forgotPassword, resetPassword } from '../Controller/Auth.controller.js'
 
+router.post('/signup', signup)
+router.post('/login', login)
+router.post('/forgot-password', forgotPassword)
+router.post('/reset-password', resetPassword)
 router.get('/google', passportAuth)
 router.get('/google/callback', callback)
 router.get('/user', getuser)

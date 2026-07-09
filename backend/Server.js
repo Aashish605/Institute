@@ -6,12 +6,11 @@ dotenv.config()
 import passport from 'passport'
 import session from 'express-session'
 import pgStore from 'connect-pg-simple'
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
+import configurePassport from './Config/passport.js'
 import contactRoutes from './Routes/Contact.route.js'
 import mockRoutes from './Routes/Mock.route.js'
 import noticeRoutes from './Routes/Notice.route.js'
 import courseRoutes from './Routes/Course.route.js'
-import { User } from './Model/index.js';
 import authRoutes from './Routes/Auth.route.js'
 import paymentReceiptRoutes from './Routes/PaymentReceipt.route.js';
 import contentRoutes from './Routes/Content.route.js';
@@ -62,50 +61,7 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session())
-
-
-passport.use(
-    new GoogleStrategy({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL || "https://institute-xi.vercel.app/auth/google/callback"
-    }, async (accessToken, refreshToken, profile, done) => {
-        try {
-            const adminEmail = "ashishkhadka317@gmail.com"; // <-- Set your admin Gmail here
-            let user = await User.findOne({ where: { googleId: profile.id } });
-            if (!user) {
-                user = await User.create({
-                    googleId: profile.id,
-                    displayName: profile.displayName,
-                    email: profile.emails[0].value,
-                    photo: profile.photos[0].value,
-                    isAdmin: profile.emails[0].value === adminEmail, // <-- Set admin flag
-                });
-            } else if (profile.emails[0].value === adminEmail && !user.isAdmin) {
-                user.isAdmin = true;
-                await user.save();
-            }
-            return done(null, user);
-        } catch (err) {
-            return done(err, null);
-        }
-    })
-)
-
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-    try {
-        const user = await User.findByPk(id);
-        done(null, user);
-    } catch (err) {
-        done(err, null);
-    }
-});
-
-
+configurePassport()
 
 app.use('/api/contact', contactRoutes)
 app.use('/api/mock', mockRoutes)
