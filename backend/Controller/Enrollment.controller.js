@@ -1,4 +1,4 @@
-import { Enrollment, User, Course } from '../Model/index.js';
+import { Enrollment, User, Course, Payment } from '../Model/index.js';
 import { Op } from 'sequelize';
 
 export const getAllEnrollments = async (req, res) => {
@@ -35,7 +35,7 @@ export const getAllEnrollments = async (req, res) => {
 
 export const createEnrollment = async (req, res) => {
     try {
-        const { userId, courseId } = req.body;
+        const { userId, courseId, paymentType } = req.body;
         if (!userId || !courseId) {
             return res.status(400).json({ msg: "userId and courseId are required" });
         }
@@ -53,6 +53,17 @@ export const createEnrollment = async (req, res) => {
         if (!created) {
             return res.status(409).json({ msg: "User is already enrolled in this course" });
         }
+
+        await Payment.create({
+            userId,
+            courseId,
+            course: course.title,
+            userName: user.displayName || user.email,
+            userEmail: user.email,
+            receipt: '',
+            paymentType: paymentType || 'cash',
+            status: 'verified',
+        });
 
         const populated = await Enrollment.findByPk(enrollment.id, {
             include: [

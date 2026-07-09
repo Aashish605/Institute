@@ -4,18 +4,18 @@ import Course from './Course.model.js';
 import Contact from './Contact.model.js';
 import Mock from './Mock.model.js';
 import Notice from './Notice.model.js';
-import PaymentReceipt from './PaymentReceipt.model.js';
+import Payment from './Payment.model.js';
 import ContentBlock from './ContentBlock.model.js';
 import Enrollment from './Enrollment.model.js';
 import Testimonial from './Testimonial.model.js';
 
-// PaymentReceipt -> User
-PaymentReceipt.belongsTo(User, { foreignKey: 'userId' });
-User.hasMany(PaymentReceipt, { foreignKey: 'userId' });
+// Payment -> User
+Payment.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Payment, { foreignKey: 'userId' });
 
-// PaymentReceipt -> Course
-PaymentReceipt.belongsTo(Course, { foreignKey: 'courseId' });
-Course.hasMany(PaymentReceipt, { foreignKey: 'courseId' });
+// Payment -> Course
+Payment.belongsTo(Course, { foreignKey: 'courseId' });
+Course.hasMany(Payment, { foreignKey: 'courseId' });
 
 // Contact -> User (optional — null for unauthenticated submissions)
 Contact.belongsTo(User, { foreignKey: 'userId' });
@@ -35,11 +35,11 @@ const db = {
     Contact,
     Mock,
     Notice,
-    PaymentReceipt,
+    Payment,
     ContentBlock,
     Enrollment,
     Testimonial,
 };
 
 export default db;
-export { sequelize, User, Course, Contact, Mock, Notice, PaymentReceipt, ContentBlock, Enrollment, Testimonial };
+export { sequelize, User, Course, Contact, Mock, Notice, Payment, ContentBlock, Enrollment, Testimonial };

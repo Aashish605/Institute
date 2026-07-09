@@ -69,6 +69,7 @@ const Enroll = () => {
         course: course?.title,
         userName: user?.displayName || user?.name || "",
         userEmail: user?.email || "",
+        paymentType: 'cash',
       });
       setSuccess(true);
       setReference('');

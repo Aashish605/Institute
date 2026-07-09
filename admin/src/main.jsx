@@ -36,13 +36,16 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="/courses/:id/edit" element={<CourseForm />} />
       <Route path="/notices" element={<NoticeList />} />
       <Route path="/notices/new" element={<NoticeForm />} />
+      <Route path="/notices/:id/edit" element={<NoticeForm />} />
       <Route path="/mocks" element={<MockList />} />
       <Route path="/mocks/new" element={<MockForm />} />
+      <Route path="/mocks/:id/edit" element={<MockForm />} />
       <Route path="/payments" element={<Payments />} />
       <Route path="/contacts" element={<Contacts />} />
       <Route path="/content" element={<ContentEditor />} />
       <Route path="/testimonials" element={<TestimonialList />} />
       <Route path="/testimonials/new" element={<TestimonialForm />} />
+      <Route path="/testimonials/:id/edit" element={<TestimonialForm />} />
       <Route path="/users" element={<UserList />} />
       <Route path="/enrollments" element={<EnrollmentList />} />
     </Route>

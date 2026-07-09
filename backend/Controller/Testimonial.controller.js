@@ -21,6 +21,36 @@ export const getTestimonials = async (req, res) => {
     }
 }
 
+export const getTestimonialById = async (req, res) => {
+    try {
+        const data = await Testimonial.findByPk(req.params.id);
+        if (!data) return res.status(404).json({ msg: "Not found" });
+        return res.json(data);
+    } catch (error) {
+        console.error("Error getting testimonial", error)
+        return res.status(500).json({ msg: "Error getting testimonial" })
+    }
+}
+
+export const updateTestimonial = async (req, res) => {
+    let { Id, name, role, company, avatar, content, rating } = req.body;
+    try {
+        const existing = await Testimonial.findByPk(Id);
+        if (!existing) return res.status(404).json({ msg: "Testimonial not found" });
+        existing.name = name;
+        existing.role = role || null;
+        existing.company = company || null;
+        existing.avatar = avatar || null;
+        existing.content = content;
+        existing.rating = rating || 5;
+        await existing.save();
+        return res.json(existing);
+    } catch (error) {
+        console.error("Error updating testimonial", error)
+        return res.status(500).json({ msg: "Error updating testimonial" })
+    }
+}
+
 export const deleteTestimonial = async (req, res) => {
     try {
         const removed = await Testimonial.destroy({ where: { id: req.body.id } });

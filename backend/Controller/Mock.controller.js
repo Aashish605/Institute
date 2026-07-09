@@ -39,6 +39,24 @@ export const getMockById = async (req, res) => {
     }
 }
 
+export const updateMock = async (req, res) => {
+    let { Id, Title, Week, Description, FileUrl, FileType } = req.body;
+    try {
+        const existing = await Mock.findByPk(Id);
+        if (!existing) return res.status(404).json({ msg: "Mock result not found" });
+        existing.Title = Title;
+        existing.Week = Week;
+        existing.Description = Description;
+        existing.FileUrl = FileUrl;
+        existing.FileType = FileType;
+        await existing.save();
+        return res.json(existing);
+    } catch (error) {
+        console.error("Error updating mock result", error)
+        return res.status(500).json({ msg: "Error updating mock result" })
+    }
+}
+
 export const deleteMock = async (req,res) => {
     try {
         const removed = await Mock.destroy({ where: { id: req.body.id } });

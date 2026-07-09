@@ -12,7 +12,7 @@ import mockRoutes from './Routes/Mock.route.js'
 import noticeRoutes from './Routes/Notice.route.js'
 import courseRoutes from './Routes/Course.route.js'
 import authRoutes from './Routes/Auth.route.js'
-import paymentReceiptRoutes from './Routes/PaymentReceipt.route.js';
+import paymentRoutes from './Routes/Payment.route.js';
 import contentRoutes from './Routes/Content.route.js';
 import testimonialRoutes from './Routes/Testimonial.route.js';
 import userRoutes from './Routes/User.route.js';
@@ -71,7 +71,7 @@ app.use('/api/mock', mockRoutes)
 app.use('/api/notice', noticeRoutes)
 app.use('/api/course', courseRoutes)
 app.use("/auth", authRoutes)
-app.use('/api/payment', paymentReceiptRoutes)
+app.use('/api/payment', paymentRoutes)
 app.use('/api/content', contentRoutes)
 app.use('/api/testimonial', testimonialRoutes)
 app.use('/api/user', userRoutes)

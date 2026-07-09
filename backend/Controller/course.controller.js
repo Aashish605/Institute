@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Course } from '../Model/index.js'
+import { Course, Enrollment } from '../Model/index.js'
 
 export const getCourse = async (req, res) => {
     try {
@@ -37,7 +37,6 @@ export const getCourseByTitle = async (req, res) => {
         
         let isEnrolled = false;
         if (req.isAuthenticated() && req.user) {
-            const { Enrollment } = await import('../Model/index.js');
             const enrollment = await Enrollment.findOne({
                 where: {
                     userId: req.user.id,

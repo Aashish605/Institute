@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../Db/db.js';
 
-const PaymentReceipt = sequelize.define('PaymentReceipt', {
+const Payment = sequelize.define('Payment', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -17,8 +17,9 @@ const PaymentReceipt = sequelize.define('PaymentReceipt', {
     userName: { type: DataTypes.STRING, allowNull: false },
     userEmail: { type: DataTypes.STRING, allowNull: false },
     status: { type: DataTypes.STRING, defaultValue: 'pending' },
+    paymentType: { type: DataTypes.ENUM('cash', 'online'), defaultValue: 'cash' },
 }, {
     timestamps: true,
 });
 
-export default PaymentReceipt;
+export default Payment;

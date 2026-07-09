@@ -1,5 +1,5 @@
 import express from 'express';
-import { submitReceipt, getMyCourses, getAllReceipts, updateReceiptStatus } from '../Controller/PaymentReceipt.controller.js';
+import { submitReceipt, getMyCourses, getAllReceipts, updateReceiptStatus } from '../Controller/Payment.controller.js';
 import { isAdmin } from '../Middleware/adminAuth.js';
 
 const router = express.Router();

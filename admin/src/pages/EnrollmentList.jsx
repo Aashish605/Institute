@@ -14,6 +14,7 @@ export default function EnrollmentList() {
   const [showModal, setShowModal] = useState(false)
   const [selectedUser, setSelectedUser] = useState('')
   const [selectedCourse, setSelectedCourse] = useState('')
+  const [paymentType, setPaymentType] = useState('cash')
   const [submitting, setSubmitting] = useState(false)
 
   const fetchEnrollments = useCallback(() => {
@@ -46,11 +47,12 @@ export default function EnrollmentList() {
     if (!selectedUser || !selectedCourse) return toast.error('Select both a user and a course')
     setSubmitting(true)
     try {
-      await api.post('/api/enrollment', { userId: selectedUser, courseId: selectedCourse })
+      await api.post('/api/enrollment', { userId: selectedUser, courseId: selectedCourse, paymentType })
       toast.success('Enrollment added')
       setShowModal(false)
       setSelectedUser('')
       setSelectedCourse('')
+      setPaymentType('cash')
       fetchEnrollments()
     } catch (err) {
       toast.error(err.response?.data?.msg || 'Failed to add enrollment')
@@ -178,6 +180,17 @@ export default function EnrollmentList() {
                   >
                     <option value="">Select a course...</option>
                     {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Payment Type</label>
+                  <select
+                    value={paymentType}
+                    onChange={e => setPaymentType(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                  >
+                    <option value="cash">Cash</option>
+                    <option value="online">Online</option>
                   </select>
                 </div>
                 <div className="flex gap-3 justify-end pt-2">

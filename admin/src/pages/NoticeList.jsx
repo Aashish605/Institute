@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { motion } from 'motion/react'
 import api from '../config/api'
@@ -8,6 +8,7 @@ import { LoaderThree } from '../components/ui/loader'
 export default function NoticeList() {
   const [notices, setNotices] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   const fetchData = () => {
     setLoading(true)
@@ -64,9 +65,14 @@ export default function NoticeList() {
                 <td className="px-6 py-4 font-medium text-gray-800">{n.Title}</td>
                 <td className="px-6 py-4 text-gray-600 line-clamp-2 max-w-xs">{n.Description}</td>
                 <td className="px-6 py-4">
-                  <button onClick={() => handleDelete(n.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium">
-                    Delete
-                  </button>
+                  <div className="flex gap-2">
+                    <button onClick={() => navigate(`/notices/${n.id}/edit`, { state: { notice: n } })} className="px-3 py-1 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition text-sm font-medium">
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(n.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium">
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </motion.tr>
             ))}
