@@ -14,7 +14,23 @@ export const getCourseByTitle = async (req, res) => {
     try {
         const data = await Course.findOne({ where: { title: req.params.title } });
         if (!data) return res.status(404).json({ msg: "Not found" });
-        return res.json(data);
+        
+        let isEnrolled = false;
+        if (req.isAuthenticated() && req.user) {
+            const { Enrollment } = await import('../Model/index.js');
+            const enrollment = await Enrollment.findOne({
+                where: {
+                    userId: req.user.id,
+                    courseId: data.id
+                }
+            });
+            isEnrolled = !!enrollment;
+        }
+
+        const plainData = data.get({ plain: true });
+        plainData.isEnrolled = isEnrolled;
+
+        return res.json(plainData);
     } catch (error) {
         console.error("Error during getting the data", error)
         return res.status(500).json({ msg: "Error getting data" })

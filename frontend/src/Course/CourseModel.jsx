@@ -1,13 +1,30 @@
 import { useEffect, useState } from 'react';
 import api from "../config/api";
 import { useParams, NavLink } from 'react-router-dom';
-import { motion } from "motion/react"
+import { motion } from "motion/react";
 import ErrorState from '../Components/ErrorState';
-import { BookMarked, ArrowLeft, Star, Zap, Check } from 'lucide-react';
+import { 
+  BookMarked, 
+  ArrowLeft, 
+  ArrowRight, 
+  Star, 
+  Zap, 
+  Check, 
+  Lock, 
+  Unlock, 
+  BookOpen, 
+  GraduationCap, 
+  FileDown, 
+  ExternalLink,
+  ShieldAlert
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Badge } from '../Components/ui/badge';
 
 const CourseModel = () => {
   const { model } = useParams();
-  const [course, setCourse] = useState();
+  const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,16 +35,12 @@ const CourseModel = () => {
   }, [model]);
 
   if (loading) return (
-    <div className="pt-24 pb-12 min-h-screen bg-gradient-to-br from-surface via-white to-surface">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="h-12 skeleton rounded-lg w-32 mb-8" />
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          <div className="h-96 skeleton rounded-2xl" />
-          <div className="space-y-4">
-            <div className="h-8 skeleton rounded-lg w-3/4" />
-            <div className="h-4 skeleton rounded-lg w-full" />
-            <div className="h-4 skeleton rounded-lg w-full" />
-          </div>
+    <div className="pt-28 pb-16 min-h-screen bg-[radial-gradient(circle_at_top,_rgba(0,78,143,0.04),_transparent_50%)]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="h-6 skeleton rounded w-32 mb-8 animate-pulse bg-slate-200" />
+        <div className="grid lg:grid-cols-12 gap-8 mb-8">
+          <div className="lg:col-span-8 h-96 skeleton rounded-3xl animate-pulse bg-slate-200" />
+          <div className="lg:col-span-4 h-96 skeleton rounded-3xl animate-pulse bg-slate-200" />
         </div>
       </div>
     </div>
@@ -43,191 +56,257 @@ const CourseModel = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface via-white to-surface pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(0,78,143,0.04),_transparent_55%)] pt-28 pb-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        
         {/* Back Button */}
         <motion.div 
-          initial={{ opacity: 0, y: -20 }} 
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -10 }} 
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
           className="mb-8"
         >
           <NavLink 
             to="/course" 
-            className="inline-flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text transition-colors hover:gap-3"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary transition-all duration-200 group"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             Back to Courses
           </NavLink>
         </motion.div>
 
-        {/* Hero Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="grid lg:grid-cols-2 gap-10 items-center mb-16"
-        >
-          {/* Image */}
-          <div className="rounded-3xl overflow-hidden shadow-2xl border border-border/50">
-            <motion.img 
-              src={course.image} 
-              alt={course.title}
-              className="w-full h-full object-cover"
-              initial={{ scale: 1.1 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.6 }}
-            />
+        {/* Course Details Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Main Content Column */}
+          <div className="lg:col-span-8 space-y-8">
+            <Card className="overflow-hidden border-slate-100 shadow-2xl shadow-slate-100/70 bg-white/90 backdrop-blur-sm rounded-3xl">
+              
+              {/* Cover Image */}
+              <div className="relative h-64 sm:h-[380px] overflow-hidden bg-slate-100">
+                <motion.img 
+                  src={course.image} 
+                  alt={course.title}
+                  className="w-full h-full object-cover"
+                  initial={{ scale: 1.05 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.6 }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+                
+                {/* Overlay Badge */}
+                <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+                  <Badge className="bg-secondary text-white hover:bg-secondary border-none px-3.5 py-1 text-xs font-bold uppercase tracking-wider">
+                    {course.discount ? `${course.discount} Off` : 'Entrance Prep'}
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Main Info */}
+              <CardContent className="p-6 sm:p-10 space-y-6">
+                <div className="space-y-4">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-950 tracking-tight leading-tight">
+                    {course.title}
+                  </h1>
+                  <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    {course.description}
+                  </p>
+                </div>
+
+                <hr className="border-slate-100" />
+
+                {/* Features list */}
+                {course.features?.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-secondary" /> What you will get
+                    </h3>
+                    <div className="grid sm:grid-cols-2 gap-3.5">
+                      {course.features.map((f, i) => (
+                        <div key={i} className="flex gap-2.5 items-start p-3 bg-slate-50 rounded-xl border border-slate-100/50">
+                          {f.icon ? (
+                            <img src={f.icon} alt="" className="w-5 h-5 shrink-0 mt-0.5" />
+                          ) : (
+                            <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <Check className="w-3.5 h-3.5 text-primary" />
+                            </div>
+                          )}
+                          <span className="text-xs sm:text-sm font-semibold text-slate-600">{f.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Subjects */}
+                {course.subjects?.length > 0 && (
+                  <div className="space-y-3 pt-2">
+                    <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-primary" /> Subjects Covered
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {course.subjects.map((s, i) => (
+                        <Badge key={i} variant="outline" className="px-3.5 py-1 text-slate-600 border-slate-200 bg-white font-medium text-xs rounded-full">
+                          {s}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Study Materials Security Section */}
+            <Card className="border-slate-100 shadow-2xl shadow-slate-100/70 bg-white/95 rounded-3xl overflow-hidden">
+              <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-5">
+                <CardTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  {course.isEnrolled ? (
+                    <Unlock className="w-5 h-5 text-green-500" />
+                  ) : (
+                    <Lock className="w-5 h-5 text-slate-400" />
+                  )}
+                  Course Learning Materials
+                </CardTitle>
+                <CardDescription>
+                  {course.isEnrolled 
+                    ? "Welcome back! You have active enrollment access to these files." 
+                    : "Premium contents like entrance files and revision documents are locked."
+                  }
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-6 sm:p-8">
+                {course.isEnrolled ? (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-2xl flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center text-green-600 shrink-0">
+                        <GraduationCap className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-800">Enrollment Active</h4>
+                        <p className="text-xs text-slate-500 mt-0.5">Below are your learning portals and study guides.</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                      <div className="p-4 border border-slate-100 rounded-2xl hover:border-primary/20 transition-all space-y-2 bg-slate-50/40">
+                        <h5 className="font-bold text-slate-800 text-sm">Official Study Portal</h5>
+                        <p className="text-xs text-slate-400">Contains class PDFs, video lectures, and revision keys.</p>
+                        <a 
+                          href={course.materialsLink}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs text-primary font-bold hover:underline pt-1"
+                        >
+                          Access Materials <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+
+                      {course.mockTestLink && (
+                        <div className="p-4 border border-slate-100 rounded-2xl hover:border-primary/20 transition-all space-y-2 bg-slate-50/40">
+                          <h5 className="font-bold text-slate-800 text-sm">Weekly Simulation Tests</h5>
+                          <p className="text-xs text-slate-400">Complete weekly mock tests and view your scoring rank.</p>
+                          <NavLink 
+                            to={course.mockTestLink}
+                            className="inline-flex items-center gap-1.5 text-xs text-primary font-bold hover:underline pt-1"
+                          >
+                            Go to Mock Tests <ArrowRight className="w-3 h-3" />
+                          </NavLink>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-10 px-4 space-y-4">
+                    <div className="mx-auto w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
+                      <Lock className="w-6 h-6" />
+                    </div>
+                    <div className="max-w-md mx-auto space-y-1">
+                      <h4 className="text-base font-bold text-slate-800">Materials Locked</h4>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        To unlock the study syllabus, past questions sheets, and recorded class links, please complete your enrollment process.
+                      </p>
+                    </div>
+                    <Button asChild className="bg-secondary hover:bg-secondary/90 text-white rounded-xl px-6 py-5 text-sm font-bold shadow-md shadow-secondary/10">
+                      <NavLink to={`/course/${course.title}`}>
+                        Learn More
+                      </NavLink>
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="space-y-6"
-          >
-            <div>
-              <h1 className="text-4xl sm:text-5xl font-bold mb-4 leading-tight">{course.title}</h1>
-              <p className="text-lg text-text-secondary leading-relaxed">{course.description}</p>
-            </div>
-
-            {/* Price Section */}
-            <div className="flex items-center gap-4 py-6 border-y border-border/50">
-              <div>
-                {course.oldPrice && (
-                  <span className="text-sm text-text-muted line-through block mb-1">NPR {course.oldPrice}</span>
-                )}
-                <span className="text-4xl font-bold text-primary">NPR {course.newPrice}</span>
-              </div>
-              {course.discount && (
-                <motion.div
-                  className="ml-auto px-4 py-2 rounded-full bg-secondary/20 border border-secondary/50"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <span className="text-secondary font-bold">{course.discount} OFF</span>
-                </motion.div>
-              )}
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex-1"
-              >
-                <NavLink 
-                  to={`/course/${course.title}/enroll`}
-                  className="block w-full px-6 py-4 rounded-xl bg-gradient-to-r from-secondary to-secondary-light text-white font-bold text-center hover:shadow-lg transition-all duration-300"
-                >
-                  Enroll Now
-                </NavLink>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <a
-                  href={course.materialsLink || undefined}
-                  target={course.materialsLink ? '_blank' : undefined}
-                  rel="noopener noreferrer"
-                  aria-disabled={!course.materialsLink}
-                  className={`block px-6 py-4 rounded-xl font-semibold text-center transition-all duration-300 ${
-                    course.materialsLink 
-                      ? 'border-2 border-primary hover:border-primary/60 text-text hover:bg-primary/5'
-                      : 'border-2 border-border text-text-muted cursor-not-allowed bg-surface'
-                  }`}
-                >
-                  Materials
-                </a>
-              </motion.div>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Features Section */}
-        {course.features?.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="mb-16 bg-white rounded-3xl p-8 sm:p-12 border border-border/50 shadow-lg"
-          >
-            <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-              <Zap className="w-8 h-8 text-secondary" />
-              Why Choose This Course?
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {course.features.map((f, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/10 hover:border-primary/30 transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                      <Check className="w-4 h-4 text-primary" />
+          {/* Right Sidebar Column */}
+          <div className="lg:col-span-4 space-y-6">
+            
+            {/* Purchase Details */}
+            <Card className="border-slate-100 shadow-xl shadow-slate-100/50 bg-white/95 rounded-3xl">
+              <div className="p-6 space-y-6">
+                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 border-b border-slate-50 pb-3">
+                  <Star className="w-5 h-5 text-secondary" /> Course Plan
+                </h3>
+                
+                <div className="space-y-3.5">
+                  <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2.5">
+                    <span className="text-slate-400">Enrollment Fee</span>
+                    <div className="text-right">
+                      {course.oldPrice && (
+                        <span className="text-xs text-slate-400 line-through block">NPR {course.oldPrice}</span>
+                      )}
+                      <span className="font-extrabold text-primary text-lg">NPR {course.newPrice}</span>
                     </div>
-                    <span className="text-sm font-medium text-text-secondary">{f.text}</span>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+                  <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2.5">
+                    <span className="text-slate-400">Status</span>
+                    {course.isEnrolled ? (
+                      <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700 font-bold">Active Member</Badge>
+                    ) : (
+                      <Badge variant="outline" className="border-slate-200 text-slate-500 font-semibold">Not Enrolled</Badge>
+                    )}
+                  </div>
+                </div>
 
-        {/* Subjects Section */}
-        {course.subjects?.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="mb-16 bg-white rounded-3xl p-8 sm:p-12 border border-border/50 shadow-lg"
-          >
-            <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-              <Star className="w-8 h-8 text-primary" />
-              Subjects Covered
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {course.subjects.map((s, i) => (
-                <motion.span 
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  className="px-4 py-2 rounded-full bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 text-primary font-medium hover:border-primary/60 transition-colors cursor-default"
-                >
-                  {s}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
-        )}
+                <div className="space-y-3 pt-2">
+                  {course.isEnrolled ? (
+                    <Button className="w-full bg-slate-900 text-white rounded-xl py-5" disabled>
+                      Enrolled
+                    </Button>
+                  ) : (
+                    <Button className="w-full bg-gradient-to-r from-primary to-primary-light hover:shadow-lg hover:shadow-primary/20 text-white rounded-xl py-5 font-bold" asChild>
+                      <NavLink to={`/course/${course.title}/enroll`}>
+                        Enroll in Course
+                      </NavLink>
+                    </Button>
+                  )}
+                  
+                  <Button variant="outline" className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl py-5 font-semibold" asChild>
+                    <NavLink to="/course">Browse Others</NavLink>
+                  </Button>
+                </div>
+              </div>
+            </Card>
 
-        {/* Related Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center"
-        >
-          <p className="text-text-secondary text-sm mb-6">Ready to practice?</p>
-          <NavLink 
-            to="/mock"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-semibold hover:shadow-lg transition-all duration-300"
-          >
-            <Zap className="w-4 h-4" />
-            Access Mock Tests
-          </NavLink>
-        </motion.div>
+            {/* Assistance Alert */}
+            <Card className="border-slate-100 shadow-xl shadow-slate-100/50 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-6 relative overflow-hidden">
+              <div className="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 opacity-10">
+                <BookOpen size={160} />
+              </div>
+              <div className="relative z-10 space-y-4">
+                <h4 className="text-base font-bold tracking-tight">Accessing materials?</h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  If you have already paid but details are still locked, it may take up to 24 hours for manual verification. Feel free to contact administration for immediate support.
+                </p>
+                <Button className="bg-secondary hover:bg-secondary/90 text-white border-none rounded-xl text-xs py-4 px-4 w-full sm:w-auto" asChild>
+                  <NavLink to="/contact">Contact Support</NavLink>
+                </Button>
+              </div>
+            </Card>
+
+          </div>
+
+        </div>
+
       </div>
     </div>
   );

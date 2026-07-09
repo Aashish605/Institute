@@ -1,4 +1,4 @@
-import { PaymentReceipt, Course } from '../Model/index.js';
+import { PaymentReceipt, Course, Enrollment } from '../Model/index.js';
 
 export const submitReceipt = async (req, res) => {
     if (!req.isAuthenticated()) {
@@ -27,6 +27,20 @@ export const submitReceipt = async (req, res) => {
 };
 
 // Optional: Admin can get all receipts
+export const getMyCourses = async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ msg: "Not authenticated" });
+    try {
+        const receipts = await PaymentReceipt.findAll({
+            where: { userId: req.user.id, status: 'verified' },
+            include: [{ model: Course, attributes: ['id', 'title', 'image', 'newPrice'] }],
+            order: [['createdAt', 'DESC']],
+        });
+        res.json(receipts);
+    } catch (err) {
+        res.status(500).json({ msg: "Server error", error: err.message });
+    }
+};
+
 export const getAllReceipts = async (req, res) => {
     try {
         const where = {};
@@ -43,6 +57,16 @@ export const updateReceiptStatus = async (req, res) => {
         const receipt = await PaymentReceipt.findByPk(req.params.id);
         if (!receipt) return res.status(404).json({ msg: "Receipt not found" });
         await receipt.update({ status: req.body.status });
+
+        if (req.body.status === 'verified' && receipt.userId && receipt.courseId) {
+            await Enrollment.findOrCreate({
+                where: {
+                    userId: receipt.userId,
+                    courseId: receipt.courseId,
+                }
+            });
+        }
+
         res.json(receipt);
     } catch (err) {
         res.status(500).json({ msg: "Failed to update status" });

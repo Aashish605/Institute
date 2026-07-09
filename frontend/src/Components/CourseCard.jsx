@@ -11,19 +11,21 @@ const CourseCard = ({ course, index = 0 }) => {
 
   return (
     <div className="group relative rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 pt-0 shadow-sm hover:shadow-lg transition-all duration-300">
-      <div className="relative h-48 overflow-hidden rounded-t-xl">
-        <img
-          src={course.image}
-          alt={course.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
-        />
-        {course.discount && (
-          <Badge variant="secondary" className="absolute top-3 right-3 rounded-sm">
-            {course.discount} OFF
-          </Badge>
-        )}
-      </div>
+      <NavLink to={`/course/${encodeURIComponent(course.title)}`} className="block">
+        <div className="relative h-48 overflow-hidden rounded-t-xl">
+          <img
+            src={course.image}
+            alt={course.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+          {course.discount && (
+            <Badge variant="secondary" className="absolute top-3 right-3 rounded-sm">
+              {course.discount} OFF
+            </Badge>
+          )}
+        </div>
+      </NavLink>
       <Button
         size="icon"
         onClick={() => setLiked(!liked)}
@@ -34,7 +36,9 @@ const CourseCard = ({ course, index = 0 }) => {
       </Button>
       <Card className="border-none shadow-none">
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg line-clamp-1">{course.title}</CardTitle>
+          <NavLink to={`/course/${encodeURIComponent(course.title)}`} className="hover:text-primary transition-colors">
+            <CardTitle className="text-lg line-clamp-1">{course.title}</CardTitle>
+          </NavLink>
           <CardDescription className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className="rounded-sm text-xs">
               <Clock className="w-3 h-3 mr-1" /> Self-paced
@@ -54,9 +58,9 @@ const CourseCard = ({ course, index = 0 }) => {
             )}
             <span className="text-xl font-bold text-primary">NPR {course.newPrice}</span>
           </div>
-          <NavLink to={`/course/${course.title}/enroll`}>
+          <NavLink to={`/course/${course.title}`}>
             <Button size="lg" className="w-full bg-secondary hover:bg-secondary-light text-white">
-              Enroll Now
+              Learn More
             </Button>
           </NavLink>
         </CardFooter>

@@ -9,7 +9,7 @@ const api = axios.create({
 api.interceptors.response.use(
   response => response,
   error => {
-    const ignoredAuthPaths = ['/auth/user', '/auth/login', '/auth/signup'];
+    const ignoredAuthPaths = ['/auth/user', '/auth/login', '/auth/signup', '/api/course/'];
     const shouldIgnoreRedirect = ignoredAuthPaths.some(path => error.config?.url?.includes(path));
 
     if (error.response?.status === 401 && !shouldIgnoreRedirect) {

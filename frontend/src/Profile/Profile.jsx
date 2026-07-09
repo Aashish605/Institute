@@ -7,7 +7,7 @@ import { PAYMENTS } from '../config/site'
 import { toast } from 'react-toastify'
 import useDocumentTitle from '../hooks/useDocumentTitle'
 import { motion } from 'motion/react'
-import { BadgeCheck, Building2, Camera, GraduationCap, LogOut, Mail, Phone, Sparkles, UserRound, ShieldCheck } from 'lucide-react'
+import { BadgeCheck, Building2, BookOpen, Camera, Calendar, GraduationCap, LogOut, Mail, Phone, Sparkles, UserRound, ShieldCheck } from 'lucide-react'
 
 function Profile() {
   useDocumentTitle('Profile')
@@ -21,6 +21,7 @@ function Profile() {
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [enrolledCourses, setEnrolledCourses] = useState([])
   const fileInputRef = useRef(null)
 
   const updated = !!(logIn?.number && logIn?.class && logIn?.age && logIn?.school)
@@ -33,6 +34,13 @@ function Profile() {
     setUserClass(logIn?.class || '')
     setSchool(logIn?.school || '')
   }, [logIn?.displayName, logIn?.age, logIn?.number, logIn?.class, logIn?.school])
+
+  useEffect(() => {
+    if (!logIn) return
+    api.get('/api/payment/my-courses')
+      .then(res => setEnrolledCourses(res.data))
+      .catch(() => setEnrolledCourses([]))
+  }, [logIn])
 
   const validate = () => {
     const errs = {}
@@ -244,6 +252,33 @@ function Profile() {
             </div>
           </div>
         </motion.div>
+
+        {enrolledCourses.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-6 rounded-[28px] border border-border/60 bg-white/80 p-4 shadow-[0_25px_80px_-30px_rgba(2,18,43,0.35)] backdrop-blur md:p-8 lg:p-10">
+            <div className="flex items-center gap-2 text-sm font-medium text-primary">
+              <BookOpen className="h-4 w-4" />
+              My Courses
+            </div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {enrolledCourses.map((receipt) => {
+                const course = receipt.Course
+                if (!course) return null
+                return (
+                  <a key={receipt.id} href={`/course/${encodeURIComponent(course.title)}`} className="group flex items-center gap-4 rounded-2xl border border-border/50 bg-white/70 p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:shadow-primary/5">
+                    <img src={course.image} alt={course.title} className="h-14 w-14 shrink-0 rounded-xl object-cover shadow-sm" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-text group-hover:text-primary transition-colors">{course.title}</p>
+                      <div className="mt-1 flex items-center gap-3 text-xs text-text-secondary">
+                        <span className="inline-flex items-center gap-1"><Calendar className="h-3 w-3" />{new Date(receipt.createdAt).toLocaleDateString()}</span>
+                        <span className="font-medium text-secondary">NPR.{course.newPrice}</span>
+                      </div>
+                    </div>
+                  </a>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   )
