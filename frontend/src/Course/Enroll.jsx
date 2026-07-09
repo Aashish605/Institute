@@ -52,7 +52,7 @@ const Enroll = () => {
       setReference('');
       setReceipt(null);
       setNotes('');
-    } catch (err) {
+    } catch {
       setError('Submission failed. Please try again.');
     }
     setSubmitting(false);

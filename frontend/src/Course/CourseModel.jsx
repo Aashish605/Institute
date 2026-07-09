@@ -84,7 +84,13 @@ const CourseModel = () => {
         )}
 
         <div className="flex flex-wrap gap-4 justify-center">
-          <NavLink to={course.materialsLink || '#'} className="px-6 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary-light transition-colors">Access Course Materials</NavLink>
+          <a
+            href={course.materialsLink || undefined}
+            target={course.materialsLink ? '_blank' : undefined}
+            rel="noopener noreferrer"
+            aria-disabled={!course.materialsLink}
+            className={`px-6 py-3 rounded-lg font-semibold transition-colors ${course.materialsLink ? 'bg-primary text-white hover:bg-primary-light' : 'bg-surface text-text-muted cursor-not-allowed border border-border'}`}
+          >Access Course Materials</a>
           <NavLink to="/mock" className="px-6 py-3 rounded-lg bg-secondary text-white font-semibold hover:bg-secondary-light transition-colors">Access Mock Tests</NavLink>
         </div>
       </div>

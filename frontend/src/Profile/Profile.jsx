@@ -81,9 +81,9 @@ function Profile() {
                 <input type="text" value={userClass} onChange={e => setUserClass(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors" />
               </div>
               <div className="flex gap-3 pt-2">
-                <button type="submit" disabled={loading}
+                <button type="submit" disabled={loading || updated}
                   className="flex-1 py-2.5 rounded-lg bg-primary text-white font-semibold hover:bg-primary-light transition-colors disabled:opacity-50 text-sm">
-                  {loading ? 'Updating...' : updated ? 'Profile Up to Date' : 'Update Profile'}
+                  {loading ? 'Updating...' : updated ? 'Profile Up to Date ✓' : 'Update Profile'}
                 </button>
                 <button type="button" onClick={() => { api.get('/auth/logout').finally(() => dispatch(clearUser())) }}
                   className="px-6 py-2.5 rounded-lg border border-error text-error font-semibold hover:bg-error/5 transition-colors text-sm">
