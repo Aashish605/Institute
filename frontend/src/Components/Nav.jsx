@@ -17,8 +17,21 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileCourses, setMobileCourses] = useState(false)
   const [imgError, setImgError] = useState(false)
-  const dropdownRef = useRef(null)
+  const [imageKey, setImageKey] = useState(0)
+  const profileDropdownRef = useRef(null)
   const mobileCoursesRef = useRef(null)
+  const coursesMenuRef = useRef(null)
+
+  const getAvatarSrc = (user) => {
+    if (!user) return '/profile.jpg'
+    // Prioritize photo field like the profile page does
+    if (user.photo?.trim()) return user.photo.trim()
+    if (user.picture?.trim()) return user.picture.trim()
+    if (user.image?.trim()) return user.image.trim()
+    return '/profile.jpg'
+  }
+
+  const displayName = logIn?.displayName || logIn?.name || 'User'
 
   const { scrollY } = useScroll()
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -27,15 +40,19 @@ export default function Nav() {
 
   useEffect(() => {
     setImgError(false)
+    setImageKey(prev => prev + 1)
   }, [logIn])
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
         setDropdown(false)
       }
       if (mobileCoursesRef.current && !mobileCoursesRef.current.contains(e.target)) {
         setMobileCourses(false)
+      }
+      if (coursesMenuRef.current && !coursesMenuRef.current.contains(e.target)) {
+        setCourses(false)
       }
       if (!e.target.closest('.sidebar') && select) {
         dispatch(closeSidebar())
@@ -130,8 +147,16 @@ export default function Nav() {
                 {logIn ? (
                   <>
                     <NavLink onClick={() => dispatch(toggleSidebar())} to="/profile" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-text-secondary hover:bg-surface transition-colors">
-                      <img src={imgError ? '/profile.jpg' : logIn.photo} onError={() => setImgError(true)} className="w-7 h-7 rounded-full object-cover" alt="" />
-                      <span>{logIn.displayName}</span>
+                      <img
+                        key={imageKey}
+                        src={imgError ? '/profile.jpg' : getAvatarSrc(logIn)}
+                        onError={() => setImgError(true)}
+                        className="w-7 h-7 rounded-full object-cover"
+                        alt=""
+                        loading="lazy"
+                        crossOrigin="anonymous"
+                      />
+                      <span>{displayName}</span>
                     </NavLink>
                     <button onClick={() => { api.get('/auth/logout').finally(() => dispatch(clearUser())); dispatch(toggleSidebar()) }} className="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-error hover:bg-error/5 transition-colors">
                       Log Out
@@ -166,9 +191,12 @@ export default function Nav() {
                 Home
               </NavLink>
 
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative" ref={coursesMenuRef}>
                 <button
-                  onClick={() => setCourses(!Courses)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setCourses((prev) => !prev)
+                  }}
                   onMouseEnter={() => setCourses(true)}
                   className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${Courses ? 'text-primary bg-primary/5' : 'text-text-secondary hover:text-text hover:bg-surface'}`}
                 >
@@ -218,9 +246,25 @@ export default function Nav() {
 
             <div className="flex items-center gap-3">
               {logIn ? (
-                <div className="relative">
-                  <button onClick={() => setDropdown(!dropdown)} className="flex items-center gap-2 p-1 rounded-full hover:bg-surface transition-colors">
-                    <img src={imgError ? '/profile.jpg' : logIn.photo} onError={() => setImgError(true)} className="w-8 h-8 rounded-full object-cover border-2 border-secondary" alt="" />
+                <div className="relative" ref={profileDropdownRef}>
+                  <button
+                    type="button"
+                    aria-expanded={dropdown}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setDropdown((prev) => !prev)
+                    }}
+                    className="flex items-center gap-2 p-1 rounded-full hover:bg-surface transition-colors"
+                  >
+                    <img
+                      key={imageKey}
+                      src={imgError ? '/profile.jpg' : getAvatarSrc(logIn)}
+                      onError={() => setImgError(true)}
+                      className="w-8 h-8 rounded-full object-cover border-2 border-secondary"
+                      alt=""
+                      loading="lazy"
+                      crossOrigin="anonymous"
+                    />
                   </button>
                   <AnimatePresence>
                     {dropdown && (

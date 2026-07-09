@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import { useContent } from '../context/ContentContext'
 import { NOTICE } from '../config/site'
 import { motion } from "motion/react"
+import ErrorState from '../Components/ErrorState'
+import { AlertTriangle } from 'lucide-react'
 
 const Notice = () => {
   const content = useContent();
@@ -31,17 +33,45 @@ const Notice = () => {
   useEffect(() => { getdata(currentPage) }, [currentPage]);
 
   if (error) return (
-    <div className="pt-24 pb-12 text-center">
-      <p className="text-error text-lg mb-4">{error}</p>
-      <button onClick={() => getdata(currentPage)} className="px-4 py-2 rounded-lg bg-primary text-white font-semibold">Retry</button>
-    </div>
+    <ErrorState
+      title="Failed to Load Notices"
+      message={error}
+      onRetry={() => getdata(currentPage)}
+      showHome={true}
+      icon={AlertTriangle}
+    />
   )
 
   return (
     <div className="pt-24 pb-16 min-h-screen flex flex-col">
       <div className="max-w-7xl mx-auto px-6 flex-1 flex flex-col">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{content.notice_heading || NOTICE.heading}</h1>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="mb-8 rounded-2xl border border-border/60 bg-gradient-to-br from-secondary/10 via-white to-primary/10 p-6 sm:p-7 shadow-sm"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-sm font-medium text-secondary shadow-sm border border-secondary/10 mb-4">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-secondary">
+                  <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+                  <path d="M8 7h8" />
+                  <path d="M8 12h8" />
+                  <path d="M8 17h5" />
+                </svg>
+                Latest Announcements
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-text">{content.notice_heading || NOTICE.heading}</h1>
+              <p className="text-text-secondary max-w-2xl text-sm sm:text-base">Stay updated with the newest notices and important campus updates.</p>
+            </div>
+            <div className="flex items-center justify-center rounded-2xl bg-white/80 p-3 shadow-sm border border-border/60">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-primary">
+                <path d="M6 8h12" />
+                <path d="M6 12h8" />
+                <path d="M6 16h5" />
+              </svg>
+            </div>
+          </div>
         </motion.div>
 
         {loading ? (
@@ -49,9 +79,11 @@ const Notice = () => {
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="bg-white rounded-xl overflow-hidden border border-border">
                 <div className="h-36 skeleton" />
-                <div className="p-5 space-y-2">
-                  <div className="h-5 skeleton rounded w-3/4" />
-                  <div className="h-3 skeleton rounded w-full" />
+                <div className="p-5">
+                  <div className="h-5 skeleton rounded w-3/4 mb-3" />
+                  <div className="h-3 skeleton rounded w-full mb-2" />
+                  <div className="h-3 skeleton rounded w-5/6 mb-4" />
+                  <div className="h-10 skeleton rounded-lg w-32" />
                 </div>
               </div>
             ))}
@@ -78,9 +110,9 @@ const Notice = () => {
                   <div className="p-5">
                     <h3 className="font-semibold mb-2 line-clamp-1">{notice.Title}</h3>
                     <p className="text-sm text-text-secondary line-clamp-2 mb-4">{notice.Description}</p>
-                    <NavLink to={`/notice/${notice.id}`} className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-semibold hover:bg-secondary-dark transition-colors">
+                    <NavLink to={`/notice/${notice.id}`} className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-semibold shadow-sm hover:bg-secondary-light hover:shadow-lg hover:shadow-secondary/20 hover:scale-[1.02] transition-all duration-200">
                       {content.notice_viewButton || NOTICE.viewButton}
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                      <svg className="group-hover:translate-x-1 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                     </NavLink>
                   </div>
                 </motion.div>

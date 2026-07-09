@@ -98,9 +98,10 @@ const Home = () => {
                 </NavLink>
                 <NavLink
                   to="/about"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border border-border text-text-secondary font-semibold hover:bg-surface hover:border-primary/20 hover:text-primary transition-all duration-200"
+                  className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border border-border bg-white text-text-secondary font-semibold shadow-sm hover:bg-primary/5 hover:border-primary/20 hover:text-primary hover:shadow-md hover:scale-[1.03] transition-all duration-200"
                 >
                   Learn More
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                 </NavLink>
               </div>
 
@@ -192,14 +193,21 @@ const Home = () => {
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/70 rounded-full blur-3xl" />
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-6">
-            <motion.div {...fadeUp} className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-3">
-              {content.course_heading || COURSES.heading}
-            </h2>
-            <p className="text-text-secondary max-w-xl mx-auto">
-              {content.course_subtitle || COURSES.subtitle}
-            </p>
-          </motion.div>
+            <motion.div {...fadeUp} className="text-center mb-14">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 text-primary text-sm font-medium mb-4 border border-primary/10">
+                <BookOpen className="w-4 h-4" />
+                Featured Learning Paths
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-3">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                  {content.course_heading || COURSES.heading}
+                </span>
+              </h2>
+              <p className="text-text-secondary max-w-2xl mx-auto">
+                {content.course_subtitle || COURSES.subtitle}
+              </p>
+              <div className="w-16 h-1 bg-gradient-to-r from-primary/20 via-secondary/30 to-primary/20 rounded-full mx-auto mt-6" />
+            </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading ? (
@@ -221,9 +229,9 @@ const Home = () => {
 
           {course.length > 3 && (
             <motion.div {...fadeUp} className="text-center mt-10">
-              <NavLink to="/course" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-border text-text-secondary font-semibold hover:bg-surface transition-colors">
+              <NavLink to="/course" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-white text-text-secondary font-semibold shadow-sm hover:bg-primary/5 hover:border-primary/20 hover:text-primary hover:shadow-md hover:scale-[1.03] transition-all duration-200">
                 View All Courses
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </NavLink>
             </motion.div>
           )}

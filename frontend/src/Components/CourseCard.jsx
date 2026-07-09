@@ -55,7 +55,7 @@ const CourseCard = ({ course, index = 0 }) => {
             <span className="text-xl font-bold text-primary">NPR {course.newPrice}</span>
           </div>
           <NavLink to={`/course/${course.title}/enroll`}>
-            <Button size="lg" className="w-full bg-secondary hover:bg-secondary-dark text-white">
+            <Button size="lg" className="w-full bg-secondary hover:bg-secondary-light text-white">
               Enroll Now
             </Button>
           </NavLink>

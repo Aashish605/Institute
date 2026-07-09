@@ -3,6 +3,8 @@ import { useEffect, useState, useMemo } from 'react';
 import useDocumentTitle from '../hooks/useDocumentTitle'
 import { motion } from "motion/react"
 import CourseCard, { CourseCardSkeleton } from '../Components/CourseCard'
+import ErrorState from '../Components/ErrorState'
+import { BookOpen } from 'lucide-react'
 
 const Course = () => {
   useDocumentTitle('Courses')
@@ -26,10 +28,13 @@ const Course = () => {
   }, [course, search]);
 
   if (!course) return (
-    <div className="pt-24 pb-12 text-center">
-      <p className="text-error text-lg">Failed to load courses.</p>
-      <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 rounded-lg bg-primary text-white font-semibold">Retry</button>
-    </div>
+    <ErrorState
+      title="Failed to Load Courses"
+      message="We couldn't load the courses at the moment. Please check your connection and try again."
+      onRetry={() => window.location.reload()}
+      showHome={true}
+      icon={BookOpen}
+    />
   );
 
   return (

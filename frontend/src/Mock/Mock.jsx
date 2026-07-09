@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import { useContent } from '../context/ContentContext'
 import { MOCK } from '../config/site'
 import { motion } from "motion/react"
+import ErrorState from '../Components/ErrorState'
+import { AlertTriangle } from 'lucide-react'
 
 const Mock = () => {
   const content = useContent();
@@ -31,28 +33,58 @@ const Mock = () => {
   useEffect(() => { getdata(currentPage) }, [currentPage]);
 
   if (error) return (
-    <div className="pt-24 pb-12 text-center">
-      <p className="text-error text-lg mb-4">{error}</p>
-      <button onClick={() => getdata(currentPage)} className="px-4 py-2 rounded-lg bg-primary text-white font-semibold">Retry</button>
-    </div>
+    <ErrorState
+      title="Failed to Load Mock Results"
+      message={error}
+      onRetry={() => getdata(currentPage)}
+      showHome={true}
+      icon={AlertTriangle}
+    />
   )
 
   return (
     <div className="pt-24 pb-16 min-h-screen flex flex-col">
       <div className="max-w-7xl mx-auto px-6 flex-1 flex flex-col">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{content.mock_heading || MOCK.heading}</h1>
-          <p className="text-text-secondary max-w-xl mx-auto">{content.mock_subtitle || MOCK.subtitle}</p>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="mb-8 rounded-2xl border border-border/60 bg-gradient-to-br from-primary/10 via-white to-secondary/10 p-6 sm:p-7 shadow-sm"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-sm font-medium text-primary shadow-sm border border-primary/10 mb-4">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
+                  <path d="M9 11H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h4" />
+                  <path d="M15 11h4a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-4" />
+                  <path d="M9 11V7a3 3 0 0 1 6 0v4" />
+                  <path d="M12 17v2" />
+                </svg>
+                Mock Practice Hub
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-text">{content.mock_heading || MOCK.heading}</h1>
+              <p className="text-text-secondary max-w-2xl text-sm sm:text-base">{content.mock_subtitle || MOCK.subtitle}</p>
+            </div>
+            <div className="flex items-center justify-center rounded-2xl bg-white/80 p-3 shadow-sm border border-border/60">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-secondary">
+                <path d="M5 7h14" />
+                <path d="M5 12h14" />
+                <path d="M5 17h9" />
+              </svg>
+            </div>
+          </div>
         </motion.div>
 
         {loading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="bg-white rounded-xl overflow-hidden border border-border">
-                <div className="h-40 skeleton" />
-                <div className="p-5 space-y-2">
-                  <div className="h-4 skeleton rounded w-1/3" />
-                  <div className="h-5 skeleton rounded w-2/3" />
+                <div className="h-36 skeleton" />
+                <div className="p-5">
+                  <div className="h-3 skeleton rounded w-16 mb-2" />
+                  <div className="h-5 skeleton rounded w-3/4 mb-3" />
+                  <div className="h-3 skeleton rounded w-full mb-2" />
+                  <div className="h-3 skeleton rounded w-5/6 mb-4" />
+                  <div className="h-10 skeleton rounded-lg w-32" />
                 </div>
               </div>
             ))}
@@ -73,15 +105,16 @@ const Mock = () => {
                   transition={{ delay: i * 0.05 }}
                   className="group bg-white rounded-xl border border-border hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden"
                 >
-                  <div className="h-40 overflow-hidden">
-                    <img src={MOCK.placeholderImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="h-36 overflow-hidden">
+                    <img src={result.Img || MOCK.placeholderImage} alt={result.Title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
                   <div className="p-5">
                     <div className="text-xs text-text-muted font-medium mb-1">Week {result.Week}</div>
-                    <h3 className="font-semibold mb-3 line-clamp-1">{result.Title}</h3>
-                    <NavLink to={`/mock/${result.id}`} className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-semibold hover:bg-secondary-dark transition-colors">
+                    <h3 className="font-semibold mb-2 line-clamp-1">{result.Title}</h3>
+                    <p className="text-sm text-text-secondary line-clamp-2 mb-4">{result.Description || 'View the full mock result details.'}</p>
+                    <NavLink to={`/mock/${result.id}`} className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-semibold shadow-sm hover:bg-secondary-light hover:shadow-lg hover:shadow-secondary/20 hover:scale-[1.02] transition-all duration-200">
                       {content.mock_viewButton || MOCK.viewButton}
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                      <svg className="group-hover:translate-x-1 transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                     </NavLink>
                   </div>
                 </motion.div>
