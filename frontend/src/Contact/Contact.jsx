@@ -57,19 +57,19 @@ const InputField = ({ id, label, type = 'text', register, error, rows, placehold
 }
 
 const InfoCard = ({ icon, label, children, href, accent }) => {
-  const Tag = href ? 'a' : 'div'
+  const MotionTag = href ? motion.a : motion.div
   return (
-    <Tag
+    <MotionTag
       {...(href ? { href } : {})}
-      className="flex gap-4 items-start p-4 rounded-xl bg-white group transition-all duration-200 hover:-translate-y-0.5"
+      className="flex gap-4 items-start p-4 rounded-xl bg-white group"
       style={{
         border: '1px solid var(--color-border)',
         borderLeft: `3px solid ${accent || 'var(--color-primary)'}`,
         textDecoration: 'none',
         boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
       }}
-      onMouseEnter={e => { if (href) e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.10)' }}
-      onMouseLeave={e => { if (href) e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)' }}
+      whileHover={href ? { y: -2, boxShadow: '0 4px 12px rgba(0,0,0,0.10)' } : undefined}
+      transition={{ duration: 0.15 }}
     >
       <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
         style={{ background: `${accent || 'var(--color-primary)'}18` }}>
@@ -79,7 +79,7 @@ const InfoCard = ({ icon, label, children, href, accent }) => {
         <div className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--color-text-muted)' }}>{label}</div>
         <div className="text-sm" style={{ color: 'var(--color-text)' }}>{children}</div>
       </div>
-    </Tag>
+    </MotionTag>
   )
 }
 

@@ -196,8 +196,7 @@ const About = () => {
                   border: '1px solid var(--color-border)',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-primary)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-border)'}
+                whileHover={{ borderColor: 'var(--color-primary)', boxShadow: '0 4px 16px rgba(0,78,143,0.12)' }}
               >
                 <div className="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                   style={{ background: 'linear-gradient(135deg, rgba(0,78,143,0.08) 0%, rgba(247,146,29,0.1) 100%)' }}>

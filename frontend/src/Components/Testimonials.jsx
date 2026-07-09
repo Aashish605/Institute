@@ -143,17 +143,11 @@ const Testimonials = () => {
           }}
           className="testimonials-swiper"
         >
-          {testimonials.map((t, i) => (
+          {testimonials.map((t) => (
             <SwiperSlide key={t.id}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="h-full"
-              >
+              <div className="h-full">
                 <TestimonialCard testimonial={t} />
-              </motion.div>
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
