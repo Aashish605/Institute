@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion } from 'motion/react'
-import { Eye, EyeOff, Lock, Mail, UserRound, ArrowRight, Sparkles } from 'lucide-react'
+import { Eye, EyeOff, Lock, Mail, UserRound, ArrowRight, Sparkles, AlertCircle } from 'lucide-react'
 import { useContent } from '../context/ContentContext'
 import { LOGIN, API } from '../config/site'
 import useDocumentTitle from '../hooks/useDocumentTitle'
@@ -10,6 +10,7 @@ import api from '../config/api'
 import { setUser } from '../Redux/Auth/AuthSlice'
 import { Button } from '../Components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card'
+import VerifyEmailNotice from './VerifyEmailNotice'
 
 const Login = () => {
   useDocumentTitle('Login')
@@ -25,6 +26,14 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' })
+  // After signup success, show the verify-email notice
+  const [pendingEmail, setPendingEmail] = useState(null)
+  // After login attempt with unverified account
+  const [unverifiedEmail, setUnverifiedEmail] = useState(null)
+
+  // Read ?verified= query param from email-verification redirect
+  const searchParams = new URLSearchParams(location.search)
+  const verifiedStatus = searchParams.get('verified') // 'true' | 'invalid' | 'expired'
 
   useEffect(() => {
     if (logIn) navigate(from, { replace: true })
@@ -38,6 +47,7 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
+    setUnverifiedEmail(null)
 
     if (mode === 'signup') {
       if (!form.name.trim()) {
@@ -57,19 +67,76 @@ const Login = () => {
         ? { name: form.name, email: form.email, password: form.password }
         : { email: form.email, password: form.password }
 
-      const response = await api.post(`/auth/${mode === 'signup' ? 'signup' : 'login'}`, payload)
-      dispatch(setUser(response.data.user))
-      navigate(from, { replace: true })
+      if (mode === 'signup') {
+        const response = await api.post('/auth/signup', payload)
+        // Don't log in — show verify-email notice
+        setPendingEmail(response.data.email || form.email)
+      } else {
+        const response = await api.post('/auth/login', payload)
+        dispatch(setUser(response.data.user))
+        navigate(from, { replace: true })
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Unable to complete your request right now.')
+      const data = err.response?.data
+      if (data?.unverified) {
+        setUnverifiedEmail(form.email)
+        setError(data.message || 'Please verify your email before logging in.')
+      } else {
+        setError(data?.message || 'Unable to complete your request right now.')
+      }
     } finally {
       setLoading(false)
     }
   }
 
+  // Show the "check your inbox" screen after successful signup
+  if (pendingEmail) {
+    return (
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(0,78,143,0.08),_transparent_60%)] px-4 py-24 sm:px-6 lg:px-8">
+        <VerifyEmailNotice
+          email={pendingEmail}
+          onBack={() => { setPendingEmail(null); setMode('login') }}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(0,78,143,0.08),_transparent_60%)] px-4 py-24 sm:px-6 lg:px-8">
       <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="mx-auto w-full max-w-md">
+
+        {/* Verified success banner */}
+        {verifiedStatus === 'true' && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 flex items-center gap-2"
+          >
+            <span className="text-green-500 text-lg">✓</span>
+            Email verified! You can now log in.
+          </motion.div>
+        )}
+
+        {verifiedStatus === 'expired' && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700"
+          >
+            Your verification link has expired. Please sign up again or request a new link.
+          </motion.div>
+        )}
+
+        {verifiedStatus === 'invalid' && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+          >
+            This verification link is invalid or has already been used.
+          </motion.div>
+        )}
+
         <Card className="border-border/70 bg-white/90 shadow-2xl shadow-slate-200/70 backdrop-blur">
           <CardHeader className="space-y-4 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -82,14 +149,14 @@ const Login = () => {
             <div className="mx-auto flex w-full max-w-xs rounded-full bg-slate-100 p-1">
               <button
                 type="button"
-                onClick={() => { setMode('login'); setError('') }}
+                onClick={() => { setMode('login'); setError(''); setUnverifiedEmail(null) }}
                 className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition ${mode === 'login' ? 'bg-primary text-white shadow' : 'text-text-secondary hover:text-primary'}`}
               >
                 Login
               </button>
               <button
                 type="button"
-                onClick={() => { setMode('signup'); setError('') }}
+                onClick={() => { setMode('signup'); setError(''); setUnverifiedEmail(null) }}
                 className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition ${mode === 'signup' ? 'bg-primary text-white shadow' : 'text-text-secondary hover:text-primary'}`}
               >
                 Sign up
@@ -163,7 +230,17 @@ const Login = () => {
                 </label>
               )}
 
-              {error && <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{error}</div>}
+              {/* Unverified email banner with resend option */}
+              {unverifiedEmail && (
+                <UnverifiedBanner
+                  email={unverifiedEmail}
+                  onResent={() => setPendingEmail(unverifiedEmail)}
+                />
+              )}
+
+              {error && !unverifiedEmail && (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{error}</div>
+              )}
 
               <Button type="submit" className="w-full gap-2" disabled={loading}>
                 {loading ? 'Please wait...' : mode === 'signup' ? 'Create account' : 'Sign in'}
@@ -194,6 +271,40 @@ const Login = () => {
           </CardContent>
         </Card>
       </motion.div>
+    </div>
+  )
+}
+
+// Inline banner shown when a login attempt is made with an unverified email
+const UnverifiedBanner = ({ email, onResent }) => {
+  const [status, setStatus] = useState('idle') // idle | sending | sent | error
+
+  const handleResend = async () => {
+    setStatus('sending')
+    try {
+      await api.post('/auth/resend-verification', { email })
+      setStatus('sent')
+      // After 1.5s, flip to the full "check inbox" screen
+      setTimeout(() => onResent(), 1500)
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+      <div className="flex items-start gap-2 mb-2">
+        <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-amber-500" />
+        <span>Your email address hasn't been verified yet. Please check your inbox or request a new link.</span>
+      </div>
+      <button
+        type="button"
+        onClick={handleResend}
+        disabled={status === 'sending' || status === 'sent'}
+        className="w-full rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 disabled:opacity-60 transition"
+      >
+        {status === 'sending' ? 'Sending…' : status === 'sent' ? 'Sent! Redirecting…' : status === 'error' ? 'Failed — try again' : 'Resend verification email'}
+      </button>
     </div>
   )
 }

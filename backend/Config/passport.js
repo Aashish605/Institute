@@ -22,6 +22,10 @@ const configurePassport = () => {
                     return done(null, false, { message: 'Invalid email or password.' });
                 }
 
+                if (!user.isEmailVerified) {
+                    return done(null, false, { message: 'Please verify your email address before logging in.', unverified: true });
+                }
+
                 return done(null, user);
             } catch (err) {
                 return done(err, null);
@@ -50,6 +54,7 @@ const configurePassport = () => {
                         email,
                         photo: profile.photos?.[0]?.value,
                         isAdmin: email === adminEmail,
+                        isEmailVerified: true,
                     });
                 } else {
                     const updates = {};
@@ -58,6 +63,7 @@ const configurePassport = () => {
                     if (!user.photo && profile.photos?.[0]?.value) updates.photo = profile.photos[0].value;
                     if (!user.email && email) updates.email = email;
                     if ((email === adminEmail) && !user.isAdmin) updates.isAdmin = true;
+                    if (!user.isEmailVerified) updates.isEmailVerified = true;
 
                     if (Object.keys(updates).length) {
                         await user.update(updates);

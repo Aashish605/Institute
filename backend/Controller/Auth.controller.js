@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import passport from 'passport';
 import bcrypt from 'bcryptjs';
 import { User } from '../Model/index.js';
+import { sendVerificationEmail } from '../Utils/mailer.js';
 
 const adminEmail = process.env.ADMIN_EMAIL || 'ashishkhadka317@gmail.com';
 
@@ -34,19 +35,89 @@ export const signup = async (req, res, next) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
-        const newUser = await User.create({
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours
+
+        await User.create({
             displayName: name.trim(),
             email: normalizedEmail,
             password: hashedPassword,
             isAdmin: normalizedEmail === adminEmail,
+            isEmailVerified: false,
+            emailVerifyToken: token,
+            emailVerifyExpires: expiresAt,
         });
 
-        req.logIn(newUser, (err) => {
-            if (err) {
-                return next(err);
-            }
-            return res.status(201).json({ user: serializeUser(newUser) });
+        await sendVerificationEmail(normalizedEmail, token);
+
+        return res.status(201).json({
+            message: 'Account created! Please check your email to verify your account before logging in.',
+            email: normalizedEmail,
         });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const verifyEmail = async (req, res, next) => {
+    const { token } = req.query;
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
+    if (!token) {
+        return res.redirect(`${clientUrl}/login?verified=invalid`);
+    }
+
+    try {
+        const user = await User.findOne({
+            where: {
+                emailVerifyToken: token,
+                isEmailVerified: false,
+            },
+        });
+
+        if (!user) {
+            return res.redirect(`${clientUrl}/login?verified=invalid`);
+        }
+
+        if (new Date() > user.emailVerifyExpires) {
+            return res.redirect(`${clientUrl}/login?verified=expired&email=${encodeURIComponent(user.email)}`);
+        }
+
+        await user.update({
+            isEmailVerified: true,
+            emailVerifyToken: null,
+            emailVerifyExpires: null,
+        });
+
+        return res.redirect(`${clientUrl}/login?verified=true`);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const resendVerification = async (req, res, next) => {
+    const { email } = req.body;
+
+    if (!email?.trim()) {
+        return res.status(400).json({ message: 'Please provide your email address.' });
+    }
+
+    try {
+        const normalizedEmail = email.toLowerCase().trim();
+        const user = await User.findOne({ where: { email: normalizedEmail } });
+
+        // Always return success to avoid email enumeration
+        if (!user || user.isEmailVerified) {
+            return res.json({ message: 'If your account exists and is unverified, a new verification email has been sent.' });
+        }
+
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24);
+
+        await user.update({ emailVerifyToken: token, emailVerifyExpires: expiresAt });
+        await sendVerificationEmail(normalizedEmail, token);
+
+        return res.json({ message: 'A new verification email has been sent. Please check your inbox.' });
     } catch (err) {
         next(err);
     }
@@ -59,7 +130,10 @@ export const login = (req, res, next) => {
         }
 
         if (!user) {
-            return res.status(401).json({ message: info?.message || 'Invalid email or password.' });
+            return res.status(401).json({
+                message: info?.message || 'Invalid email or password.',
+                unverified: info?.unverified || false,
+            });
         }
 
         req.logIn(user, (loginErr) => {

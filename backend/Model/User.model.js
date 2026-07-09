@@ -13,6 +13,9 @@ const User = sequelize.define('User', {
     resetToken: { type: DataTypes.STRING, allowNull: true },
     resetTokenExpires: { type: DataTypes.DATE, allowNull: true },
     isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
+    isEmailVerified: { type: DataTypes.BOOLEAN, defaultValue: false },
+    emailVerifyToken: { type: DataTypes.STRING, allowNull: true },
+    emailVerifyExpires: { type: DataTypes.DATE, allowNull: true },
 }, {
     timestamps: true,
 });
