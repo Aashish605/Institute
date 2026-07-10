@@ -208,15 +208,27 @@ export const resetPassword = async (req, res, next) => {
     }
 };
 
-export const callback = [
-    passport.authenticate('google', { failureRedirect: '/' }),
-    (req, res) => {
-        const redirectUrl = req.user?.isAdmin
-            ? process.env.ADMIN_URL || `${process.env.CLIENT_URL}/profile`
-            : `${process.env.CLIENT_URL}/profile`;
-        res.redirect(redirectUrl);
-    }
-];
+export const callback = (req, res, next) => {
+    passport.authenticate('google', (err, user) => {
+        if (err) {
+            console.error('Google OAuth callback error:', err.message, err.stack);
+            return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=oauth_failed`);
+        }
+        if (!user) {
+            return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login`);
+        }
+        req.logIn(user, (loginErr) => {
+            if (loginErr) {
+                console.error('Login error after Google auth:', loginErr);
+                return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=login_failed`);
+            }
+            const redirectUrl = user.isAdmin
+                ? (process.env.ADMIN_URL || `${process.env.CLIENT_URL}/profile`)
+                : `${process.env.CLIENT_URL}/profile`;
+            res.redirect(redirectUrl);
+        });
+    })(req, res, next);
+};
 
 export const getuser = (req, res) => {
     if (req.isAuthenticated()) {

@@ -1,0 +1,25 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [ui]
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger backend deploy
+        run: curl -s -X POST "https://api.vercel.com/v1/integrations/deploy/prj_JSYdJXyffS7NrMwaouf58otfZ7ji/OXzzblAlti"
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger frontend deploy
+        run: curl -s -X POST "https://api.vercel.com/v1/integrations/deploy/prj_wdrGa7sXwVvMLonIAYwUN7lCI2H9/hhRYWkwjQb"
+
+  deploy-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger admin deploy
+        run: curl -s -X POST "https://api.vercel.com/v1/integrations/deploy/prj_9xuxSI0p5vqaHbTMEbTSnlwu564x/vJFqCt0oTc"
