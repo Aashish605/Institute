@@ -69,6 +69,17 @@ app.use(passport.initialize())
 app.use(passport.session())
 configurePassport()
 
+// Wait for DB before any route handler
+let dbInit = connectDB();
+if (process.env.VERCEL) {
+    dbInit.catch(err => console.error('DB init failed:', err.message));
+}
+
+app.use(async (req, res, next) => {
+    try { await dbInit; } catch (e) { /* db failed, continue */ }
+    next();
+});
+
 app.use('/api/contact', contactRoutes)
 app.use('/api/mock', mockRoutes)
 app.use('/api/notice', noticeRoutes)
@@ -95,8 +106,6 @@ if (!process.env.VERCEL) {
         }
     };
     startServer();
-} else {
-    connectDB().catch(err => console.error('DB init failed:', err.message));
 }
 
 export default app;
