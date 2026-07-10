@@ -13,7 +13,10 @@ const connectDB = async () => {
     try {
         await sequelize.authenticate();
         console.log('PostgreSQL connected');
-        await sequelize.sync({ alter: true });
+
+        // Drop all tables and recreate with current model definitions
+        await sequelize.query(`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
+        await sequelize.sync();
         console.log('Models synchronized');
     } catch (error) {
         console.error('Unable to connect to PostgreSQL:', error.message);

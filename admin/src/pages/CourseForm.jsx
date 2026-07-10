@@ -70,7 +70,7 @@ export default function CourseForm() {
   const removeSubject = (i) => setSubjects(subjects.filter((_, idx) => idx !== i))
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate('/courses')} className="p-2 rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600">
           <FiArrowLeft size={20} />

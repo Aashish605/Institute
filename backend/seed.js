@@ -1,5 +1,6 @@
 import { sequelize } from './Db/db.js'
-import { Course, Notice, Mock, ContentBlock, Testimonial } from './Model/index.js'
+import bcrypt from 'bcryptjs'
+import { User, Course, Notice, Mock, ContentBlock, Testimonial, Enrollment, Payment, Contact } from './Model/index.js'
 
 const seed = async () => {
   try {
@@ -83,7 +84,7 @@ const seed = async () => {
     ]
 
     for (const course of courses) {
-      await Course.create(course)
+      await Course.findOrCreate({ where: { title: course.title }, defaults: course })
     }
     console.log(`Seeded ${courses.length} courses`)
 
@@ -116,7 +117,7 @@ const seed = async () => {
     ]
 
     for (const notice of notices) {
-      await Notice.create(notice)
+      await Notice.findOrCreate({ where: { Title: notice.Title }, defaults: notice })
     }
     console.log(`Seeded ${notices.length} notices`)
 
@@ -153,7 +154,7 @@ const seed = async () => {
     ]
 
     for (const mock of mocks) {
-      await Mock.create(mock)
+      await Mock.findOrCreate({ where: { Title: mock.Title }, defaults: mock })
     }
     console.log(`Seeded ${mocks.length} mock results`)
 
@@ -208,6 +209,121 @@ const seed = async () => {
       await Testimonial.findOrCreate({ where: { name: t.name }, defaults: t });
     }
     console.log(`Seeded ${testimonials.length} testimonials`)
+
+    // --- Users ---
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash('password123', salt)
+
+    const users = [
+      {
+        displayName: 'Admin User',
+        email: 'admin@mirror.com',
+        password: hashedPassword,
+        isAdmin: true,
+        isEmailVerified: true,
+        number: '9851198288',
+        school: 'Mirror Academy',
+      },
+      {
+        displayName: 'Aarav Sharma',
+        email: 'aarav@example.com',
+        password: hashedPassword,
+        isEmailVerified: true,
+        number: '9841234567',
+        class: '12',
+        school: 'Trinity College',
+      },
+      {
+        displayName: 'Priya Adhikari',
+        email: 'priya@example.com',
+        password: hashedPassword,
+        isEmailVerified: true,
+        number: '9847654321',
+        class: '11',
+        school: 'St. Xavier\'s College',
+      },
+      {
+        displayName: 'Rohit Basnet',
+        email: 'rohit@example.com',
+        password: hashedPassword,
+        isEmailVerified: true,
+        number: '9851122334',
+        class: '12',
+        school: 'Liverpool College',
+      },
+    ]
+
+    const createdUsers = []
+    for (const u of users) {
+      const [user, created] = await User.findOrCreate({
+        where: { email: u.email },
+        defaults: u,
+      })
+      if (created) createdUsers.push(user)
+      else createdUsers.push(user)
+    }
+    console.log(`Seeded ${createdUsers.length} users`)
+
+    // --- Enrollments & Payments ---
+    const allCourses = await Course.findAll()
+    const adminUser = createdUsers.find(u => u.isAdmin)
+    const students = createdUsers.filter(u => !u.isAdmin)
+
+    let enrollCount = 0
+    for (let i = 0; i < students.length; i++) {
+      const student = students[i]
+      const course = allCourses[i % allCourses.length]
+
+      const [enrollment, created] = await Enrollment.findOrCreate({
+        where: { userId: student.id, courseId: course.id },
+      })
+
+      if (created) {
+        await Payment.findOrCreate({
+          where: { userId: student.id, courseId: course.id },
+          defaults: {
+            userId: student.id,
+            courseId: course.id,
+            course: course.title,
+            userName: student.displayName,
+            userEmail: student.email,
+            receipt: 'https://placehold.co/400x300/004e8f/ffffff?text=Receipt',
+            reference: `TXN${String(1000 + i).padStart(6, '0')}`,
+            paymentType: i % 2 === 0 ? 'online' : 'cash',
+            status: 'verified',
+          },
+        })
+        enrollCount++
+      }
+    }
+    console.log(`Seeded ${enrollCount} enrollments with payments`)
+
+    // --- Contacts ---
+    const contacts = [
+      {
+        userId: adminUser?.id || null,
+        fullName: 'Sita Rai',
+        email: 'sita@example.com',
+        phone: '9812345678',
+        subject: 'Course Inquiry',
+        message: 'I would like to know more about the IOE Entrance Crash Course. What is the duration and when does the next batch start?',
+      },
+      {
+        fullName: 'Ram Pandey',
+        email: 'ram@example.com',
+        phone: '9823456789',
+        subject: 'Admission',
+        message: 'Is there any scholarship available for the Bridge Course? I have scored above 3.6 GPA in SEE.',
+      },
+    ]
+
+    for (const c of contacts) {
+      await Contact.findOrCreate({
+        where: { email: c.email, subject: c.subject },
+        defaults: c,
+      })
+    }
+    console.log(`Seeded ${contacts.length} contacts`)
 
     console.log('✅ All seed data inserted successfully!')
     process.exit(0)

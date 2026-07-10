@@ -49,7 +49,7 @@ export default function TestimonialForm() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate('/testimonials')} className="p-2 rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600">
           <FiArrowLeft size={20} />

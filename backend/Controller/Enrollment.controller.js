@@ -35,7 +35,7 @@ export const getAllEnrollments = async (req, res) => {
 
 export const createEnrollment = async (req, res) => {
     try {
-        const { userId, courseId, paymentType } = req.body;
+        const { userId, courseId, paymentType, reference, receipt, notes } = req.body;
         if (!userId || !courseId) {
             return res.status(400).json({ msg: "userId and courseId are required" });
         }
@@ -60,7 +60,9 @@ export const createEnrollment = async (req, res) => {
             course: course.title,
             userName: user.displayName || user.email,
             userEmail: user.email,
-            receipt: '',
+            reference: reference || null,
+            receipt: receipt || '',
+            notes: notes || null,
             paymentType: paymentType || 'cash',
             status: 'verified',
         });

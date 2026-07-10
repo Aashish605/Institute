@@ -18,7 +18,7 @@ export const submitReceipt = async (req, res) => {
             course,
             userName,
             userEmail,
-            userId: req.user?.id || null,
+            userId: req.user.id,
             courseId: courseMatch?.id || null,
             paymentType: paymentType || 'cash',
         });
