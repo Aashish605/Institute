@@ -75,6 +75,8 @@ if (process.env.VERCEL) {
     dbInit.catch(err => console.error('DB init failed:', err.message));
 }
 
+app.get('/health', (req, res) => res.json({ ok: true }));
+
 app.use(async (req, res, next) => {
     try { await dbInit; } catch (e) { /* db failed, continue */ }
     next();
