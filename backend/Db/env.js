@@ -22,6 +22,7 @@ const config = {
         name: process.env.DB_NAME || 'aone',
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || '',
+        ssl: process.env.DB_SSL === 'true' || process.env.NODE_ENV === 'production',
     },
 };
 

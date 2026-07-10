@@ -21,15 +21,18 @@ import enrollmentRoutes from './Routes/Enrollment.route.js';
 const app = express()
 app.use(express.json())
 
+const allowedOrigins = [
+    process.env.CLIENT_URL,
+    process.env.ADMIN_URL,
+    "https://institute-frontend-gamma.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174",
+].filter(Boolean);
+
 app.use(
     cors({
         origin: (origin, callback) => {
-            const allowedOrigins = [
-                "https://institute-frontend-gamma.vercel.app",
-                "http://localhost:5173",
-                "http://localhost:5174"
-            ];
-            if (!origin || allowedOrigins.includes(origin)) {
+            if (!origin || allowedOrigins.some(o => origin.startsWith(o.replace(/\/+$/, '')))) {
                 callback(null, true);
             } else {
                 callback(new Error("Not allowed by CORS"));

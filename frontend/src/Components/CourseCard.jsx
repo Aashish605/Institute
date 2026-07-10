@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Heart, Clock, Users, Star } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardDescription, CardTitle, CardFooter, CardContent } from '@/components/ui/card'
+import { Badge } from '@/Components/ui/badge'
+import { Button } from '@/Components/ui/button'
+import { Card, CardHeader, CardDescription, CardTitle, CardFooter, CardContent } from '@/Components/ui/card'
 import { cn } from '@/lib/utils'
 
 const CourseCard = ({ course, index = 0 }) => {

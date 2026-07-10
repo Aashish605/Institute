@@ -7,6 +7,14 @@ const sequelize = new Sequelize(env.db.name, env.db.user, env.db.password, {
     dialect: 'postgres',
     logging: false,
     pool: { max: 5, min: 0, acquire: 30000, idle: 10000 },
+    ...(env.db.ssl ? {
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false,
+            },
+        },
+    } : {}),
 });
 
 const connectDB = async () => {
@@ -14,8 +22,9 @@ const connectDB = async () => {
         await sequelize.authenticate();
         console.log('PostgreSQL connected');
 
-        // Drop all tables and recreate with current model definitions
-        await sequelize.query(`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
+        if (process.env.NODE_ENV !== 'production') {
+            await sequelize.query(`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
+        }
         await sequelize.sync();
         console.log('Models synchronized');
     } catch (error) {
