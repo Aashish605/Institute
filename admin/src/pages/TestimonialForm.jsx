@@ -64,7 +64,7 @@ export default function TestimonialForm() {
         <div className="h-1.5 bg-gradient-to-r from-amber-500 to-amber-400" />
 
         <div className="p-8">
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* LEFT COLUMN */}
             <div className="col-span-2 space-y-6">
               <div>

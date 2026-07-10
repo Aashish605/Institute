@@ -3,7 +3,7 @@ import { FiGrid, FiBook, FiFileText, FiClipboard, FiCreditCard, FiMail, FiEdit3,
 import { IconMenu2, IconX } from '@tabler/icons-react'
 import api from '../config/api'
 import { useAuth } from '../context/AuthContext'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
 const links = [
@@ -29,6 +29,15 @@ export default function Sidebar() {
     api.get('/auth/logout').finally(() => setUser(null))
   }
 
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [sidebarOpen])
+
   const isExpanded = hovered || sidebarOpen
 
   const sidebarContent = (
@@ -38,13 +47,13 @@ export default function Sidebar() {
           animate={{ opacity: isExpanded ? 1 : 0, display: isExpanded ? 'block' : 'none' }}
           className="text-xl font-bold whitespace-nowrap"
         >
-          Mirror Admin
+          Admin
         </motion.h1>
         <motion.div
           animate={{ opacity: isExpanded ? 0 : 1, display: isExpanded ? 'none' : 'block' }}
           className="text-xl font-bold"
         >
-          M
+          A
         </motion.div>
       </div>
       <nav className="flex-1 p-4 space-y-1 overflow-hidden">
@@ -100,17 +109,6 @@ export default function Sidebar() {
         {sidebarContent}
       </motion.aside>
 
-      {/* Mobile Toggle */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 bg-primary text-white rounded-lg shadow-lg"
-          aria-label="Toggle sidebar"
-        >
-          {sidebarOpen ? <IconX size={24} /> : <IconMenu2 size={24} />}
-        </button>
-      </div>
-
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -125,7 +123,7 @@ export default function Sidebar() {
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="w-64 bg-primary text-white h-full"
               onClick={(e) => e.stopPropagation()}
             >
@@ -134,6 +132,17 @@ export default function Sidebar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Mobile Toggle */}
+      <div className="md:hidden fixed top-4 left-4 z-[60]">
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 bg-primary text-white rounded-lg shadow-lg"
+          aria-label="Toggle sidebar"
+        >
+          {sidebarOpen ? <IconX size={24} /> : <IconMenu2 size={24} />}
+        </button>
+      </div>
     </>
   )
 }

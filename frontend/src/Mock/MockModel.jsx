@@ -253,7 +253,7 @@ const MockModel = () => {
                               onChange={(e) => setSearchQuery(e.target.value)}
                               className="w-full max-w-sm rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:bg-white"
                             />
-                            <Button variant="outline" size="sm" onClick={handleDownloadFile} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 rounded-xl whitespace-nowrap hidden sm:flex">
+                            <Button variant="outline" size="sm" onClick={handleDownloadFile} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 rounded-xl whitespace-nowrap flex">
                               <Download className="w-4 h-4 mr-2" /> Download (.xlsx)
                             </Button>
                           </div>

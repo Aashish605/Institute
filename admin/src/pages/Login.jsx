@@ -9,7 +9,7 @@ export default function Login() {
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-        className="relative z-10 bg-white/90 backdrop-blur-lg p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border border-white/20"
+        className="relative z-10 bg-white/90 backdrop-blur-lg p-6 sm:p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border border-white/20"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -17,9 +17,9 @@ export default function Login() {
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
           className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
         >
-          <span className="text-white text-3xl font-bold">M</span>
+          <span className="text-white text-2xl font-bold">A</span>
         </motion.div>
-        <h1 className="text-3xl font-bold text-primary mb-2">Mirror Admin</h1>
+        <h1 className="text-3xl font-bold text-primary mb-2">Admin</h1>
         <p className="text-gray-500 mb-8">Sign in to manage your website</p>
           <motion.a
             whileHover={{ scale: 1.02 }}

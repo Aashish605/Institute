@@ -53,13 +53,13 @@ const About = () => {
               className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4"
               style={{ background: 'rgba(247,146,29,0.25)', color: 'var(--color-secondary-light)' }}
             >
-              Mirror Academy
+              Our Institute
             </motion.span>
             <motion.h1
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
               className="text-4xl sm:text-5xl font-bold text-white mb-3"
             >
-              {content.about_hero_title || 'About Mirror'}
+              {content.about_hero_title || 'About Us'}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
@@ -72,7 +72,7 @@ const About = () => {
             {/* Stat strip */}
             <motion.div
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-              className="grid grid-cols-2 sm:grid-cols-4 divide-x"
+              className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0"
               style={{ borderTop: '1px solid rgba(255,255,255,0.15)', divideColor: 'rgba(255,255,255,0.15)' }}
             >
               {stats.map((s, i) => (
@@ -101,10 +101,10 @@ const About = () => {
               {content.about_aboutUs_heading || 'About Us'}
             </h2>
             <p className="leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-              {content.about_aboutUs_text || 'Mirror Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.'}
+              {content.about_aboutUs_text || 'We are a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.'}
             </p>
             <p className="leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              Our approach combines <span className="font-semibold" style={{ color: 'var(--color-text)' }}>expert-led teaching, data-driven performance analytics,</span> and a strong mentorship-driven community to give students the clarity, confidence, and competence they need to excel.
+              {content.about_approach_text || 'Our approach combines expert-led teaching, data-driven performance analytics, and a strong mentorship-driven community to give students the clarity, confidence, and competence they need to excel.'}
             </p>
           </div>
 
@@ -141,7 +141,7 @@ const About = () => {
           </span>
           <h2 className="text-2xl font-bold mb-2">{content.about_introduction_heading || 'Introduction'}</h2>
           <p className="mb-7" style={{ color: 'var(--color-text-secondary)' }}>
-            At <span className="font-semibold" style={{ color: 'var(--color-text)' }}>Mirror Academy</span>, we believe that every student has the potential to excel — with the right guidance, strategy, and environment.
+            {content.about_intro_text || 'We believe that every student has the potential to excel — with the right guidance, strategy, and environment.'}
           </p>
 
           <div className="space-y-3">
@@ -165,7 +165,7 @@ const About = () => {
           </div>
 
           <p className="mt-6 text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-            At Mirror Academy, we don't just prepare you for exams — we help you unlock your full academic potential.
+            {content.about_closing_text || "We don't just prepare you for exams — we help you unlock your full academic potential."}
           </p>
         </motion.section>
 
@@ -209,11 +209,11 @@ const About = () => {
           </div>
 
           <p className="text-center mt-8 text-sm max-w-2xl mx-auto" style={{ color: 'var(--color-text-muted)' }}>
-            Founded by Pulchowk Campus graduates and front-line faculty members, Mirror contributes towards developing qualitative future engineers.
+            {content.about_whyChooseUs_footer || 'Founded by passionate educators and experienced faculty members, our institute contributes towards developing qualitative future professionals.'}
           </p>
         </motion.section>
 
-        {/* ── Message from Mirror Family ── */}
+        {/* ── Message from Our Team ── */}
         <motion.section
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="mb-14 rounded-2xl overflow-hidden"
@@ -228,9 +228,9 @@ const About = () => {
                 <img src="About/person.png" alt="" className="w-28 h-28 rounded-full object-cover ring-4 mb-4"
                   style={{ ringColor: 'rgba(255,255,255,0.25)' }} />
               </div>
-              <h3 className="text-lg font-bold text-center mb-1">{content.about_message_heading || 'Message From Mirror Family'}</h3>
+              <h3 className="text-lg font-bold text-center mb-1">{content.about_message_heading || 'Message From Our Team'}</h3>
               <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(247,146,29,0.3)', color: 'var(--color-secondary-light)' }}>
-                Mirror Academy
+                Institute
               </span>
             </div>
 
@@ -240,14 +240,14 @@ const About = () => {
                 style={{ color: 'rgba(0,78,143,0.06)' }}>"</div>
               <div className="space-y-4 relative z-10">
                 {[
-                  'Dear prospective students and guardians, we take great delight in extending a warm welcome to you all at Mirror Academy—founded by the front-liner faculties of engineering entrance and graduates of Pulchowk Campus.',
-                  'Our only goal is to support our students academically and maximize their outputs in competitive examinations.',
-                  'Our prime location in Kathmandu Valley, Maitighar, is easily accessible. We are equipped with adequate infrastructure, quality books, and qualified instructors.',
-                  'Together we can grow and create an impact in the field of engineering.',
+                  content.about_message_para1 || 'Dear prospective students and guardians, we take great delight in extending a warm welcome to you all at our institute—founded by experienced educators and graduates of leading institutions.',
+                  content.about_message_para2 || 'Our only goal is to support our students academically and maximize their outputs in competitive examinations.',
+                  content.about_message_para3 || 'Our prime location is easily accessible. We are equipped with adequate infrastructure, quality books, and qualified instructors.',
+                  content.about_message_para4 || 'Together we can grow and create an impact in your chosen field.',
                 ].map((para, i) => (
                   <p key={i} className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{para}</p>
                 ))}
-                <p className="font-semibold text-sm pt-2" style={{ color: 'var(--color-text)' }}>— Mirror Family</p>
+                <p className="font-semibold text-sm pt-2" style={{ color: 'var(--color-text)' }}>— {content.about_message_sender || 'The Team'}</p>
               </div>
             </div>
           </div>
@@ -266,7 +266,7 @@ const About = () => {
 
           <div className="relative z-10">
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-              Ready to start your journey with Mirror Academy?
+              {content.about_cta_text || 'Ready to start your journey?'}
             </h2>
             <p className="mb-8 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
               Join hundreds of students who have already taken the first step toward their dream career.

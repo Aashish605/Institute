@@ -85,7 +85,7 @@ export default function CourseForm() {
         <div className="h-1.5 bg-gradient-to-r from-primary via-secondary to-accent" />
 
         <div className="p-8">
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* --- LEFT COLUMN --- */}
             <div className="col-span-2 space-y-8">
               <div>
@@ -104,7 +104,7 @@ export default function CourseForm() {
                   <span className="text-lg">💰</span>
                   <h3 className="text-base font-semibold text-gray-800">Pricing</h3>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <FormField label="Old Price" name="oldPrice" type="number" icon={FiDollarSign} register={register} errors={errors} required />
                   <FormField label="New Price" name="newPrice" type="number" icon={FiDollarSign} register={register} errors={errors} required />
                   <FormField label="Discount" name="discount" icon={FiTag} register={register} errors={errors} required placeholder="e.g. 38%" />

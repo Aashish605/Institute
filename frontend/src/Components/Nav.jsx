@@ -62,6 +62,15 @@ export default function Nav() {
     return () => document.removeEventListener("click", handleClick)
   }, [dispatch, select])
 
+  useEffect(() => {
+    if (select) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [select])
+
   return (
     <>
       {/* Mobile Nav */}
@@ -72,8 +81,8 @@ export default function Nav() {
         className="min-[900px]:hidden fixed top-0 left-0 right-0 z-50"
       >
         <div className={`flex items-center justify-between px-4 py-3 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-lg shadow-sm' : 'bg-white'}`}>
-          <NavLink to="" onClick={() => dispatch(closeSidebar())}>
-            <img src="/logo.png" alt={SITE.name} className="h-10 w-auto" />
+          <NavLink to="" onClick={() => dispatch(closeSidebar())} className="text-lg font-bold text-primary">
+            {SITE.name}
           </NavLink>
           <button
             aria-label={select ? "Close menu" : "Open menu"}
@@ -92,11 +101,11 @@ export default function Nav() {
         <AnimatePresence>
           {select && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="sidebar bg-white border-t border-border overflow-hidden shadow-lg"
+              className="sidebar bg-white border-t border-border shadow-lg"
             >
               <div className="px-4 py-3 space-y-1">
                 <NavLink onClick={() => dispatch(toggleSidebar())} to="" className={({ isActive }) => `block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:bg-surface'}`}>
@@ -115,10 +124,10 @@ export default function Nav() {
                   <AnimatePresence>
                     {mobileCourses && (
                       <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden"
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        className=""
                       >
                         <div className="pl-4 py-1 space-y-1">
                           <NavLink onClick={() => dispatch(toggleSidebar())} to="/course" className="block px-4 py-2 rounded-lg text-sm text-secondary font-medium hover:bg-secondary/5 transition-colors">
@@ -182,8 +191,8 @@ export default function Nav() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-16">
-            <NavLink to="" className="flex-shrink-0">
-              <img src="/logo.png" alt={SITE.name} className="h-10 w-auto" />
+            <NavLink to="" className="flex-shrink-0 text-xl font-bold text-primary">
+              {SITE.name}
             </NavLink>
 
             <div className="flex items-center gap-1">

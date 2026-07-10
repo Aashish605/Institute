@@ -17,7 +17,7 @@ export default function App() {
     <div className="flex min-h-screen">
       <Sidebar />
       <main className="flex-1 overflow-auto">
-        <div className="p-8 max-sm:p-4">
+        <div className="p-8 max-sm:p-4 pt-16 md:pt-8">
           <Outlet />
         </div>
       </main>
