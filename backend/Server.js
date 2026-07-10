@@ -81,19 +81,38 @@ app.use('/api/user', userRoutes)
 app.use('/api/enrollment', enrollmentRoutes)
 
 
-const startServer = async () => {
-    try {
+let dbInitialized = false;
+
+const ensureDB = async () => {
+    if (!dbInitialized) {
         await connectDB();
-        const PORT = process.env.PORT || 3000;
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error("Error starting server:", error.message);
-        process.exit(1);
+        dbInitialized = true;
     }
 };
 
-startServer();
+app.use(async (req, res, next) => {
+    try {
+        await ensureDB();
+    } catch (err) {
+        console.error('DB init failed:', err.message);
+    }
+    next();
+});
+
+const PORT = process.env.PORT || 3000;
+if (!process.env.VERCEL) {
+    const startServer = async () => {
+        try {
+            await connectDB();
+            app.listen(PORT, () => {
+                console.log(`Server running on port ${PORT}`);
+            });
+        } catch (error) {
+            console.error("Error starting server:", error.message);
+            process.exit(1);
+        }
+    };
+    startServer();
+}
 
 export default app;
