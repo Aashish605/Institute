@@ -128,28 +128,24 @@ const seed = async () => {
         Week: 'Week 10',
         Description:
           'Results for the 10th weekly mock test covering Mathematics, Physics, and Chemistry.',
-        Img: 'https://placehold.co/600x400/004e8f/ffffff?text=Mock+Week+10',
       },
       {
         Title: 'Mock Test Week 11',
         Week: 'Week 11',
         Description:
           'Results for the 11th weekly mock test. Topics included Algebra, Mechanics, and Thermodynamics.',
-        Img: 'https://placehold.co/600x400/f7921d/ffffff?text=Mock+Week+11',
       },
       {
         Title: 'Mock Test Week 12',
         Week: 'Week 12',
         Description:
           'Full-length entrance simulation test. Covers all subjects as per the latest entrance exam pattern.',
-        Img: 'https://placehold.co/600x400/004e8f/ffffff?text=Mock+Week+12',
       },
       {
         Title: 'Special Revision Test',
         Week: 'Week 13',
         Description:
           'Special revision test focused on high-weightage topics identified from previous year question papers.',
-        Img: 'https://placehold.co/600x400/f7921d/ffffff?text=Revision+Test',
       },
     ]
 

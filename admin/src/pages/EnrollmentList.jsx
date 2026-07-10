@@ -18,12 +18,10 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange }) {
   const [results, setResults] = useState([])
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
   const debouncedQuery = useDebounce(query, 300)
   const ref = useRef(null)
   const selectedRef = useRef(null)
-
-  const selected = results.find(r => r.id === value) ||
-    (value ? { id: value, displayName: 'Loading...', email: '', title: 'Loading...' } : null)
 
   useEffect(() => {
     if (!debouncedQuery) { setResults([]); return }
@@ -50,15 +48,17 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange }) {
     if (selectedRef.current) selectedRef.current.scrollIntoView({ block: 'nearest' })
   }, [results])
 
+  const chip = selectedItem || (value && results.find(r => r.id === value))
+
   return (
     <div ref={ref} className="relative">
       <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
       <div className="relative">
         <input
           type="text"
-          placeholder={selected ? '' : placeholder}
+          placeholder={chip ? '' : placeholder}
           value={query}
-          onChange={e => { setQuery(e.target.value); if (value) onChange('') }}
+          onChange={e => { setQuery(e.target.value); if (value) { onChange(''); setSelectedItem(null) } }}
           onFocus={() => { if (results.length) setOpen(true) }}
           className="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
         />
@@ -71,17 +71,18 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange }) {
           </div>
         )}
       </div>
-      {selected && !query && (
+      {chip && !query && (
         <div className="mt-1.5 flex items-center gap-2 bg-primary/10 text-primary text-sm rounded-lg px-3 py-1.5">
           {endpoint.includes('user') ? (
             <>
-              <span className="font-medium">{selected.displayName}</span>
-              <span className="text-primary/60">({selected.email})</span>
+              {chip.photo && <img src={chip.photo} alt="" className="w-5 h-5 rounded-full object-cover" />}
+              <span className="font-medium">{chip.displayName}</span>
+              <span className="text-primary/60">({chip.email})</span>
             </>
           ) : (
-            <span className="font-medium">{selected.title}</span>
+            <span className="font-medium">{chip.title}</span>
           )}
-          <button type="button" onClick={() => onChange('')} className="ml-auto text-primary/60 hover:text-primary">&times;</button>
+          <button type="button" onClick={() => { onChange(''); setSelectedItem(null) }} className="ml-auto text-primary/60 hover:text-primary">&times;</button>
         </div>
       )}
       {open && (query || results.length > 0) && (
@@ -94,7 +95,7 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange }) {
                 key={r.id}
                 type="button"
                 ref={r.id === value ? selectedRef : null}
-                onClick={() => { onChange(r.id); setQuery(''); setOpen(false) }}
+                onClick={() => { onChange(r.id); setSelectedItem(r); setQuery(''); setOpen(false) }}
                 className={`w-full text-left px-3 py-2.5 text-sm hover:bg-primary/5 transition flex items-center gap-2 ${
                   r.id === value ? 'bg-primary/10 text-primary font-medium' : 'text-gray-700'
                 }`}
