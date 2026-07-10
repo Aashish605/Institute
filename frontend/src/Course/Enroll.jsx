@@ -179,13 +179,19 @@ const Enroll = () => {
                 </div>
 
                 <div className="flex flex-col items-center justify-center p-6 border border-dashed border-slate-200 rounded-3xl bg-slate-50/30">
-                  <div className="bg-white p-4 rounded-2xl shadow-md border border-slate-100 mb-3">
-                    <img src={PAYMENTS.bank.qrImage} alt="QR Code" className="w-36 h-36 object-contain" />
-                  </div>
-                  <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                    <QrCode className="w-4 h-4 text-primary" /> Scan QR to Pay Instantly
-                  </span>
-                  <p className="text-[10px] text-slate-400 mt-1">Supports any Nepalese banking app or digital wallet.</p>
+                  {PAYMENTS.bank.qrImage ? (
+                    <>
+                      <div className="bg-white p-4 rounded-2xl shadow-md border border-slate-100 mb-3">
+                        <img src={PAYMENTS.bank.qrImage} alt="QR Code" className="w-36 h-36 object-contain" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                        <QrCode className="w-4 h-4 text-primary" /> Scan QR to Pay Instantly
+                      </span>
+                      <p className="text-[10px] text-slate-400 mt-1">Supports any Nepalese banking app or digital wallet.</p>
+                    </>
+                  ) : (
+                    <span className="text-xs text-slate-400">QR code will appear here once configured.</span>
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -284,11 +284,11 @@ const Contact = () => {
 
             <InfoCard
               label="Email"
-              href="mailto:info@piacademy.edu.np"
+              href="mailto:info@institute.edu.np"
               accent="var(--color-secondary)"
               icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>}
             >
-              info@piacademy.edu.np
+              info@institute.edu.np
             </InfoCard>
 
             <InfoCard
@@ -342,10 +342,10 @@ const Contact = () => {
             style={{ background: 'var(--color-primary)' }}>
             <div>
               <div className="text-white font-semibold">Find Us</div>
-              <div className="text-xs" style={{ color: 'rgba(255,255,255,0.65)' }}>Visit our institute — Mirror Institute Pvt. Ltd.</div>
+              <div className="text-xs" style={{ color: 'rgba(255,255,255,0.65)' }}>Visit our institute</div>
             </div>
             <a
-              href="https://maps.google.com/?q=Mirror+Institute+Kathmandu"
+              href="https://maps.google.com/?q=Kathmandu+Nepal"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:scale-105"

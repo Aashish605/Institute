@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const siteName = process.env.SITE_NAME || 'Mirror Academy';
+const siteName = process.env.SITE_NAME || 'Institute';
 const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
 

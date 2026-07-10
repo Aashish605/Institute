@@ -1,13 +1,13 @@
 export const SITE = {
-  name: "Mirror",
-  shortName: "Mirror",
+  name: "Institute",
+  shortName: "Institute",
   tagline: "Building a strong foundation for your future",
   description:
-    "Mirror is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.",
-  url: import.meta.env.VITE_SITE_URL || "https://frontend-ten-delta-65.vercel.app",
-  pageTitle: "Mirror Academy",
-  copyright: `(c)${new Date().getFullYear()} Mirror`,
-  logo: "/logo.png",
+    "A premier educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.",
+  url: import.meta.env.VITE_SITE_URL || "",
+  pageTitle: "Institute",
+  copyright: `(c)${new Date().getFullYear()} Institute`,
+  logo: "",
   favicon: "/vite.svg",
   fontFamily: "Poppins",
   ogImage: "",
@@ -26,7 +26,7 @@ export const HERO = {
   heading: "Empowering Learning for",
   headingHighlight: "Everyone",
   subtitle:
-    "Join Mirror where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.",
+    "Join us where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.",
   image: "Home/Interview.png",
   video: {
     url: "https://www.facebook.com/plugins/video.php?height=500&href=https%3A%2F%2Fwww.facebook.com%2F61555638202803%2Fvideos%2F1042443771036432%2F&show_text=false&width=560&t=0",
@@ -53,13 +53,13 @@ export const HERO = {
         "Access a structured content library that simplifies your study process and enriches your learning experience across various subjects.",
     },
   ],
-  cta: "Join Mirror Today!",
+  cta: "Get Started Today",
 };
 
 export const ADS = {
   title: "Run your Ads here!",
   description:
-    "Promote your educational services, products, or events to a highly engaged audience of learners and educators. Contact us to feature your advertisement on Mirror.",
+    "Promote your educational services, products, or events to a highly engaged audience of learners and educators. Contact us to feature your advertisement.",
   image: "/ad.png",
   cta: "Contact Us",
   ctaLink: "/contact",
@@ -67,22 +67,22 @@ export const ADS = {
 
 export const ABOUT = {
   hero: {
-    title: "About Mirror",
-    subtitle: "Building a strong foundation for  your future",
+    title: "About Us",
+    subtitle: "Building a strong foundation for your future",
     image: "/About/image.png",
   },
   sections: {
     aboutUs: {
       heading: "About Us",
       paragraphs: [
-        "Mirror Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.",
+        "We are a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. Founded by passionate educators and exam specialists, we exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.",
         "Our approach combines expert-led teaching, data-driven performance analytics, and a strong mentorship-driven community to give students the clarity, confidence, and competence they need to excel.",
       ],
     },
     introduction: {
       heading: "Introduction",
       paragraphs: [
-        "At Mirror Academy, we believe that every student has the potential to excel — with the right guidance, strategy, and environment. That's why we offer a comprehensive, student-focused approach to entrance exam preparation, available both online and offline. Here's what sets us apart:",
+        "We believe that every student has the potential to excel — with the right guidance, strategy, and environment. That's why we offer a comprehensive, student-focused approach to entrance exam preparation, available both online and offline. Here's what sets us apart:",
       ],
       highlights: [
         "Focused Entrance Preparation with a strong emphasis on conceptual clarity and foundational understanding",
@@ -92,7 +92,7 @@ export const ABOUT = {
         "Personalized support, flexible learning modes, and a vibrant, motivating student community",
       ],
       closing:
-        "At Mirror Academy, we don't just prepare you for exams — we help you unlock your full academic potential.",
+        "We don't just prepare you for exams — we help you unlock your full academic potential.",
     },
     whyChooseUs: {
       heading: "Why Students Choose Us",
@@ -113,25 +113,25 @@ export const ABOUT = {
           icon: "About/support.png",
           title: "Dedicated Support",
           description:
-            "Regular QAD, doubt clearing sessions, and special guidance by IOE Ambassadors every week.",
+            "Regular Q&A, doubt clearing sessions, and special guidance by ambassadors every week.",
         },
       ],
       footer:
-        "Founded by Pulchowk Campus graduates and front-line faculty members, PI contributes towards the development of qualitative future engineers who tend to establish a well-settled destiny in the field of engineering.",
+        "Founded by passionate educators and experienced faculty members, our institute contributes towards the development of qualitative future professionals.",
     },
     message: {
-      heading: "Message From Mirror Family",
+      heading: "Message From Our Team",
       image: "About/person.png",
       content: [
-        "Dear prospective students/Guardians, we take great delight in extending a warm welcome to you all at Mirror Academy—founded by the front-liner faculties of engineering entrance and graduates of Pulchowk Campus. Choosing Mirror guarantees you for making your future bright ahead.",
-        "Our only goal is to support our students academically and maximise their outputs in the competitive examination. We will make our every effort count in paving the excellent way for engineering aspirants towards their dream.",
-        "Our prime location Kathmandu Valley, Maitighar, is easily accessible from different corners of the valley. We are equipped with adequate infrastructure, quality books and qualified instructors to enforce excellent accomplishments. Together we can grow and create an impact in the field of engineering.",
-        "Finally, we assume Mirror shall be considered as a place where your talent is furnished and you shall prepare yourself for a rewarding career in your interested field of engineering/IT and eventually to be a morally honoured and cultured citizen.",
-        "Wishing you all the best and hoping for your gracious visit.\nThank you all.\n- Mirror Family",
+        "Dear prospective students and guardians, we take great delight in extending a warm welcome to you all at our institute—founded by experienced faculties and graduates of leading institutions.",
+        "Our only goal is to support our students academically and maximise their outputs in competitive examinations. We will make our every effort count in paving the excellent way for aspirants towards their dream.",
+        "Our prime location is easily accessible from different corners of the valley. We are equipped with adequate infrastructure, quality books and qualified instructors to enforce excellent accomplishments. Together we can grow and create an impact.",
+        "Finally, we hope our institute shall be considered as a place where your talent is furnished and you shall prepare yourself for a rewarding career in your interested field and eventually to be a morally honoured and cultured citizen.",
+        "Wishing you all the best and hoping for your gracious visit.\nThank you all.\n- The Team",
       ],
     },
     cta: {
-      text: "Ready to start your journey with Mirror Academy?",
+      text: "Ready to start your journey?",
       button: "Contact Us",
       link: "/contact",
     },
@@ -141,11 +141,11 @@ export const ABOUT = {
 export const CONTACT = {
   heading: "Get in Touch",
   subtitle:
-    "Have questions about our programs or want to learn more about Mirror Academy? We'd love to hear from you.",
+    "Have questions about our programs or want to learn more? We'd love to hear from you.",
   info: {
     location: {
       label: "Our Location",
-      lines: ["Maitighar, Kathmandu, Nepal", "Opposite St. Xavier's College, Kathmandu, Nepal"],
+      lines: ["Kathmandu, Nepal"],
     },
     phone: {
       label: "Phone",
@@ -159,8 +159,8 @@ export const CONTACT = {
     },
     email: {
       label: "Email",
-      value: "info@piacademy.edu.np",
-      href: "mailto:info@piacademy.edu.np",
+      value: "info@institute.edu.np",
+      href: "mailto:info@institute.edu.np",
     },
     hours: {
       label: "Office Hours",
@@ -169,9 +169,9 @@ export const CONTACT = {
     },
     map: {
       title: "Find Us",
-      subtitle: "Visit our institute in Birendranagar, Surkhet, Nepal",
+      subtitle: "Visit our institute",
       embedUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.264619619895!2d81.62840969396086!3d28.59183730054133!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a2858da90f964b%3A0x190aacc454506fab!2sMirror%20Institute%20Pvt.%20Ltd.!5e0!3m2!1sen!2sus!4v1783579743628!5m2!1sen!2sus",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.4!2d85.3168!3d27.7041!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190a5b2e4c1f%3A0x4e!2sMaitighar%2C%20Kathmandu!5e0!3m2!1sen!2snp!4v1",
     },
   },
 };
@@ -211,7 +211,7 @@ export const TESTIMONIALS = [
     description: "St.Xavier College, Scholarship",
     subtext: "Rank : 1 Entrance 2081",
     quote:
-      "I've been a part of Pi Academy for the part three years, and it's been a rewarding journey. Our bridge course equips SEE-appeared students with a strong academic base for +2, while the IOE Entrance preparation is result-driven and highly focused. With expert faculty, regular mock tests, and a disciplined learning environment, PI Academy ensures every student gets the support they need to succeed. If you're serious about your future, this is the place to be!",
+      "The entrance preparation program was thorough and well-organized. With expert faculty, regular mock tests, and a disciplined learning environment, every student gets the support they need to succeed. If you're serious about your future, this is the place to be!",
     avatar: "Home/person.png",
   },
 ];
@@ -223,15 +223,15 @@ export const PAYMENTS = {
   },
   bank: {
     name: "Citizen Bank International",
-    accountName: "Mirror",
+    accountName: "Institute",
     accountNumber: "****************",
-    qrImage: "/logo.png",
-    qrLabel: "Mirror",
+    qrImage: "",
+    qrLabel: "Institute",
   },
   contact: {
     phone: "+977 9851198288",
-    email: "neobridge.edu.np",
-    location: "Birendranagar,Surkhet, Nepal",
+    email: "info@institute.edu.np",
+    location: "Kathmandu, Nepal",
   },
   instructions: [
     "Use the account details shown below",
@@ -244,11 +244,11 @@ export const PAYMENTS = {
 export const FOOTER = {
   aboutHeading: "About Us",
   aboutText:
-    "Mirror is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. We exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.",
+    "We are a student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations. We exist to bridge the gap between aspiration and achievement through structured, smart, and supportive learning.",
   quickLinks: {
     heading: "Quick Links",
     links: [
-      { label: "Menu", to: "" },
+      { label: "Home", to: "" },
       { label: "About Us", to: "/about" },
       { label: "Log In", to: "/login" },
     ],

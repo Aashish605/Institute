@@ -81,6 +81,60 @@ const seed = async () => {
         materialsLink: '#',
         mockTestLink: '/mock',
       },
+      {
+        title: 'MBBS & BDS Entrance Preparation',
+        description:
+          'Comprehensive preparation for medical entrance exams including MBBS and BDS. Covers all science subjects with intensive practice sessions.',
+        image: 'https://placehold.co/600x400/004e8f/ffffff?text=Medical+Prep',
+        oldPrice: 10000,
+        newPrice: 7000,
+        discount: '30%',
+        features: [
+          { icon: 'https://img.icons8.com/color/48/stethoscope.png', text: 'Medical Focus' },
+          { icon: 'https://img.icons8.com/color/48/test-passed.png', text: 'Mock Tests' },
+          { icon: 'https://img.icons8.com/color/48/teacher.png', text: 'Expert Faculty' },
+          { icon: 'https://img.icons8.com/color/48/analytics.png', text: 'Performance Tracking' },
+        ],
+        subjects: ['Biology', 'Chemistry', 'Physics', 'English', 'Mathematics'],
+        materialsLink: '#',
+        mockTestLink: '/mock',
+      },
+      {
+        title: 'Loksewa Preparation Course',
+        description:
+          'Targeted preparation for Loksewa civil service exams. Covers general knowledge, reasoning, and subject-specific content.',
+        image: 'https://placehold.co/600x400/f7921d/ffffff?text=Loksewa+Prep',
+        oldPrice: 6000,
+        newPrice: 4000,
+        discount: '33%',
+        features: [
+          { icon: 'https://img.icons8.com/color/48/knowledge.png', text: 'GK & Current Affairs' },
+          { icon: 'https://img.icons8.com/color/48/reasoning.png', text: 'Reasoning Skills' },
+          { icon: 'https://img.icons8.com/color/48/test-passed.png', text: 'Practice Sets' },
+          { icon: 'https://img.icons8.com/color/48/mentor.png', text: 'Expert Guidance' },
+        ],
+        subjects: ['General Knowledge', 'English', 'Mathematics', 'Reasoning', 'Nepali'],
+        materialsLink: '#',
+        mockTestLink: '/mock',
+      },
+      {
+        title: 'CEE (Common Entrance Exam) Preparation',
+        description:
+          'Focused preparation for the CEE conducted by Tribhuvan University for science and management programs.',
+        image: 'https://placehold.co/600x400/004e8f/ffffff?text=CEE+Prep',
+        oldPrice: 7500,
+        newPrice: 5500,
+        discount: '27%',
+        features: [
+          { icon: 'https://img.icons8.com/color/48/books.png', text: 'Comprehensive Coverage' },
+          { icon: 'https://img.icons8.com/color/48/exam.png', text: 'Past Papers' },
+          { icon: 'https://img.icons8.com/color/48/teacher.png', text: 'Expert Faculty' },
+          { icon: 'https://img.icons8.com/color/48/support.png', text: 'Doubt Sessions' },
+        ],
+        subjects: ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English'],
+        materialsLink: '#',
+        mockTestLink: '/mock',
+      },
     ]
 
     for (const course of courses) {
@@ -113,6 +167,24 @@ const seed = async () => {
         Description:
           'The results for the Week 10 mock test have been published. Students can view their results and rank on the Mock Test page.',
         Img: 'https://placehold.co/800x400/f7921d/ffffff?text=Results+Published',
+      },
+      {
+        Title: 'Scholarship Announcement',
+        Description:
+          'Merit-based scholarships now available for top-performing students. Apply through the admin office with your latest academic transcripts.',
+        Img: 'https://placehold.co/800x400/004e8f/ffffff?text=Scholarship',
+      },
+      {
+        Title: 'Guest Lecture Series',
+        Description:
+          'We are hosting a guest lecture series with industry experts every Saturday this month. Open to all enrolled students.',
+        Img: 'https://placehold.co/800x400/f7921d/ffffff?text=Guest+Lecture',
+      },
+      {
+        Title: 'Holiday Notice: Important Festival',
+        Description:
+          'The institute will remain closed for three days on the occasion of the upcoming festival. Regular classes will resume on Monday.',
+        Img: 'https://placehold.co/800x400/004e8f/ffffff?text=Holiday+Notice',
       },
     ]
 
@@ -147,6 +219,18 @@ const seed = async () => {
         Description:
           'Special revision test focused on high-weightage topics identified from previous year question papers.',
       },
+      {
+        Title: 'Mock Test Week 14',
+        Week: 'Week 14',
+        Description:
+          'Comprehensive test covering all science subjects with emphasis on numerical problems.',
+      },
+      {
+        Title: 'Full Syllabus Mock - Midterm',
+        Week: 'Week 15',
+        Description:
+          'Midterm full syllabus mock test simulating the actual entrance exam environment.',
+      },
     ]
 
     for (const mock of mocks) {
@@ -158,27 +242,42 @@ const seed = async () => {
     const contentBlocks = [
         { key: 'hero_heading', value: 'Empowering Learning for' },
         { key: 'hero_headingHighlight', value: 'Everyone' },
-        { key: 'hero_subtitle', value: 'Join Mirror where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.' },
+        { key: 'hero_tagline', value: "Nepal's Premier Learning Institute" },
+        { key: 'hero_subtitle', value: 'Join us where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.' },
         { key: 'hero_image', value: 'Home/Interview.png' },
-        { key: 'hero_cta', value: 'Join Mirror Today!' },
+        { key: 'hero_cta', value: 'Get Started Today' },
+        { key: 'about_hero_title', value: 'About Us' },
+        { key: 'about_hero_subtitle', value: 'Building a strong foundation for your future' },
         { key: 'about_aboutUs_heading', value: 'About Us' },
-        { key: 'about_aboutUs_text', value: 'Mirror Academy is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.' },
+        { key: 'about_aboutUs_text', value: 'We are a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.' },
+        { key: 'about_approach_text', value: 'Our approach combines expert-led teaching, data-driven performance analytics, and a strong mentorship-driven community to give students the clarity, confidence, and competence they need to excel.' },
         { key: 'about_introduction_heading', value: 'Introduction' },
+        { key: 'about_intro_text', value: 'We believe that every student has the potential to excel — with the right guidance, strategy, and environment.' },
+        { key: 'about_closing_text', value: "We don't just prepare you for exams — we help you unlock your full academic potential." },
         { key: 'about_whyChooseUs_heading', value: 'Why Students Choose Us' },
-        { key: 'about_message_heading', value: 'Message From Mirror Family' },
+        { key: 'about_whyChooseUs_footer', value: 'Founded by passionate educators and experienced faculty members, our institute contributes towards developing qualitative future professionals.' },
+        { key: 'about_message_heading', value: 'Message From Our Team' },
+        { key: 'about_message_para1', value: 'Dear prospective students and guardians, we take great delight in extending a warm welcome to you all at our institute—founded by experienced educators and graduates of leading institutions.' },
+        { key: 'about_message_para2', value: 'Our only goal is to support our students academically and maximize their outputs in competitive examinations.' },
+        { key: 'about_message_para3', value: 'Our prime location is easily accessible. We are equipped with adequate infrastructure, quality books, and qualified instructors.' },
+        { key: 'about_message_para4', value: 'Together we can grow and create an impact in your chosen field.' },
+        { key: 'about_message_sender', value: 'The Team' },
+        { key: 'about_cta_text', value: 'Ready to start your journey?' },
+        { key: 'contact_heading', value: 'Get in Touch' },
+        { key: 'contact_subtitle', value: 'Have questions about our programs or want to learn more? We would love to hear from you.' },
         { key: 'contact_phone', value: '+977 01-5360880' },
         { key: 'contact_mobile', value: '+977 9851198288' },
-        { key: 'contact_email', value: 'info@piacademy.edu.np' },
-        { key: 'contact_location', value: 'Maitighar, Kathmandu, Nepal' },
+        { key: 'contact_email', value: 'info@institute.edu.np' },
+        { key: 'contact_location', value: 'Kathmandu, Nepal' },
         { key: 'contact_hours', value: 'Sunday - Friday: 9:00 AM - 5:00 PM' },
         { key: 'social_facebook', value: 'https://facebook.com' },
         { key: 'social_instagram', value: 'https://instagram.com' },
         { key: 'social_tiktok', value: 'https://tiktok.com' },
         { key: 'social_whatsapp', value: '9779843340238' },
-        { key: 'site_name', value: 'Mirror' },
+        { key: 'site_name', value: 'Institute' },
         { key: 'site_tagline', value: 'Building a strong foundation for your future' },
-        { key: 'site_copyright', value: 'Mirror' },
-        { key: 'footer_aboutText', value: 'Mirror is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.' },
+        { key: 'site_copyright', value: 'Institute' },
+        { key: 'footer_aboutText', value: 'We are a student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.' },
         { key: 'footer_rights', value: 'All Right Reserved' },
         { key: 'mock_heading', value: 'Weekly Mock Test Results' },
         { key: 'mock_subtitle', value: 'Topper of each mock test receives a cash incentive to motivate and reward hard work!' },
@@ -193,13 +292,15 @@ const seed = async () => {
 
     // --- Testimonials ---
     const testimonials = [
-      { name: 'Aarav Sharma', role: 'Student', company: 'IOE Entrance 2081', avatar: 'https://i.pravatar.cc/100?img=11', content: 'Mirror Academy\'s crash course was a game-changer for my IOE prep. The mock tests mirrored the real exam perfectly, and the weekly reviews helped me fix my weak areas. Scored in the top 100!', rating: 5 },
+      { name: 'Aarav Sharma', role: 'Student', company: 'IOE Entrance 2081', avatar: 'https://i.pravatar.cc/100?img=11', content: 'The crash course was a game-changer for my IOE prep. The mock tests mirrored the real exam perfectly, and the weekly reviews helped me fix my weak areas. Scored in the top 100!', rating: 5 },
       { name: 'Priya Adhikari', role: 'Student', company: 'Bridge Course, Science', avatar: 'https://i.pravatar.cc/100?img=12', content: 'The bridge course made my transition from SEE to +2 Science so smooth. The teachers broke down complex topics into simple concepts. I felt confident going into my first semester.', rating: 5 },
       { name: 'Sagar Thapa', role: 'Student', company: 'BSc CSIT Prep', avatar: 'https://i.pravatar.cc/100?img=20', content: 'I joined for CSIT entrance prep and the structured curriculum was exactly what I needed. The doubt-clearing sessions were incredibly helpful. Highly recommend for anyone aiming for top colleges.', rating: 5 },
       { name: 'Anjana Karki', role: 'Student', company: 'Staff Nurse Entrance', avatar: 'https://i.pravatar.cc/100?img=23', content: 'The health science entrance prep was thorough and well-organized. Practice questions and subject-wise tests covered everything that appeared in the exam. Grateful to the entire team!', rating: 5 },
       { name: 'Rohit Basnet', role: 'Student', company: 'BE Entrance Prep', avatar: 'https://i.pravatar.cc/100?img=33', content: 'What really helped me was the performance analytics — I could track my progress week by week. The mentorship program kept me motivated throughout the preparation.', rating: 5 },
       { name: 'Sneha Pandey', role: 'Student', company: 'Bridge Course, Management', avatar: 'https://i.pravatar.cc/100?img=42', content: 'I was nervous about switching to Management in +2, but the bridge course gave me a solid foundation. The faculty made learning enjoyable and the study materials were top-notch.', rating: 4 },
-      { name: 'Bibek Gurung', role: 'Student', company: 'Diploma Engg Prep', avatar: 'https://i.pravatar.cc/100?img=55', content: 'Affordable yet high-quality preparation. The mock tests every week kept me on track, and the expert feedback helped me improve my speed and accuracy. Thank you Mirror!', rating: 5 },
+      { name: 'Bibek Gurung', role: 'Student', company: 'Diploma Engg Prep', avatar: 'https://i.pravatar.cc/100?img=55', content: 'Affordable yet high-quality preparation. The mock tests every week kept me on track, and the expert feedback helped me improve my speed and accuracy.', rating: 5 },
+      { name: 'Maya Tamang', role: 'Student', company: 'MBBS Prep', avatar: 'https://i.pravatar.cc/100?img=47', content: 'The biology classes were incredibly detailed and the mock tests closely followed the actual exam pattern. I felt fully prepared on exam day. Highly recommended for medical aspirants!', rating: 5 },
+      { name: 'Kiran Acharya', role: 'Student', company: 'Loksewa Prep', avatar: 'https://i.pravatar.cc/100?img=59', content: 'The Loksewa preparation course covered everything from general knowledge to reasoning. The regular current affairs updates and mock interviews were particularly helpful.', rating: 5 },
     ];
     for (const t of testimonials) {
       await Testimonial.findOrCreate({ where: { name: t.name }, defaults: t });
@@ -213,12 +314,12 @@ const seed = async () => {
     const users = [
       {
         displayName: 'Admin User',
-        email: 'admin@mirror.com',
+        email: 'admin@institute.com',
         password: hashedPassword,
         isAdmin: true,
         isEmailVerified: true,
         number: '9851198288',
-        school: 'Mirror Academy',
+        school: 'Institute',
       },
       {
         displayName: 'Aarav Sharma',
@@ -246,6 +347,24 @@ const seed = async () => {
         number: '9851122334',
         class: '12',
         school: 'Liverpool College',
+      },
+      {
+        displayName: 'Maya Tamang',
+        email: 'maya@example.com',
+        password: hashedPassword,
+        isEmailVerified: true,
+        number: '9861234567',
+        class: '12',
+        school: 'Golden Gate College',
+      },
+      {
+        displayName: 'Kiran Acharya',
+        email: 'kiran@example.com',
+        password: hashedPassword,
+        isEmailVerified: true,
+        number: '9845678901',
+        class: '12',
+        school: 'Valley College',
       },
     ]
 
@@ -311,6 +430,13 @@ const seed = async () => {
         subject: 'Admission',
         message: 'Is there any scholarship available for the Bridge Course? I have scored above 3.6 GPA in SEE.',
       },
+      {
+        fullName: 'Gita Sharma',
+        email: 'gita@example.com',
+        phone: '9845671234',
+        subject: 'Fee Inquiry',
+        message: 'I would like to know about the fee structure for the MBBS preparation course. Are there any installment options available?',
+      },
     ]
 
     for (const c of contacts) {
@@ -321,10 +447,10 @@ const seed = async () => {
     }
     console.log(`Seeded ${contacts.length} contacts`)
 
-    console.log('✅ All seed data inserted successfully!')
+    console.log('All seed data inserted successfully!')
     process.exit(0)
   } catch (error) {
-    console.error('❌ Seed failed:', error.message)
+    console.error('Seed failed:', error.message)
     process.exit(1)
   }
 }

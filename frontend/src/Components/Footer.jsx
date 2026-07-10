@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import { MapPin, Phone, Mail, Clock, ArrowRight, ChevronRight } from 'lucide-react'
 import { useContent } from '../context/ContentContext'
-import { SITE, SOCIAL, FOOTER } from '../config/site'
+import { SITE, SOCIAL, FOOTER, CONTACT } from '../config/site'
 
 const Footer = () => {
   const content = useContent();
@@ -35,7 +35,7 @@ const Footer = () => {
           {/* Brand column — wider */}
           <div className="lg:col-span-4 flex flex-col gap-6">
             <div>
-              <img src="/logo.png" alt={SITE.name} className="h-10 w-auto brightness-0 invert mb-4" />
+              <span className="text-xl font-bold text-white mb-4 block">{SITE.name}</span>
               <p className="text-sm leading-7 text-white/55 max-w-xs">
                 {content.footer_aboutText || FOOTER.aboutText}
               </p>
@@ -125,11 +125,11 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:info@piacademy.edu.np" className="flex items-center gap-3 group">
+                  <a href="mailto:info@institute.edu.np" className="flex items-center gap-3 group">
                     <span className="w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
                       <Mail className="w-3.5 h-3.5 text-secondary/80" />
                     </span>
-                    <span className="text-sm text-white/55 group-hover:text-white transition-colors">info@piacademy.edu.np</span>
+                    <span className="text-sm text-white/55 group-hover:text-white transition-colors">info@institute.edu.np</span>
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
@@ -146,8 +146,8 @@ const Footer = () => {
               <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-secondary/80 mb-5">Find Us</h3>
               <div className="rounded-2xl overflow-hidden border border-white/[0.08] aspect-[4/3]">
                 <iframe
-                  title="Mirror Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.4!2d85.3168!3d27.7041!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190a5b2e4c1f%3A0x4e!2sMaitighar%2C%20Kathmandu!5e0!3m2!1sen!2snp!4v1"
+                  title="Our Location"
+                  src={CONTACT.info.map.embedUrl}
                   width="100%"
                   height="100%"
                   style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) brightness(0.85) contrast(0.9)" }}

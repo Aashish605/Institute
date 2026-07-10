@@ -247,7 +247,7 @@ const Home = () => {
               <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
               Why Us
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Why Choose <span className="text-secondary">Mirror</span></h2>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3">Why Choose <span className="text-secondary">Us</span></h2>
             <p className="text-text-secondary max-w-xl mx-auto">Everything you need to excel in your entrance exams</p>
             <div className="w-16 h-1 bg-gradient-to-r from-primary/20 via-secondary/30 to-primary/20 rounded-full mx-auto mt-6" />
           </motion.div>
@@ -303,7 +303,7 @@ const Home = () => {
               Join 1000+ Students
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">Ready to Start Your Journey?</h2>
-            <p className="text-text-secondary mb-10 max-w-lg mx-auto text-lg">Join Mirror Academy today and take the first step toward your dream career.</p>
+            <p className="text-text-secondary mb-10 max-w-lg mx-auto text-lg">Join us today and take the first step toward your dream career.</p>
             <NavLink to="/contact" className="inline-flex items-center gap-3 px-8 py-3.5 rounded-xl bg-secondary text-white font-semibold hover:bg-secondary-light hover:shadow-xl hover:shadow-secondary/30 transition-all duration-300 group">
               Get Started Now
               <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
