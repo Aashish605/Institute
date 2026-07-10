@@ -21,10 +21,10 @@ export default function Login() {
         </motion.div>
         <h1 className="text-3xl font-bold text-primary mb-2">Mirror Admin</h1>
         <p className="text-gray-500 mb-8">Sign in to manage your website</p>
-        <motion.a
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          href="/auth/google"
+          <motion.a
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            href={`${import.meta.env.VITE_API_URL}/auth/google`}
           className="flex items-center justify-center gap-3 border px-6 py-3 rounded-xl border-gray-200 bg-gray-50 hover:bg-gray-100 transition font-medium w-full shadow-sm"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">

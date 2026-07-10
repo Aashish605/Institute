@@ -24,7 +24,7 @@ app.use(express.json())
 const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.ADMIN_URL,
-    "https://institute-frontend-gamma.vercel.app",
+    "https://frontend-ten-delta-65.vercel.app",
     "http://localhost:5173",
     "http://localhost:5174",
 ].filter(Boolean);

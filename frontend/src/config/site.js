@@ -4,7 +4,7 @@ export const SITE = {
   tagline: "Building a strong foundation for your future",
   description:
     "Mirror is a dynamic, student-focused educational institute in Nepal, dedicated to empowering learners for success in competitive entrance examinations.",
-  url: import.meta.env.VITE_SITE_URL || "https://institute-frontend-gamma.vercel.app",
+  url: import.meta.env.VITE_SITE_URL || "https://frontend-ten-delta-65.vercel.app",
   pageTitle: "Mirror Academy",
   copyright: `(c)${new Date().getFullYear()} Mirror`,
   logo: "/logo.png",
@@ -19,7 +19,7 @@ export const THEME = {
 };
 
 export const API = {
-  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://institute-xi.vercel.app' : ''),
+  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://institute-backend-eight.vercel.app' : ''),
 };
 
 export const HERO = {
