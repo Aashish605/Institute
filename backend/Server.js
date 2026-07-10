@@ -24,7 +24,7 @@ app.use(express.json())
 const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.ADMIN_URL,
-    "https://frontend-ten-delta-65.vercel.app",
+    process.env.FRONTEND_URL,
     "http://localhost:5173",
     "http://localhost:5174",
 ].filter(Boolean);
@@ -81,26 +81,8 @@ app.use('/api/user', userRoutes)
 app.use('/api/enrollment', enrollmentRoutes)
 
 
-let dbInitialized = false;
-
-const ensureDB = async () => {
-    if (!dbInitialized) {
-        await connectDB();
-        dbInitialized = true;
-    }
-};
-
-app.use(async (req, res, next) => {
-    try {
-        await ensureDB();
-    } catch (err) {
-        console.error('DB init failed:', err.message);
-    }
-    next();
-});
-
-const PORT = process.env.PORT || 3000;
 if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 3000;
     const startServer = async () => {
         try {
             await connectDB();
@@ -113,7 +95,8 @@ if (!process.env.VERCEL) {
         }
     };
     startServer();
+} else {
+    connectDB().catch(err => console.error('DB init failed:', err.message));
 }
 
 export default app;
-module.exports = app;
