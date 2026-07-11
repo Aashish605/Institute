@@ -1,5 +1,33 @@
 import { User } from '../Model/index.js';
 import { Op } from 'sequelize';
+import bcrypt from 'bcryptjs';
+
+export const createUser = async (req, res) => {
+    try {
+        const { displayName, email, password, isAdmin, isEmailVerified } = req.body;
+        if (!displayName?.trim() || !email?.trim() || !password) {
+            return res.status(400).json({ msg: 'Name, email, and password are required' });
+        }
+        const normalizedEmail = email.toLowerCase().trim();
+        const existing = await User.findOne({ where: { email: normalizedEmail } });
+        if (existing) return res.status(409).json({ msg: 'A user with this email already exists' });
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+        const user = await User.create({
+            displayName: displayName.trim(),
+            email: normalizedEmail,
+            password: hashedPassword,
+            isAdmin: isAdmin === true || isAdmin === 'true',
+            isEmailVerified: isEmailVerified === true || isEmailVerified === 'true',
+        });
+        const safe = await User.findByPk(user.id, {
+            attributes: { exclude: ['password', 'resetToken', 'resetTokenExpires', 'emailVerifyToken', 'emailVerifyExpires'] }
+        });
+        res.status(201).json(safe);
+    } catch (err) {
+        res.status(500).json({ msg: 'Server error', error: err.message });
+    }
+};
 
 export const getAllUsers = async (req, res) => {
     try {
