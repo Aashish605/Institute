@@ -27,7 +27,7 @@ export const HERO = {
   headingHighlight: "Everyone",
   subtitle:
     "Join us where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.",
-  image: "Home/Interview.png",
+  image: "Hero.webp",
   video: {
     url: "https://www.facebook.com/plugins/video.php?height=500&href=https%3A%2F%2Fwww.facebook.com%2F61555638202803%2Fvideos%2F1042443771036432%2F&show_text=false&width=560&t=0",
     width: "560",
