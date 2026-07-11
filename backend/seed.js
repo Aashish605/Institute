@@ -244,7 +244,7 @@ const seed = async () => {
         { key: 'hero_headingHighlight', value: 'Everyone' },
         { key: 'hero_tagline', value: "Nepal's Premier Learning Institute" },
         { key: 'hero_subtitle', value: 'Join us where expert-led teaching, data-driven performance analytics, and a mentorship-driven community come together to give you the clarity, confidence, and competence to excel.' },
-        { key: 'hero_image', value: 'Home/Interview.png' },
+        { key: 'hero_image', value: 'Hero.webp' },
         { key: 'hero_cta', value: 'Get Started Today' },
         { key: 'about_hero_title', value: 'About Us' },
         { key: 'about_hero_subtitle', value: 'Building a strong foundation for your future' },

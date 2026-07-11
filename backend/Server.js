@@ -47,9 +47,10 @@ app.use(
 
 const PostgreSQLStore = pgStore(session)
 
+const isProd = process.env.NODE_ENV === 'production';
 app.use(session({
     store: new PostgreSQLStore({
-        conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}`,
+        conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}${isProd ? '?sslmode=require' : ''}`,
         createTableIfMissing: true,
     }),
     secret: process.env.SESSION_SECRET || "fallback-secret",
@@ -57,9 +58,9 @@ app.use(session({
     proxy: true,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: isProd,
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        sameSite: isProd ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000,
         path: '/',
     }
