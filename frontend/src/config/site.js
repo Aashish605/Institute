@@ -182,8 +182,8 @@ export const SOCIAL = {
   tiktok: import.meta.env.VITE_TIKTOK_URL || "https://tiktok.com",
   whatsapp: import.meta.env.VITE_WHATSAPP_NUMBER || "9779843340238",
   developerCredit: {
-    text: "Ashish Khadka",
-    url: "https://www.facebook.com/aashish.khadka.37625",
+    text: "CodexNepal",
+    url: "https://www.codexnepal.com/",
   },
 };
 

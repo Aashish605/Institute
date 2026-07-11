@@ -86,7 +86,7 @@ export default function Nav() {
           </NavLink>
           <button
             aria-label={select ? "Close menu" : "Open menu"}
-            onClick={() => dispatch(toggleSidebar())}
+            onClick={(e) => { e.stopPropagation(); dispatch(toggleSidebar()); }}
             className="p-2 rounded-lg hover:bg-surface transition-colors"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
