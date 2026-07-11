@@ -74,7 +74,7 @@ let dbInit = connectDB();
 if (process.env.VERCEL) {
     dbInit.catch(err => console.error('DB init failed:', err.message, err.stack));
 }
-    
+
 app.get('/',(req, res) => { res.json({ ok: true }) })
 
 app.get('/health', (req, res) => res.json({ ok: true }));
@@ -89,7 +89,11 @@ app.get('/health/db', async (req, res) => {
 });
 
 app.use(async (req, res, next) => {
-    try { await dbInit; } catch (e) { /* db failed, continue */ }
+    try { await dbInit; } catch (e) {
+        try { dbInit = connectDB(); await dbInit; } catch (e2) {
+            return res.status(503).json({ msg: 'DB unavailable' });
+        }
+    }
     next();
 });
 
