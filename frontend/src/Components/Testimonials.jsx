@@ -89,6 +89,7 @@ const Testimonials = () => {
           </motion.div>
 
         <Swiper
+          loop={true}
           slidesPerView={1}
           spaceBetween={24}
           modules={[Autoplay]}
