@@ -56,6 +56,7 @@ const configurePassport = () => {
                         isAdmin: email === adminEmail,
                         isEmailVerified: true,
                     });
+                    console.log('Google strategy — created new user:', user?.id, user?.email);
                 } else {
                     const updates = {};
                     if (!user.googleId) updates.googleId = profile.id;
@@ -67,9 +68,13 @@ const configurePassport = () => {
 
                     if (Object.keys(updates).length) {
                         await user.update(updates);
+                        console.log('Google strategy — updated existing user:', user?.id, updates);
                     }
                 }
 
+                if (!user) {
+                    console.error('Google strategy — user is still null after create/update! email:', email, 'profile.id:', profile.id);
+                }
                 return done(null, user);
             } catch (err) {
                 return done(err, null);
