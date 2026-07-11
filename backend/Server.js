@@ -74,6 +74,8 @@ let dbInit = connectDB();
 if (process.env.VERCEL) {
     dbInit.catch(err => console.error('DB init failed:', err.message));
 }
+    
+app.get('/',(req, res) => { res.json({ ok: true }) })
 
 app.get('/health', (req, res) => res.json({ ok: true }));
 

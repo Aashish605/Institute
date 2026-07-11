@@ -24,9 +24,9 @@ const connectDB = async () => {
 
         if (process.env.NODE_ENV !== 'production') {
             await sequelize.query(`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
+            await sequelize.sync();
+            console.log('Models synchronized');
         }
-        await sequelize.sync();
-        console.log('Models synchronized');
     } catch (error) {
         console.error('Unable to connect to PostgreSQL:', error.message);
         throw error;
