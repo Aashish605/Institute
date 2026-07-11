@@ -72,12 +72,21 @@ configurePassport()
 // Wait for DB before any route handler
 let dbInit = connectDB();
 if (process.env.VERCEL) {
-    dbInit.catch(err => console.error('DB init failed:', err.message));
+    dbInit.catch(err => console.error('DB init failed:', err.message, err.stack));
 }
     
 app.get('/',(req, res) => { res.json({ ok: true }) })
 
 app.get('/health', (req, res) => res.json({ ok: true }));
+
+app.get('/health/db', async (req, res) => {
+    try {
+        await sequelize.authenticate();
+        res.json({ connected: true });
+    } catch (e) {
+        res.json({ connected: false, error: e.message });
+    }
+});
 
 app.use(async (req, res, next) => {
     try { await dbInit; } catch (e) { /* db failed, continue */ }
