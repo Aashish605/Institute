@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import passport from 'passport';
 import bcrypt from 'bcryptjs';
 import { User } from '../Model/index.js';
-import { sendVerificationEmail } from '../Utils/mailer.js';
+import { sendVerificationEmail, sendResetPasswordEmail } from '../Utils/mailer.js';
 
 const adminEmail = process.env.ADMIN_EMAIL || 'ashishkhadka317@gmail.com';
 
@@ -49,7 +49,7 @@ export const signup = async (req, res, next) => {
             emailVerifyExpires: expiresAt,
         });
 
-        await sendVerificationEmail(normalizedEmail, token);
+        try { await sendVerificationEmail(normalizedEmail, token); } catch (e) { console.error('Verification email failed:', e.message); }
 
         return res.status(201).json({
             message: 'Account created! Please check your email to verify your account before logging in.',
@@ -166,10 +166,10 @@ export const forgotPassword = async (req, res, next) => {
 
         await user.update({ resetToken: token, resetTokenExpires: expiresAt });
 
+        try { await sendResetPasswordEmail(normalizedEmail, token); } catch (e) { console.error('Reset email failed:', e.message); }
+
         return res.json({
-            message: 'If an account exists for that email, a reset link has been generated.',
-            resetToken: token,
-            resetLink: `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${token}`
+            message: 'If an account exists for that email, a reset link has been sent.',
         });
     } catch (err) {
         next(err);
