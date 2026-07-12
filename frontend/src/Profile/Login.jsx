@@ -254,19 +254,6 @@ const Login = () => {
               </Link>
             </div>
 
-            <div className="relative flex items-center justify-center">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
-              <span className="relative bg-white px-3 text-xs font-medium uppercase tracking-[0.2em] text-text-secondary">or continue with</span>
-            </div>
-
-            <a
-              href={`${API.baseURL}/auth/google`}
-              className="flex items-center justify-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-medium text-text transition hover:bg-surface-alt"
-            >
-              <img src="/google.png" alt="" className="h-5 w-5" />
-              Continue with Google
-            </a>
-
             <p className="text-center text-xs text-text-muted">{LOGIN.footer}</p>
           </CardContent>
         </Card>
