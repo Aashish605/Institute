@@ -37,6 +37,24 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange, onIte
   }, [debouncedQuery, endpoint])
 
   useEffect(() => {
+    if (value && !selectedItem && !query) {
+      setLoading(true)
+      const singleEndpoint = endpoint.includes('user')
+        ? `/api/user/${value}`
+        : `/api/course/id/${value}`
+      api.get(singleEndpoint)
+        .then(res => {
+          const item = endpoint.includes('user') ? res.data : res.data
+          if (item && item.id === value) {
+            setSelectedItem(item)
+          }
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false))
+    }
+  }, [value])
+
+  useEffect(() => {
     function handleClick(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false)
     }
@@ -58,7 +76,7 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange, onIte
           type="text"
           placeholder={chip ? '' : placeholder}
           value={query}
-          onChange={e => { setQuery(e.target.value); if (value) { onChange(''); setSelectedItem(null) } }}
+          onChange={e => { setQuery(e.target.value); if (value) { onChange(''); setSelectedItem(null); onItemSelect?.(null) } }}
           onFocus={() => { if (results.length) setOpen(true) }}
           className="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
         />
@@ -82,7 +100,7 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange, onIte
           ) : (
             <span className="font-medium">{chip.title}</span>
           )}
-          <button type="button" onClick={() => { onChange(''); setSelectedItem(null) }} className="ml-auto text-primary/60 hover:text-primary">&times;</button>
+          <button type="button" onClick={() => { onChange(''); setSelectedItem(null); onItemSelect?.(null) }} className="ml-auto text-primary/60 hover:text-primary">&times;</button>
         </div>
       )}
       {open && (query || results.length > 0) && (
@@ -259,7 +277,9 @@ export default function EnrollmentList() {
   const openEditModal = (enrollment) => {
     const payment = enrollment.Payment || {}
     setSelectedUser(enrollment.User?.id || '')
+    setSelectedUserData(enrollment.User || null)
     setSelectedCourse(enrollment.Course?.id || '')
+    setSelectedCourseData(enrollment.Course || null)
     setBatch(enrollment.batch || '')
     setPaymentType(payment.paymentType || 'cash')
     setReference(payment.reference || '')

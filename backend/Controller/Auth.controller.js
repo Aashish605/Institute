@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { User } from '../Model/index.js';
 import { sendVerificationEmail, sendResetPasswordEmail } from '../Utils/mailer.js';
 
-const adminEmail = process.env.ADMIN_EMAIL || 'ashishkhadka317@gmail.com';
+const adminEmail = process.env.ADMIN_EMAIL;
 
 const serializeUser = (user) => ({
     id: user.id,
@@ -25,6 +25,9 @@ export const signup = async (req, res, next) => {
 
     if (!name?.trim() || !email?.trim() || !password) {
         return res.status(400).json({ message: 'Please provide your name, email, and password.' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters long.' });
     }
 
     try {
@@ -116,7 +119,7 @@ export const resendVerification = async (req, res, next) => {
         const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
         await user.update({ emailVerifyToken: token, emailVerifyExpires: expiresAt });
-        await sendVerificationEmail(normalizedEmail, token);
+        try { await sendVerificationEmail(normalizedEmail, token); } catch (e) { console.error('Verification email failed:', e.message); }
 
         return res.json({ message: 'A new verification email has been sent. Please check your inbox.' });
     } catch (err) {
@@ -182,6 +185,9 @@ export const resetPassword = async (req, res, next) => {
     if (!token || !password) {
         return res.status(400).json({ message: 'Reset token and password are required.' });
     }
+    if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters long.' });
+    }
 
     try {
         const user = await User.findOne({
@@ -210,7 +216,6 @@ export const resetPassword = async (req, res, next) => {
 
 export const callback = (req, res, next) => {
     passport.authenticate('google', (err, user) => {
-        console.log('Google callback — err:', err?.message, '| user:', user?.id, user?.email, '| isAdmin:', user?.isAdmin);
         if (err) {
             console.error('Google OAuth callback error:', err.message, err.stack);
             return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=oauth_failed`);
@@ -224,7 +229,6 @@ export const callback = (req, res, next) => {
                 console.error('Login error after Google auth:', loginErr.message, loginErr.stack);
                 return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=login_failed`);
             }
-            console.log('Google callback — login successful, redirecting user:', user.id);
             const redirectUrl = user.isAdmin
                 ? (process.env.ADMIN_URL || `${process.env.CLIENT_URL}/profile`)
                 : `${process.env.CLIENT_URL}/profile`;

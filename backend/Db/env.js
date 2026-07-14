@@ -9,13 +9,12 @@ const result = dotenv.config({ path: resolve(__dirname, '..', '.env') });
 if (result.error) {
     console.error('Failed to load .env file:', result.error.message);
 } else {
-    console.log('DB config loaded — host:', process.env.DB_HOST, '| port:', process.env.DB_PORT, '| name:', process.env.DB_NAME);
 }
 
 
 
 const config = {
-    port: Number(process.env.PORT) || 5000,
+    port: Number(process.env.PORT) || 3000,
     db: {
         host: process.env.DB_HOST || 'localhost',
         port: Number(process.env.DB_PORT) || 5432,

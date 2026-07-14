@@ -180,7 +180,7 @@ export const SOCIAL = {
   facebook: import.meta.env.VITE_FACEBOOK_URL || "https://facebook.com",
   instagram: import.meta.env.VITE_INSTAGRAM_URL || "https://instagram.com",
   tiktok: import.meta.env.VITE_TIKTOK_URL || "https://tiktok.com",
-  whatsapp: import.meta.env.VITE_WHATSAPP_NUMBER || "9779843340238",
+  whatsapp: import.meta.env.VITE_WHATSAPP_NUMBER || "",
   developerCredit: {
     text: "CodexNepal",
     url: "https://www.codexnepal.com/",

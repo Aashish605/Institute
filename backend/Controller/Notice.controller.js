@@ -41,7 +41,6 @@ export const getNoticeById = async (req, res) => {
 }
 
 export const deleteNotice = async (req, res) => {
-    console.log(req.body.id);
     try {
         const remove = await Notice.destroy({ where: { id: req.body.id } });
         return res.json(remove)

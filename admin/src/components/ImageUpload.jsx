@@ -3,8 +3,8 @@ import axios from 'axios'
 import { FiUploadCloud } from 'react-icons/fi'
 import { motion } from 'motion/react'
 
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD || 'drsfbaluf'
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_PRESET || 'image_preset'
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_PRESET
 
 export default function ImageUpload({ onUpload, label }) {
   const [uploading, setUploading] = useState(false)

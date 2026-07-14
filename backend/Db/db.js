@@ -23,8 +23,6 @@ const connectDB = async () => {
         console.log('PostgreSQL connected');
 
         if (process.env.NODE_ENV !== 'production') {
-            // await sequelize.query(`DROP SCHEMA public CASCADE; CREATE SCHEMA public;`);
-            // await sequelize.sync();
             console.log('Models synchronized');
         }
     } catch (error) {

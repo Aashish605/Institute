@@ -4,7 +4,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { User } from '../Model/index.js';
 
-const adminEmail = process.env.ADMIN_EMAIL || 'ashishkhadka317@gmail.com';
+const adminEmail = process.env.ADMIN_EMAIL;
 
 const configurePassport = () => {
     passport.use(
@@ -56,7 +56,6 @@ const configurePassport = () => {
                         isAdmin: email === adminEmail,
                         isEmailVerified: true,
                     });
-                    console.log('Google strategy — created new user:', user?.id, user?.email);
                 } else {
                     const updates = {};
                     if (!user.googleId) updates.googleId = profile.id;
@@ -68,7 +67,6 @@ const configurePassport = () => {
 
                     if (Object.keys(updates).length) {
                         await user.update(updates);
-                        console.log('Google strategy — updated existing user:', user?.id, updates);
                     }
                 }
 

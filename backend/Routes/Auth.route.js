@@ -1,7 +1,16 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import { User } from '../Model/index.js';
 
 const router = express.Router();
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: { message: 'Too many requests. Please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 import {
     passportAuth,
     callback,
@@ -15,12 +24,12 @@ import {
     resendVerification,
 } from '../Controller/Auth.controller.js'
 
-router.post('/signup', signup)
-router.post('/login', login)
-router.post('/forgot-password', forgotPassword)
+router.post('/signup', authLimiter, signup)
+router.post('/login', authLimiter, login)
+router.post('/forgot-password', authLimiter, forgotPassword)
 router.post('/reset-password', resetPassword)
 router.get('/verify-email', verifyEmail)
-router.post('/resend-verification', resendVerification)
+router.post('/resend-verification', authLimiter, resendVerification)
 router.get('/google', passportAuth)
 router.get('/google/callback', callback)
 router.get('/user', getuser)

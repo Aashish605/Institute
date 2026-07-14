@@ -51,10 +51,10 @@ const isProd = process.env.NODE_ENV === 'production';
 const useSSL = isProd || process.env.DB_SSL === 'true';
 app.use(session({
     store: new PostgreSQLStore({
-        conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}${useSSL ? '?sslmode=require' : ''}`,
+        conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}${useSSL ? '?sslmode=verify-full' : ''}`,
         createTableIfMissing: true,
     }),
-    secret: process.env.SESSION_SECRET || "fallback-secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     proxy: true,
     saveUninitialized: false,
@@ -115,6 +115,14 @@ if (!process.env.VERCEL) {
     const PORT = process.env.PORT || 3000;
     const startServer = async () => {
         try {
+            if (!process.env.SESSION_SECRET) {
+                console.error("FATAL: SESSION_SECRET environment variable is required");
+                process.exit(1);
+            }
+            if (!process.env.ADMIN_EMAIL) {
+                console.error("FATAL: ADMIN_EMAIL environment variable is required");
+                process.exit(1);
+            }
             await connectDB();
             app.listen(PORT, () => {
                 console.log(`Server running on port ${PORT}`);

@@ -59,11 +59,10 @@ export const getAllEnrollments = async (req, res) => {
         });
 
         // Get payment info for each enrollment
-        const enrollmentIds = enrollments.map(e => e.id);
         const payments = await Payment.findAll({
             where: { 
-                userId: enrollmentIds.map(e => e.userId), 
-                courseId: enrollmentIds.map(e => e.courseId) 
+                userId: enrollments.map(e => e.userId), 
+                courseId: enrollments.map(e => e.courseId) 
             },
             order: [['createdAt', 'DESC']],
         });
