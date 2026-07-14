@@ -127,12 +127,20 @@ export default function EnrollmentList() {
   const [search, setSearch] = useState('')
   const [courseFilter, setCourseFilter] = useState('')
   const [showModal, setShowModal] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [editingEnrollment, setEditingEnrollment] = useState(null)
+  
+  // Form state
   const [selectedUser, setSelectedUser] = useState('')
   const [selectedCourse, setSelectedCourse] = useState('')
   const [paymentType, setPaymentType] = useState('cash')
   const [reference, setReference] = useState('')
   const [receipt, setReceipt] = useState('')
   const [notes, setNotes] = useState('')
+  const [totalFee, setTotalFee] = useState('')
+  const [paidAmount, setPaidAmount] = useState('')
+  const [paymentStatus, setPaymentStatus] = useState('remaining')
+  const [remarks, setRemarks] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
   const fetchEnrollments = useCallback(() => {
@@ -140,7 +148,9 @@ export default function EnrollmentList() {
     const params = new URLSearchParams()
     if (search) params.set('search', search)
     if (courseFilter) params.set('courseId', courseFilter)
-    api.get(`/api/enrollment/all?${params}`).then(res => setEnrollments(res.data)).catch(() => toast.error('Failed to load enrollments'))
+    api.get(`/api/enrollment/all?${params}`)
+      .then(res => setEnrollments(res.data))
+      .catch(() => toast.error('Failed to load enrollments'))
       .finally(() => setLoading(false))
   }, [search, courseFilter])
 
@@ -149,6 +159,90 @@ export default function EnrollmentList() {
   useEffect(() => {
     api.get('/api/course/').then(res => setCourses(res.data.courses)).catch(() => {})
   }, [])
+
+  // When course is selected in add mode, auto-fill totalFee with course.newPrice
+  useEffect(() => {
+    if (!editMode && selectedCourse) {
+      const course = courses.find(c => c.id === selectedCourse)
+      if (course && course.newPrice !== undefined) {
+        setTotalFee(course.newPrice)
+      }
+    }
+  }, [selectedCourse, editMode, courses])
+
+  const resetForm = () => {
+    setSelectedUser('')
+    setSelectedCourse('')
+    setPaymentType('cash')
+    setReference('')
+    setReceipt('')
+    setNotes('')
+    setTotalFee('')
+    setPaidAmount('')
+    setPaymentStatus('remaining')
+    setRemarks('')
+    setEditMode(false)
+    setEditingEnrollment(null)
+  }
+
+  const openAddModal = () => {
+    resetForm()
+    setShowModal(true)
+  }
+
+  const openEditModal = (enrollment) => {
+    const payment = enrollment.Payment || {}
+    setSelectedUser(enrollment.User?.id || '')
+    setSelectedCourse(enrollment.Course?.id || '')
+    setPaymentType(payment.paymentType || 'cash')
+    setReference(payment.reference || '')
+    setReceipt(payment.receipt || '')
+    setNotes(payment.notes || '')
+    setTotalFee(payment.totalFee !== undefined ? payment.totalFee : (enrollment.Course?.newPrice || ''))
+    setPaidAmount(payment.paidAmount !== undefined ? payment.paidAmount : '')
+    setPaymentStatus(payment.paymentStatus || 'remaining')
+    setRemarks(payment.remarks || '')
+    setEditMode(true)
+    setEditingEnrollment(enrollment)
+    setShowModal(true)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!selectedUser || !selectedCourse) return toast.error('Select both a user and a course')
+    if (editMode && !editingEnrollment) return
+    
+    setSubmitting(true)
+    try {
+      const payload = {
+        userId: selectedUser,
+        courseId: selectedCourse,
+        paymentType,
+        reference: reference || undefined,
+        receipt: receipt || undefined,
+        notes: notes || undefined,
+        totalFee: totalFee !== '' ? parseFloat(totalFee) : undefined,
+        paidAmount: paidAmount !== '' ? parseFloat(paidAmount) : undefined,
+        paymentStatus,
+        remarks: remarks || undefined,
+      }
+
+      if (editMode) {
+        await api.put(`/api/enrollment/${editingEnrollment.id}`, payload)
+        toast.success('Enrollment updated')
+      } else {
+        await api.post('/api/enrollment', payload)
+        toast.success('Enrollment added')
+      }
+      setShowModal(false)
+      resetForm()
+      fetchEnrollments()
+    } catch (err) {
+      toast.error(err.response?.data?.msg || (editMode ? 'Failed to update enrollment' : 'Failed to add enrollment'))
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const handleDelete = async (id) => {
     if (!confirm('Remove this enrollment?')) return
@@ -159,43 +253,14 @@ export default function EnrollmentList() {
     } catch { toast.error('Delete failed') }
   }
 
-  const handleAdd = async (e) => {
-    e.preventDefault()
-    if (!selectedUser || !selectedCourse) return toast.error('Select both a user and a course')
-    setSubmitting(true)
-    try {
-      await api.post('/api/enrollment', {
-        userId: selectedUser,
-        courseId: selectedCourse,
-        paymentType,
-        reference: reference || undefined,
-        receipt: receipt || undefined,
-        notes: notes || undefined,
-      })
-      toast.success('Enrollment added')
-      setShowModal(false)
-      setSelectedUser('')
-      setSelectedCourse('')
-      setPaymentType('cash')
-      setReference('')
-      setReceipt('')
-      setNotes('')
-      fetchEnrollments()
-    } catch (err) {
-      toast.error(err.response?.data?.msg || 'Failed to add enrollment')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
   return (
     <div>
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Enrollments</h1>
-          <p className="text-gray-500 mt-1">Manage course enrollments</p>
+          <p className="text-gray-500 mt-1">Manage course enrollments and payment tracking</p>
         </div>
-        <button onClick={() => setShowModal(true)} className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium shadow-sm">
+        <button onClick={openAddModal} className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium shadow-sm">
           + Add Enrollment
         </button>
       </motion.div>
@@ -229,39 +294,64 @@ export default function EnrollmentList() {
               <tr>
                 <th className="px-6 py-4 font-semibold">User</th>
                 <th className="px-6 py-4 font-semibold">Course</th>
+                <th className="px-6 py-4 font-semibold">Course Fee</th>
+                <th className="px-6 py-4 font-semibold">Paid</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 font-semibold">Remarks</th>
                 <th className="px-6 py-4 font-semibold">Enrolled</th>
                 <th className="px-6 py-4 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {enrollments.map((e, i) => (
-                <motion.tr
-                  key={e.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.03 }}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {e.User?.photo && <img src={e.User.photo} alt="" className="w-8 h-8 rounded-full object-cover" />}
-                      <div>
-                        <div className="font-medium text-gray-800">{e.User?.displayName || '—'}</div>
-                        <div className="text-xs text-gray-400">{e.User?.email || ''}</div>
+              {enrollments.map((e, i) => {
+                const payment = e.Payment || {}
+                const courseFee = payment.totalFee ?? e.Course?.newPrice ?? 0
+                const paid = payment.paidAmount ?? 0
+                const status = payment.paymentStatus || 'remaining'
+                return (
+                  <motion.tr
+                    key={e.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.03 }}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {e.User?.photo && <img src={e.User.photo} alt="" className="w-8 h-8 rounded-full object-cover" />}
+                        <div>
+                          <div className="font-medium text-gray-800">{e.User?.displayName || '—'}</div>
+                          <div className="text-xs text-gray-400">{e.User?.email || ''}</div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 font-medium text-gray-800">{e.Course?.title || '—'}</td>
-                  <td className="px-6 py-4 text-gray-500 text-sm">{new Date(e.createdAt).toLocaleDateString()}</td>
-                  <td className="px-6 py-4">
-                    <button onClick={() => handleDelete(e.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium">
-                      Remove
-                    </button>
-                  </td>
-                </motion.tr>
-              ))}
+                    </td>
+                    <td className="px-6 py-4 font-medium text-gray-800">{e.Course?.title || '—'}</td>
+                    <td className="px-6 py-4 text-gray-700">Rs. {courseFee.toLocaleString()}</td>
+                    <td className="px-6 py-4 text-gray-700 font-medium">Rs. {paid.toLocaleString()}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        status === 'completed' 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        {status === 'completed' ? 'Completed' : 'Remaining'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-gray-500 text-sm max-w-xs truncate block">{payment.remarks || '—'}</td>
+                    <td className="px-6 py-4 text-gray-500 text-sm">{new Date(e.createdAt).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 flex gap-2">
+                      <button onClick={() => openEditModal(e)} className="px-3 py-1 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition text-sm font-medium">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(e.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm font-medium">
+                        Remove
+                      </button>
+                    </td>
+                  </motion.tr>
+                )
+              })}
               {enrollments.length === 0 && (
-                <tr><td colSpan={4} className="px-6 py-10 text-center text-gray-400">No enrollments found</td></tr>
+                <tr><td colSpan={8} className="px-6 py-10 text-center text-gray-400">No enrollments found</td></tr>
               )}
             </tbody>
           </table>
@@ -285,14 +375,15 @@ export default function EnrollmentList() {
               onClick={e => e.stopPropagation()}
               className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6"
             >
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Add Enrollment</h2>
-              <form onSubmit={handleAdd} className="space-y-4">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">{editMode ? 'Edit Enrollment' : 'Add Enrollment'}</h2>
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <SearchableSelect
                   endpoint="/api/user/all"
                   placeholder="Search users by name or email..."
                   label="User"
                   value={selectedUser}
                   onChange={setSelectedUser}
+                  disabled={editMode}
                 />
 
                 <SearchableSelect
@@ -301,6 +392,7 @@ export default function EnrollmentList() {
                   label="Course"
                   value={selectedCourse}
                   onChange={setSelectedCourse}
+                  disabled={editMode}
                 />
 
                 <div>
@@ -313,6 +405,57 @@ export default function EnrollmentList() {
                     <option value="cash">Cash</option>
                     <option value="online">Online</option>
                   </select>
+                </div>
+
+                <div className="border-t border-gray-100 pt-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Payment Details</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600 mb-1">Total Fee (Rs.)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={totalFee}
+                        onChange={e => setTotalFee(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                        placeholder="Course fee"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600 mb-1">Paid Amount (Rs.)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={paidAmount}
+                        onChange={e => setPaidAmount(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                        placeholder="Amount paid"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600 mb-1">Payment Status</label>
+                      <select
+                        value={paymentStatus}
+                        onChange={e => setPaymentStatus(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                      >
+                        <option value="remaining">Remaining</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600 mb-1">Remarks</label>
+                      <textarea
+                        rows={2}
+                        placeholder="Payment remarks..."
+                        value={remarks}
+                        onChange={e => setRemarks(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="border-t border-gray-100 pt-4">
@@ -356,7 +499,7 @@ export default function EnrollmentList() {
                     Cancel
                   </button>
                   <button type="submit" disabled={submitting} className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-medium text-sm shadow-sm disabled:opacity-50">
-                    {submitting ? 'Adding...' : 'Add Enrollment'}
+                    {submitting ? (editMode ? 'Updating...' : 'Adding...') : (editMode ? 'Update Enrollment' : 'Add Enrollment')}
                   </button>
                 </div>
               </form>

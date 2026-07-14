@@ -18,6 +18,14 @@ const Payment = sequelize.define('Payment', {
     userEmail: { type: DataTypes.STRING, allowNull: false },
     status: { type: DataTypes.STRING, defaultValue: 'pending' },
     paymentType: { type: DataTypes.ENUM('cash', 'online'), defaultValue: 'cash' },
+    // New fields for enrollment payment tracking
+    totalFee: { type: DataTypes.FLOAT, allowNull: true },
+    paidAmount: { type: DataTypes.FLOAT, defaultValue: 0 },
+    paymentStatus: { 
+        type: DataTypes.ENUM('completed', 'remaining'), 
+        defaultValue: 'remaining' 
+    },
+    remarks: { type: DataTypes.TEXT },
 }, {
     timestamps: true,
 });
