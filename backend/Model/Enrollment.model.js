@@ -18,6 +18,10 @@ const Enrollment = sequelize.define('Enrollment', {
         allowNull: false,
         references: { model: 'Courses', key: 'id' },
     },
+    batch: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     timestamps: true,
 });

@@ -13,7 +13,7 @@ function useDebounce(value, delay) {
   return debounced
 }
 
-function SearchableSelect({ endpoint, placeholder, label, value, onChange }) {
+function SearchableSelect({ endpoint, placeholder, label, value, onChange, onItemSelect }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [open, setOpen] = useState(false)
@@ -95,7 +95,7 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange }) {
                 key={r.id}
                 type="button"
                 ref={r.id === value ? selectedRef : null}
-                onClick={() => { onChange(r.id); setSelectedItem(r); setQuery(''); setOpen(false) }}
+                onClick={() => { onChange(r.id); setSelectedItem(r); setQuery(''); setOpen(false); onItemSelect?.(r) }}
                 className={`w-full text-left px-3 py-2.5 text-sm hover:bg-primary/5 transition flex items-center gap-2 ${
                   r.id === value ? 'bg-primary/10 text-primary font-medium' : 'text-gray-700'
                 }`}
@@ -120,6 +120,63 @@ function SearchableSelect({ endpoint, placeholder, label, value, onChange }) {
   )
 }
 
+function BatchCombobox({ value, onChange, placeholder, label }) {
+  const [batches, setBatches] = useState([])
+  const [open, setOpen] = useState(false)
+  const [input, setInput] = useState(value || '')
+  const ref = useRef(null)
+
+  useEffect(() => {
+    api.get('/api/enrollment/batches')
+      .then(res => setBatches(res.data))
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    setInput(value || '')
+  }, [value])
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  const filtered = batches.filter(b =>
+    b.toLowerCase().includes(input.toLowerCase())
+  )
+
+  return (
+    <div ref={ref} className="relative">
+      {label && <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>}
+      <input
+        type="text"
+        placeholder={placeholder}
+        value={input}
+        onChange={e => { setInput(e.target.value); onChange(e.target.value); setOpen(true) }}
+        onFocus={() => setOpen(true)}
+        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+      />
+      {open && filtered.length > 0 && (
+        <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+          {filtered.map(b => (
+            <button
+              key={b}
+              type="button"
+              onClick={() => { setInput(b); onChange(b); setOpen(false) }}
+              className={`w-full text-left px-3 py-2 text-sm hover:bg-primary/5 transition ${b === value ? 'bg-primary/10 text-primary font-medium' : 'text-gray-700'}`}
+            >
+              {b}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function EnrollmentList() {
   const [enrollments, setEnrollments] = useState([])
   const [courses, setCourses] = useState([])
@@ -132,7 +189,10 @@ export default function EnrollmentList() {
   
   // Form state
   const [selectedUser, setSelectedUser] = useState('')
+  const [selectedUserData, setSelectedUserData] = useState(null)
   const [selectedCourse, setSelectedCourse] = useState('')
+  const [selectedCourseData, setSelectedCourseData] = useState(null)
+  const [batch, setBatch] = useState('')
   const [paymentType, setPaymentType] = useState('cash')
   const [reference, setReference] = useState('')
   const [receipt, setReceipt] = useState('')
@@ -142,17 +202,20 @@ export default function EnrollmentList() {
   const [paymentStatus, setPaymentStatus] = useState('remaining')
   const [remarks, setRemarks] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [batchFilter, setBatchFilter] = useState('')
+  const [showDetails, setShowDetails] = useState(false)
 
   const fetchEnrollments = useCallback(() => {
     setLoading(true)
     const params = new URLSearchParams()
     if (search) params.set('search', search)
     if (courseFilter) params.set('courseId', courseFilter)
+    if (batchFilter) params.set('batch', batchFilter)
     api.get(`/api/enrollment/all?${params}`)
       .then(res => setEnrollments(res.data))
       .catch(() => toast.error('Failed to load enrollments'))
       .finally(() => setLoading(false))
-  }, [search, courseFilter])
+  }, [search, courseFilter, batchFilter])
 
   useEffect(() => { fetchEnrollments() }, [fetchEnrollments])
 
@@ -172,7 +235,10 @@ export default function EnrollmentList() {
 
   const resetForm = () => {
     setSelectedUser('')
+    setSelectedUserData(null)
     setSelectedCourse('')
+    setSelectedCourseData(null)
+    setBatch('')
     setPaymentType('cash')
     setReference('')
     setReceipt('')
@@ -194,6 +260,7 @@ export default function EnrollmentList() {
     const payment = enrollment.Payment || {}
     setSelectedUser(enrollment.User?.id || '')
     setSelectedCourse(enrollment.Course?.id || '')
+    setBatch(enrollment.batch || '')
     setPaymentType(payment.paymentType || 'cash')
     setReference(payment.reference || '')
     setReceipt(payment.receipt || '')
@@ -217,6 +284,7 @@ export default function EnrollmentList() {
       const payload = {
         userId: selectedUser,
         courseId: selectedCourse,
+        batch: batch || undefined,
         paymentType,
         reference: reference || undefined,
         receipt: receipt || undefined,
@@ -253,6 +321,11 @@ export default function EnrollmentList() {
     } catch { toast.error('Delete failed') }
   }
 
+  const totalStudents = enrollments.length
+  const totalMoney = enrollments.reduce((s, e) => s + ((e.Payment?.totalFee ?? e.Course?.newPrice ?? 0)), 0)
+  const totalPaid = enrollments.reduce((s, e) => s + (e.Payment?.paidAmount ?? 0), 0)
+  const totalRemaining = totalMoney - totalPaid
+
   return (
     <div>
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-6">
@@ -276,11 +349,56 @@ export default function EnrollmentList() {
           />
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </div>
+        <div className="w-full sm:w-48">
+          <BatchCombobox
+            value={batchFilter}
+            onChange={setBatchFilter}
+            placeholder="Filter by batch..."
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowDetails(!showDetails)}
+          className={`px-3 py-2.5 rounded-lg text-sm font-medium transition border ${
+            showDetails
+              ? 'bg-primary text-white border-primary'
+              : 'bg-white text-gray-600 border-gray-200 hover:border-primary/30'
+          }`}
+        >
+          Detail
+        </button>
         <select value={courseFilter} onChange={e => setCourseFilter(e.target.value)} className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition">
           <option value="">All Courses</option>
           {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
         </select>
       </motion.div>
+
+      {showDetails && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 grid grid-cols-2 sm:grid-cols-4 gap-3"
+        >
+          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Students</p>
+            <p className="text-2xl font-bold text-gray-800 mt-1">{totalStudents}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Fee</p>
+            <p className="text-2xl font-bold text-gray-800 mt-1">Rs. {totalMoney.toLocaleString()}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Paid</p>
+            <p className="text-2xl font-bold text-green-600 mt-1">Rs. {totalPaid.toLocaleString()}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Remaining</p>
+            <p className={`text-2xl font-bold mt-1 ${totalRemaining > 0 ? 'text-red-600' : 'text-green-600'}`}>
+              Rs. {totalRemaining.toLocaleString()}
+            </p>
+          </div>
+        </motion.div>
+      )}
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
@@ -294,6 +412,7 @@ export default function EnrollmentList() {
               <tr>
                 <th className="px-6 py-4 font-semibold">User</th>
                 <th className="px-6 py-4 font-semibold">Course</th>
+                <th className="px-6 py-4 font-semibold">Batch</th>
                 <th className="px-6 py-4 font-semibold">Course Fee</th>
                 <th className="px-6 py-4 font-semibold">Paid</th>
                 <th className="px-6 py-4 font-semibold">Status</th>
@@ -326,6 +445,13 @@ export default function EnrollmentList() {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-medium text-gray-800">{e.Course?.title || '—'}</td>
+                    <td className="px-6 py-4">
+                      {e.batch ? (
+                        <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">{e.batch}</span>
+                      ) : (
+                        <span className="text-gray-300">—</span>
+                      )}
+                    </td>
                     <td className="px-6 py-4 text-gray-700">Rs. {courseFee.toLocaleString()}</td>
                     <td className="px-6 py-4 text-gray-700 font-medium">Rs. {paid.toLocaleString()}</td>
                     <td className="px-6 py-4">
@@ -351,7 +477,7 @@ export default function EnrollmentList() {
                 )
               })}
               {enrollments.length === 0 && (
-                <tr><td colSpan={8} className="px-6 py-10 text-center text-gray-400">No enrollments found</td></tr>
+                <tr><td colSpan={9} className="px-6 py-10 text-center text-gray-400">No enrollments found</td></tr>
               )}
             </tbody>
           </table>
@@ -373,128 +499,209 @@ export default function EnrollmentList() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6"
+              className="bg-white rounded-2xl shadow-xl w-full max-w-4xl p-6 max-h-[90vh] overflow-y-auto"
             >
-              <h2 className="text-xl font-bold text-gray-800 mb-4">{editMode ? 'Edit Enrollment' : 'Add Enrollment'}</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <SearchableSelect
-                  endpoint="/api/user/all"
-                  placeholder="Search users by name or email..."
-                  label="User"
-                  value={selectedUser}
-                  onChange={setSelectedUser}
-                  disabled={editMode}
-                />
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-800">{editMode ? 'Edit Enrollment' : 'Add Enrollment'}</h2>
+                <button type="button" onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 transition">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Left Column */}
+                  <div className="space-y-4">
+                    <SearchableSelect
+                      endpoint="/api/user/all"
+                      placeholder="Search users by name or email..."
+                      label="User"
+                      value={selectedUser}
+                      onChange={(id) => { setSelectedUser(id); if (!id) setSelectedUserData(null) }}
+                      onItemSelect={(item) => setSelectedUserData(item)}
+                    />
 
-                <SearchableSelect
-                  endpoint="/api/course"
-                  placeholder="Search courses by title..."
-                  label="Course"
-                  value={selectedCourse}
-                  onChange={setSelectedCourse}
-                  disabled={editMode}
-                />
+                    <SearchableSelect
+                      endpoint="/api/course"
+                      placeholder="Search courses by title..."
+                      label="Course"
+                      value={selectedCourse}
+                      onChange={(id) => { setSelectedCourse(id); if (!id) setSelectedCourseData(null) }}
+                      onItemSelect={(item) => setSelectedCourseData(item)}
+                    />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-1">Payment Type</label>
-                  <select
-                    value={paymentType}
-                    onChange={e => setPaymentType(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                  >
-                    <option value="cash">Cash</option>
-                    <option value="online">Online</option>
-                  </select>
-                </div>
+                    <BatchCombobox
+                      value={batch}
+                      onChange={setBatch}
+                      placeholder="e.g. Morning Batch, 2025 Batch"
+                      label="Batch"
+                    />
 
-                <div className="border-t border-gray-100 pt-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Payment Details</h3>
-                  <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Total Fee (Rs.)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={totalFee}
-                        onChange={e => setTotalFee(e.target.value)}
-                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                        placeholder="Course fee"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Paid Amount (Rs.)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={paidAmount}
-                        onChange={e => setPaidAmount(e.target.value)}
-                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                        placeholder="Amount paid"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Payment Status</label>
+                      <label className="block text-sm font-medium text-gray-600 mb-1">Payment Type</label>
                       <select
-                        value={paymentStatus}
-                        onChange={e => setPaymentStatus(e.target.value)}
+                        value={paymentType}
+                        onChange={e => setPaymentType(e.target.value)}
                         className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                       >
-                        <option value="remaining">Remaining</option>
-                        <option value="completed">Completed</option>
+                        <option value="cash">Cash</option>
+                        <option value="online">Online</option>
                       </select>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Remarks</label>
-                      <textarea
-                        rows={2}
-                        placeholder="Payment remarks..."
-                        value={remarks}
-                        onChange={e => setRemarks(e.target.value)}
-                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none"
-                      />
+
+                    <div className="border-t border-gray-100 pt-4">
+                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Payment Details</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-600 mb-1">Total Fee (Rs.)</label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={totalFee}
+                            onChange={e => setTotalFee(e.target.value)}
+                            className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                            placeholder="Course fee"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-600 mb-1">Paid Amount (Rs.)</label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={paidAmount}
+                            onChange={e => setPaidAmount(e.target.value)}
+                            className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                            placeholder="Amount paid"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-600 mb-1">Payment Status</label>
+                          <select
+                            value={paymentStatus}
+                            onChange={e => setPaymentStatus(e.target.value)}
+                            className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                          >
+                            <option value="remaining">Remaining</option>
+                            <option value="completed">Completed</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-600 mb-1">Remarks</label>
+                          <textarea
+                            rows={2}
+                            placeholder="Payment remarks..."
+                            value={remarks}
+                            onChange={e => setRemarks(e.target.value)}
+                            className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-4">
+                    {/* User Preview Card */}
+                    {selectedUserData && (
+                      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20 p-4">
+                        <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Selected User</h4>
+                        <div className="flex items-center gap-3">
+                          {selectedUserData.photo && (
+                            <img src={selectedUserData.photo} alt="" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-semibold text-gray-800 truncate">{selectedUserData.displayName}</p>
+                            <p className="text-sm text-gray-500 truncate">{selectedUserData.email}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Course Preview Card */}
+                    {selectedCourseData && (
+                      <div className="bg-gradient-to-br from-secondary/5 to-secondary/10 rounded-xl border border-secondary/20 p-4">
+                        <h4 className="text-xs font-semibold text-secondary uppercase tracking-wider mb-3">Selected Course</h4>
+                        <p className="font-semibold text-gray-800">{selectedCourseData.title}</p>
+                        {selectedCourseData.newPrice !== undefined && (
+                          <p className="text-sm text-gray-500 mt-1">Fee: Rs. {Number(selectedCourseData.newPrice).toLocaleString()}</p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Payment Summary Card */}
+                    {(totalFee || paidAmount) && (
+                      <div className="bg-gray-50 rounded-xl border border-gray-200 p-4">
+                        <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Payment Summary</h4>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Total Fee</span>
+                            <span className="font-medium text-gray-800">Rs. {(parseFloat(totalFee) || 0).toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Paid</span>
+                            <span className="font-medium text-green-700">Rs. {(parseFloat(paidAmount) || 0).toLocaleString()}</span>
+                          </div>
+                          <div className="border-t border-gray-200 pt-2 flex justify-between">
+                            <span className="font-semibold text-gray-700">Balance Due</span>
+                            <span className={`font-semibold ${(parseFloat(totalFee || 0) - parseFloat(paidAmount || 0)) > 0 ? 'text-red-600' : 'text-green-700'}`}>
+                              Rs. {Math.max(0, (parseFloat(totalFee || 0) - parseFloat(paidAmount || 0))).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="pt-2">
+                            <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${
+                              paymentStatus === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                            }`}>
+                              {paymentStatus === 'completed' ? 'Completed' : 'Remaining'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Receipt & Notes */}
+                    <div className="border-t border-gray-100 pt-4">
+                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Receipt & Notes</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-600 mb-1">Receipt URL</label>
+                          <input
+                            type="text"
+                            placeholder="https://res.cloudinary.com/..."
+                            value={receipt}
+                            onChange={e => setReceipt(e.target.value)}
+                            className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                          />
+                        </div>
+                        {receipt && (
+                          <img src={receipt} alt="Receipt preview" className="w-full h-32 object-cover rounded-lg border border-gray-200" onError={e => { e.target.style.display = 'none' }} />
+                        )}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-600 mb-1">Reference / Transaction ID</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. TXN123456"
+                            value={reference}
+                            onChange={e => setReference(e.target.value)}
+                            className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-600 mb-1">Notes</label>
+                          <textarea
+                            rows={2}
+                            placeholder="Optional notes..."
+                            value={notes}
+                            onChange={e => setNotes(e.target.value)}
+                            className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-gray-100 pt-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Receipt Details (optional)</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Receipt URL</label>
-                      <input
-                        type="text"
-                        placeholder="https://res.cloudinary.com/..."
-                        value={receipt}
-                        onChange={e => setReceipt(e.target.value)}
-                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Reference / Transaction ID</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. TXN123456"
-                        value={reference}
-                        onChange={e => setReference(e.target.value)}
-                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Notes</label>
-                      <textarea
-                        rows={2}
-                        placeholder="Optional notes..."
-                        value={notes}
-                        onChange={e => setNotes(e.target.value)}
-                        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-3 justify-end pt-2">
+                <div className="flex gap-3 justify-end pt-6 mt-4 border-t border-gray-100">
                   <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition font-medium">
                     Cancel
                   </button>

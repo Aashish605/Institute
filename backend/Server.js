@@ -48,9 +48,10 @@ app.use(
 const PostgreSQLStore = pgStore(session)
 
 const isProd = process.env.NODE_ENV === 'production';
+const useSSL = isProd || process.env.DB_SSL === 'true';
 app.use(session({
     store: new PostgreSQLStore({
-        conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}${isProd ? '?sslmode=require' : ''}`,
+        conString: `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'aone'}${useSSL ? '?sslmode=require' : ''}`,
         createTableIfMissing: true,
     }),
     secret: process.env.SESSION_SECRET || "fallback-secret",

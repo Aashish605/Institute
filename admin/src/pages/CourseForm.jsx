@@ -17,6 +17,7 @@ export default function CourseForm() {
   const [submitting, setSubmitting] = useState(false)
   const [features, setFeatures] = useState([{ icon: '', text: '' }])
   const [subjects, setSubjects] = useState([''])
+  const [batches, setBatches] = useState([''])
   const imageUrl = watch('image')
 
   useEffect(() => {
@@ -34,12 +35,14 @@ export default function CourseForm() {
       })
       setFeatures(c.features || [{ icon: '', text: '' }])
       setSubjects(c.subjects || [''])
+      setBatches(c.batches || [''])
     }
   }, [isEdit, location.state, reset])
 
   const onSubmit = async (data) => {
     data.features = features.filter(f => f.text)
     data.subjects = subjects.filter(s => s)
+    data.batches = batches.filter(b => b.trim())
     setSubmitting(true)
     try {
       if (isEdit) {
@@ -68,6 +71,12 @@ export default function CourseForm() {
     const copy = [...subjects]; copy[i] = value; setSubjects(copy)
   }
   const removeSubject = (i) => setSubjects(subjects.filter((_, idx) => idx !== i))
+
+  const addBatch = () => setBatches([...batches, ''])
+  const updateBatch = (i, value) => {
+    const copy = [...batches]; copy[i] = value; setBatches(copy)
+  }
+  const removeBatch = (i) => setBatches(batches.filter((_, idx) => idx !== i))
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto">
@@ -158,6 +167,28 @@ export default function CourseForm() {
 
               <div>
                 <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+                  <span className="text-lg">📦</span>
+                  <h3 className="text-base font-semibold text-gray-800">Batches</h3>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {batches.map((b, i) => (
+                    <span key={i} className="inline-flex items-center gap-1.5 bg-secondary/5 text-secondary rounded-full px-3 py-1.5 text-sm">
+                      <input value={b} onChange={e => updateBatch(i, e.target.value)} className="bg-transparent border-none outline-none w-20 text-sm text-secondary placeholder-secondary/40" placeholder="Batch name" />
+                      {batches.length > 1 && (
+                        <button type="button" onClick={() => removeBatch(i)} className="text-secondary/60 hover:text-secondary p-0.5 rounded-full hover:bg-secondary/10 transition">
+                          <FiX size={14} />
+                        </button>
+                      )}
+                    </span>
+                  ))}
+                </div>
+                <button type="button" onClick={addBatch} className="flex items-center gap-1.5 text-sm text-secondary font-medium hover:text-secondary/80 transition">
+                  <FiPlus size={14} /> Add batch
+                </button>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
                   <span className="text-lg">🔗</span>
                   <h3 className="text-base font-semibold text-gray-800">Course Links</h3>
                 </div>
@@ -200,6 +231,10 @@ export default function CourseForm() {
                   <div className="flex justify-between">
                     <span>Subjects</span>
                     <span className="font-medium text-gray-700">{subjects.filter(s => s).length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Batches</span>
+                    <span className="font-medium text-gray-700">{batches.filter(b => b.trim()).length}</span>
                   </div>
                   <div className="border-t border-gray-100 pt-2 flex justify-between">
                     <span>Status</span>

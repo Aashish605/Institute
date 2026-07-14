@@ -1,9 +1,29 @@
 import { Enrollment, User, Course, Payment } from '../Model/index.js';
 import { Op } from 'sequelize';
 
+export const getBatches = async (req, res) => {
+    try {
+        const enrollmentBatches = await Enrollment.findAll({
+            attributes: ['batch'],
+            where: { batch: { [Op.ne]: null, [Op.ne]: '' } },
+            group: ['batch'],
+            order: [['batch', 'ASC']],
+        });
+        const courses = await Course.findAll({
+            attributes: ['batches'],
+            where: { batches: { [Op.ne]: null } },
+        });
+        const courseBatches = courses.flatMap(c => c.batches || []);
+        const all = [...enrollmentBatches.map(b => b.batch), ...courseBatches].filter(Boolean);
+        res.json([...new Set(all)].sort());
+    } catch (err) {
+        res.status(500).json({ msg: "Server error", error: err.message });
+    }
+};
+
 export const getAllEnrollments = async (req, res) => {
     try {
-        const { search, courseId } = req.query;
+        const { search, courseId, batch } = req.query;
         const where = {};
         const userWhere = {};
         const courseWhere = {};
@@ -16,6 +36,9 @@ export const getAllEnrollments = async (req, res) => {
         }
         if (courseId) {
             where.courseId = courseId;
+        }
+        if (batch) {
+            where.batch = batch;
         }
 
         const enrollments = await Enrollment.findAll({
@@ -64,7 +87,7 @@ export const getAllEnrollments = async (req, res) => {
 
 export const createEnrollment = async (req, res) => {
     try {
-        const { userId, courseId, paymentType, reference, receipt, notes, totalFee, paidAmount, paymentStatus, remarks } = req.body;
+        const { userId, courseId, batch, paymentType, reference, receipt, notes, totalFee, paidAmount, paymentStatus, remarks } = req.body;
         if (!userId || !courseId) {
             return res.status(400).json({ msg: "userId and courseId are required" });
         }
@@ -77,7 +100,12 @@ export const createEnrollment = async (req, res) => {
 
         const [enrollment, created] = await Enrollment.findOrCreate({
             where: { userId, courseId },
+            defaults: batch ? { batch } : undefined,
         });
+
+        if (!created && batch) {
+            await enrollment.update({ batch });
+        }
 
         if (!created) {
             return res.status(409).json({ msg: "User is already enrolled in this course" });
@@ -132,7 +160,7 @@ export const createEnrollment = async (req, res) => {
 export const updateEnrollment = async (req, res) => {
     try {
         const { id } = req.params;
-        const { totalFee, paidAmount, paymentStatus, remarks, receipt, reference, notes } = req.body;
+        const { totalFee, paidAmount, paymentStatus, remarks, receipt, reference, notes, batch } = req.body;
 
         const enrollment = await Enrollment.findByPk(id, {
             include: [
@@ -150,6 +178,11 @@ export const updateEnrollment = async (req, res) => {
         });
 
         if (!payment) return res.status(404).json({ msg: "Payment record not found" });
+
+        // Update enrollment batch
+        if (batch !== undefined) {
+            await enrollment.update({ batch });
+        }
 
         // Update payment fields
         const updateData = {};

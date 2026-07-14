@@ -18,6 +18,7 @@ const Course = sequelize.define('Course', {
     subjects: { type: DataTypes.JSONB, allowNull: false },
     materialsLink: { type: DataTypes.STRING, allowNull: false },
     mockTestLink: { type: DataTypes.STRING },
+    batches: { type: DataTypes.JSONB, defaultValue: [] },
 }, {
     timestamps: true,
 });
